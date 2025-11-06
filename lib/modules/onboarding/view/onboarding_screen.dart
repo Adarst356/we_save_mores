@@ -4,12 +4,11 @@ import 'package:we_save_more/utils/app_strings.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import 'onboarding_controller.dart';
 
-class OnboardingScreen extends StatelessWidget {
+class OnboardingScreen extends GetView<OnboardingController> {
   const OnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(OnboardingController());
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
     final backgroundColor = theme.colorScheme.background;

@@ -1,77 +1,56 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  final String label;
-  final String hint;
+  final String labelText;
+  final IconData prefixIcon;
+  final IconData? suffixIcon;
   final bool obscureText;
+  final VoidCallback? onSuffixTap;
   final TextEditingController? controller;
   final TextInputType keyboardType;
-  final Widget? prefixIcon;
-  final Widget? suffixIcon;
-  final Color fillColor;
-  final double borderRadius;
-  final bool enabled;
 
   const CustomTextField({
     super.key,
-    required this.label,
-    required this.hint,
+    required this.labelText,
+    required this.prefixIcon,
+    this.suffixIcon,
     this.obscureText = false,
+    this.onSuffixTap,
     this.controller,
     this.keyboardType = TextInputType.text,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.fillColor = Colors.transparent,
-    this.borderRadius = 1.0,
-    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[700],
-            fontWeight: FontWeight.w500,
-          ),
+    final theme = Theme.of(context);
+
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        prefixIcon: Icon(
+          prefixIcon,
+          color: theme.primaryColor,
         ),
-        SizedBox(height: 8),
-        TextFormField(
-          controller: controller,
-          obscureText: obscureText,
-          keyboardType: keyboardType,
-          enabled: enabled,
-          decoration: InputDecoration(
-            hintText: hint,
-            filled: true,
-            // labelText: label,
-            fillColor: fillColor,
-            prefixIcon: prefixIcon,
-            suffixIcon: suffixIcon,
-            contentPadding: EdgeInsets.symmetric(
-              vertical: 14.0,
-              horizontal: 12.0,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(borderRadius),
-              borderSide: BorderSide(color: Colors.grey.shade200, width: 1.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(borderRadius),
-              borderSide: BorderSide(color: Colors.blue, width: 2.0),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(borderRadius),
-              borderSide: BorderSide(color: Colors.grey.shade200, width: 1.0),
-            ),
+        suffixIcon: suffixIcon != null
+            ? IconButton(
+          onPressed: onSuffixTap,
+          icon: Icon(
+            suffixIcon,
+            color: theme.primaryColor,
           ),
+        )
+            : null,
+        labelText: labelText,
+        labelStyle: const TextStyle(color: Colors.grey),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: theme.primaryColor),
         ),
-        SizedBox(height: 20),
-      ],
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+      ),
     );
   }
 }

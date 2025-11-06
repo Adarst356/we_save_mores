@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:we_save_more/modules/auth/login/view/login_controller.dart';
 import 'package:we_save_more/modules/auth/login/view/login_screen.dart';
+import 'package:we_save_more/modules/auth/signup/view/signup_controller.dart';
+import 'package:we_save_more/modules/auth/signup/view/signup_screen.dart';
 import '../modules/splash/view/splash_screen.dart';
 import '../modules/splash/view/splash_controller.dart';
 import '../modules/onboarding/view/onboarding_screen.dart';
@@ -28,6 +30,13 @@ class AppPages {
       page: () => const LoginScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<LoginController>(() => LoginController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.signUp,
+      page: () => const SignupScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<SignupController>(() => SignupController());
       }),
     ),
 

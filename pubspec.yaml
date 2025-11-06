@@ -40,7 +40,7 @@ dependencies:
   dio: ^5.9.0
   lottie: ^3.3.2
   shared_preferences: ^2.5.3
-  flutter_svg: ^2.2.1
+  flutter_svg: ^2.2.2
   get_storage: ^2.1.1
   cached_network_image: ^3.4.1
 
@@ -84,8 +84,8 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
 fonts:
-    - family: Poppins
-      fonts:
+     - family: Poppins
+       fonts:
         - asset: assets/fonts/Poppins-Light.ttf
           weight: 300
         - asset: assets/fonts/Poppins-Regular.ttf

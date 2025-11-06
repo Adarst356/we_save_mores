@@ -1,17 +1,15 @@
 class AppStrings {
   static const String loginTitle = "Login";
-  static const String signupTitle = "Create Account";
-  static const String emailHint = "Enter your email";
-  static const String passwordHint = "Enter your password";
-  static const String forgotPassword = "Forgot Password?";
   static const String loginButton = "Login";
-  static const String signupButton = "Sign Up";
   static const String skip = "Skip";
-
-  static const String homeTitle = "Welcome Home!";
-  static const String searchHint = "Search here...";
-  static const String logoutButton = "Logout";
-
-  static const String noData = "No data available";
-  static const String errorMessage = "Something went wrong, please try again.";
+  static const String homeTitle = "Welcome";
+  static const String homeSubtitle = "Login to Continue";
+  static const String mobileAuth = "Mobile Number or User Id";
+  static const String passAuth = "Password";
+  static const String policyInstruction = "By Tapping on Login  Button, you are agree to our";
+ static const String privacyPolicy = " Privacy Policy & Terms Condition";
+ static const String forgotPass = "Forgot Password?";
+ static const String login ="LOGIN";
+ static const String userNotExist = "Don't have An Account?";
+ static const String signUp = "Sign Up";
 }
