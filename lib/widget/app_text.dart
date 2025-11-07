@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 class AppText extends StatelessWidget {
   final String text;
@@ -12,6 +13,7 @@ class AppText extends StatelessWidget {
   final TextDecoration? decoration;
   final TextOverflow? overflow;
   final String? fontFamily;
+  final bool useThemeColor;
 
   const AppText(
       this.text, {
@@ -24,22 +26,34 @@ class AppText extends StatelessWidget {
         this.height,
         this.decoration,
         this.fontFamily,
-        this.color, this.overflow,
+        this.color,
+        this.overflow,
+        this.useThemeColor = true,
       });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    final effectiveColor = color ??
+        (useThemeColor
+            ? (theme.brightness == Brightness.dark
+            ? appColors.textLight
+            : appColors.textDark)
+            : appColors.textDark);
+
     return Text(
       text,
       textAlign: align,
       maxLines: maxLines,
+      overflow: overflow,
       style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,
-        color: color,
-        overflow: overflow,
+        color: effectiveColor,
         letterSpacing: letterSpacing,
         height: height,
+        decorationColor: effectiveColor,
         decoration: decoration,
         fontFamily: fontFamily,
       ),

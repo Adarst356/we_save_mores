@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'app_text.dart';
 
 class CustomButton extends StatelessWidget {
@@ -7,10 +6,15 @@ class CustomButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
   final Color? backgroundColor;
-  final double borderRadius;
   final double fontSize;
   final FontWeight fontWeight;
   final String fontFamily;
+
+  /// Optional radius for each corner
+  final double topLeft;
+  final double topRight;
+  final double bottomLeft;
+  final double bottomRight;
 
   const CustomButton({
     super.key,
@@ -18,10 +22,15 @@ class CustomButton extends StatelessWidget {
     required this.icon,
     required this.onPressed,
     this.backgroundColor,
-    this.borderRadius = 12,
     this.fontSize = 22,
     this.fontWeight = FontWeight.w800,
     this.fontFamily = "Poppins",
+
+    /// Default rounded on all sides
+    this.topLeft = 12,
+    this.topRight = 12,
+    this.bottomLeft = 12,
+    this.bottomRight = 12,
   });
 
   @override
@@ -33,8 +42,10 @@ class CustomButton extends StatelessWidget {
         backgroundColor: backgroundColor ?? theme.primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(borderRadius),
-            bottomLeft: Radius.circular(borderRadius),
+            topLeft: Radius.circular(topLeft),
+            topRight: Radius.circular(topRight),
+            bottomLeft: Radius.circular(bottomLeft),
+            bottomRight: Radius.circular(bottomRight),
           ),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

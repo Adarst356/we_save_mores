@@ -8,6 +8,8 @@ class CustomTextField extends StatelessWidget {
   final VoidCallback? onSuffixTap;
   final TextEditingController? controller;
   final TextInputType keyboardType;
+  final int? maxLength; // ✅ added for input limit
+  final String? Function(String?)? validator;
 
   const CustomTextField({
     super.key,
@@ -18,6 +20,8 @@ class CustomTextField extends StatelessWidget {
     this.onSuffixTap,
     this.controller,
     this.keyboardType = TextInputType.text,
+    this.maxLength,
+    this.validator,
   });
 
   @override
@@ -28,6 +32,8 @@ class CustomTextField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
+      maxLength: maxLength,
+      validator: validator,
       decoration: InputDecoration(
         prefixIcon: Icon(
           prefixIcon,
@@ -44,11 +50,23 @@ class CustomTextField extends StatelessWidget {
             : null,
         labelText: labelText,
         labelStyle: const TextStyle(color: Colors.grey),
+        errorStyle: const TextStyle(
+          color: Colors.red,
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+        ),
+        counterText: "",
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: theme.primaryColor),
+          borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
         ),
         enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
+        ),
+        errorBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        focusedErrorBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
         ),
       ),
     );

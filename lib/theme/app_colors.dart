@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   /// Brand Colors
-  final Color primaryColor = const Color(0xFF4D267A);
+  final Color primaryColor = const Color(0xFF3E1F66);
   final Color primaryLight = const Color(0xFFCC401D5D);
-  final Color primaryDark = const Color(0xFF4D267A);
+  final Color primaryDark = const Color(0xFF3E1F66);
   final Color primaryMoreLight = const Color(0xFF99401D5D);
   final Color primaryLightDark = const Color(0xFFCC4D267A);
   final Color primaryMoreLight2 = const Color(0xFF8660A5);
@@ -17,10 +17,12 @@ class AppColors {
   final Color backgroundLight = Colors.white;
   final Color backgroundDark = Colors.black;
 
+
   ///Text Colors
   final Color textDark = Colors.black;
   final Color textLight = Colors.white;
-  final Color textPrimary = const Color(0xFF4D267A);
+  final Color textPrimary = const Color(0xFF3E1F66);
+  final Color textGrey = Color(0xffE0E0E0);
 
 
   /// Neutral Utility Colors

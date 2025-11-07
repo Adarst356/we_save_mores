@@ -48,6 +48,7 @@ final ThemeData lightTheme = ThemeData(
     titleLarge: TextStyle(color: appColors.primaryColor, fontWeight: FontWeight.bold),
     titleMedium: TextStyle(color: appColors.textDark),
     labelLarge: TextStyle(color: appColors.primaryColor),
+    labelMedium: TextStyle(color: appColors.textGrey),
   ),
 );
 
@@ -89,11 +90,13 @@ final ThemeData darkTheme = ThemeData(
   ),
 
   textTheme: TextTheme(
-    bodyLarge: TextStyle(color: appColors.textLight),
-    bodyMedium: TextStyle(color: appColors.textLight),
-    bodySmall: TextStyle(color: appColors.textLight),
+    bodyLarge: TextStyle(color: appColors.textDark),
+    bodyMedium: TextStyle(color: appColors.textDark),
+    bodySmall: TextStyle(color: appColors.textDark),
     titleLarge: TextStyle(color: appColors.primaryColor, fontWeight: FontWeight.bold),
-    titleMedium: TextStyle(color: appColors.textLight),
+    titleMedium: TextStyle(color: appColors.textDark),
     labelLarge: TextStyle(color: appColors.primaryColor),
+    labelMedium: TextStyle(color: appColors.textGrey),
   ),
+
 );
