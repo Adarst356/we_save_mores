@@ -92,43 +92,31 @@ class LoginScreen extends GetView<LoginController> {
 
                   child: Column(
                     children: [
-                      /// Mobile Number
-                      CustomTextField(
+                      /// Mobile Field
+                      Obx(() => CustomTextField(
                         labelText: AppStrings.mobileAuth,
                         prefixIcon: Icons.phone,
                         controller: controller.mobileController,
                         maxLength: 10,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Please enter your mobile number";
-                          } else if (value.length != 10) {
-                            return "Mobile number must be exactly 10 digits";
-                          }
-                          return null;
-                        },
-                      ),
+                        errorText: controller.mobileError.value,
+                        onChanged: controller.validateMobile,
+                      )),
                       Spacing.h16,
 
-                      /// Password
+                      /// Password Field (Realtime)
                       Obx(() => CustomTextField(
                         labelText: AppStrings.passAuth,
                         prefixIcon: Icons.lock,
+                        maxLength: 6,
                         suffixIcon: controller.obscureText.value
                             ? Icons.visibility_off
                             : Icons.visibility,
                         obscureText: controller.obscureText.value,
-                        onSuffixTap: () {
-                          controller.obscureText.toggle();
-                        },
+                        onSuffixTap: () =>
+                            controller.obscureText.toggle(),
                         controller: controller.passwordController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Please enter your password";
-                          } else if (value.length < 6) {
-                            return "Password must be at least 6 characters";
-                          }
-                          return null;
-                        },
+                        errorText: controller.passwordError.value,
+                        onChanged: controller.validatePassword,
                       )),
                       Spacing.h16,
 
@@ -139,14 +127,28 @@ class LoginScreen extends GetView<LoginController> {
                         fontWeight: FontWeight.w100,
                       ),
                       Spacing.h8,
-                      GestureDetector(
-                        onTap: () {},
-                        child: AppText(
-                          AppStrings.privacyPolicy,
-                          decoration: TextDecoration.underline,
-                          useThemeColor: true,
-                          fontWeight: FontWeight.w100,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {},
+                            child: AppText(
+                              AppStrings.privacyPolicy,
+                              decoration: TextDecoration.underline,
+                              useThemeColor: true,
+                              fontWeight: FontWeight.w100,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: AppText(
+                              AppStrings.termCondition,
+                              decoration: TextDecoration.underline,
+                              useThemeColor: true,
+                              fontWeight: FontWeight.w100,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

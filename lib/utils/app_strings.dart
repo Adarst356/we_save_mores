@@ -7,7 +7,8 @@ class AppStrings {
   static const String mobileAuth = "Mobile Number or User Id";
   static const String passAuth = "Password";
   static const String policyInstruction = "By Tapping on Login  Button, you are agree to our";
- static const String privacyPolicy = " Privacy Policy & Terms Condition";
+ static const String privacyPolicy = " Privacy Policy & ";
+ static const String termCondition = "Terms Condition";
  static const String forgotPass = "Forgot Password?";
  static const String login ="LOGIN";
  static const String userNotExist = "Don't have An Account?";

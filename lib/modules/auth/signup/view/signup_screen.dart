@@ -115,83 +115,60 @@ class SignupScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           /// Name
-                          CustomTextField(
+                          Obx(() => CustomTextField(
                             labelText: AppStrings.name,
                             prefixIcon: Icons.person,
                             controller: controller.nameController,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter your name";
-                              }
-                              return null;
-                            },
-                          ),
+                            errorText: controller.nameError.value,
+                            onChanged: (value) =>
+                                controller.validateName(value),
+                          )),
                           Spacing.h16,
 
-                          /// Mobile Number
-                          CustomTextField(
+                          /// Mobile
+                          Obx(() => CustomTextField(
                             labelText: AppStrings.mobileNum,
-                            prefixIcon: Icons.mobile_friendly,
+                            prefixIcon: Icons.phone_android,
                             controller: controller.mobileController,
                             keyboardType: TextInputType.number,
                             maxLength: 10,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter your mobile number";
-                              } else if (!RegExp(r'^[0-9]{10}$')
-                                  .hasMatch(value)) {
-                                return "Enter valid 10-digit mobile number";
-                              }
-                              return null;
-                            },
-                          ),
+                            errorText: controller.mobileError.value,
+                            onChanged: (value) =>
+                                controller.validateMobile(value),
+                          )),
                           Spacing.h16,
 
                           /// Email
-                          CustomTextField(
+                          Obx(() => CustomTextField(
                             labelText: AppStrings.email,
                             prefixIcon: Icons.email,
                             controller: controller.emailController,
                             keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter your email";
-                              } else if (!RegExp(
-                                  r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')
-                                  .hasMatch(value)) {
-                                return "Enter a valid email";
-                              }
-                              return null;
-                            },
-                          ),
+                            errorText: controller.emailError.value,
+                            onChanged: (value) =>
+                                controller.validateEmail(value),
+                          )),
                           Spacing.h16,
 
-                          /// Password
+                          /// Password Field (Realtime)
                           Obx(() => CustomTextField(
-                            labelText: AppStrings.pass,
-                            prefixIcon: Icons.password,
+                            labelText: AppStrings.passAuth,
+                            prefixIcon: Icons.lock,
+                            maxLength: 6,
                             suffixIcon: controller.obscureText.value
                                 ? Icons.visibility_off
                                 : Icons.visibility,
                             obscureText: controller.obscureText.value,
-                            onSuffixTap: () {
-                              controller.obscureText.toggle();
-                            },
+                            onSuffixTap: () =>
+                                controller.obscureText.toggle(),
                             controller: controller.passwordController,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter your password";
-                              } else if (value.length < 6) {
-                                return "Password must be at least 6 characters";
-                              }
-                              return null;
-                            },
+                            errorText: controller.passwordError.value,
+                            onChanged: controller.validatePassword,
                           )),
                         ],
                       ),
                     ),
                   ),
-
                   /// Sign Up button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
