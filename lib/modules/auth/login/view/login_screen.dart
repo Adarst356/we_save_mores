@@ -34,8 +34,8 @@ class LoginScreen extends GetView<LoginController> {
                   ),
                   Image.asset(
                     "assets/images/bg_circle_top.png",
-                    height: 250,
-                    width: 210,
+                    height: 230,
+                    width: 180,
                     color: Theme.of(context).primaryColor,
                   ),
                 ],
@@ -44,11 +44,11 @@ class LoginScreen extends GetView<LoginController> {
               ClipRRect(
                 child: Image.asset(
                   "assets/images/app_full_logo.png",
-                  height: 150,
+                  height: 120,
                 ),
               ),
 
-              Spacing.h16,
+              Spacing.h12,
               AppText(
                 AppStrings.homeTitle,
                 color: Theme.of(context).primaryColor,
@@ -153,7 +153,7 @@ class LoginScreen extends GetView<LoginController> {
                 ),
               ),
 
-              Spacing.h20,
+              Spacing.h16,
 
               /// Bottom Row
               Row(
@@ -192,8 +192,8 @@ class LoginScreen extends GetView<LoginController> {
                 children: [
                   Image.asset(
                     "assets/images/bg_circle_bottom.png",
-                    height: 250,
-                    width: 210,
+                    height: 230,
+                    width: 180,
                     color: Theme.of(context).primaryColor,
                   ),
                   Column(

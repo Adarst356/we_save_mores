@@ -5,7 +5,6 @@ import 'package:we_save_more/modules/auth/login/view/login_controller.dart';
 import 'package:we_save_more/modules/auth/login/view/login_screen.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_controller.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_screen.dart';
-import 'package:we_save_more/modules/dashboards/dashboard_screen.dart';
 import '../modules/splash/view/splash_screen.dart';
 import '../modules/splash/view/splash_controller.dart';
 import '../modules/onboarding/view/onboarding_screen.dart';
@@ -48,11 +47,6 @@ class AppPages {
       binding: BindingsBuilder(() {
         Get.lazyPut<ForgotPassController>(() => ForgotPassController());
       }),
-    ),
-    GetPage(
-      name: AppRoutes.dashboard,
-      page: () => const DashboardScreen(),
-
     ),
 
   ];

@@ -59,7 +59,7 @@ class SignupScreen extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Image.asset(
                           "assets/images/bg_circle_bottom.png",
-                          height: 200,
+                          height: 180,
                           width: 180,
                           color: Theme.of(context).primaryColor,
                         ),
@@ -208,7 +208,7 @@ class SignupScreen extends StatelessWidget {
                     ],
                   ),
 
-                  Spacing.h40,
+                  Spacing.h20,
 
                   /// Already have account section
                   Column(
@@ -223,7 +223,7 @@ class SignupScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Spacing.h16,
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -247,7 +247,7 @@ class SignupScreen extends StatelessWidget {
                           ),
                           Image.asset(
                             "assets/images/bg_circle_top.png",
-                            height: 200,
+                            height: 180,
                             width: 180,
                             color: Theme.of(context).primaryColor,
                           ),
