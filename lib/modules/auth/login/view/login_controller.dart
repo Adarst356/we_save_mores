@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:we_save_more/modules/auth/login/data/login_response.dart';
 
 import '../../../../api/ui_state.dart';
+import '../../../../utils/app_toast.dart';
 import '../data/login_repo.dart';
 
 class LoginController extends GetxController {
@@ -66,7 +67,7 @@ class LoginController extends GetxController {
 
     if (mobileError.value != null || passwordError.value != null) return;
 
-    repo.getLogin(
+    repo.getLoginUser(
       {
         "loginTypeID": 1,
         "password": passwordController.text.trim(),
@@ -77,18 +78,19 @@ class LoginController extends GetxController {
 
         state.when(
           success: (data) {
-            if (Get.isDialogOpen == true) Get.back(); // close loader
+              if (Get.isDialogOpen == true) Get.back(); // close loader
             if (data.statuscode == 1) {
-              Get.snackbar("Success", data.msg ?? "Login successful");
+              // success block
+              CommonToast.showToastSuccess(data.msg ?? "Login successful");
               // You can navigate to Dashboard here
               // Get.offAllNamed(AppRoutes.dashboard);
             } else {
-              Get.snackbar("Error", data.msg ?? "Invalid credentials");
+              CommonToast.showToastError(data.msg ?? "Invalid credentials");
             }
           },
           error: (msg) {
             if (Get.isDialogOpen == true) Get.back(); // close loader
-            Get.snackbar("Error", msg);
+            CommonToast.showToastError(msg);
           },
           loading: () {
             Get.dialog(

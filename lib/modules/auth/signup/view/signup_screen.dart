@@ -178,11 +178,12 @@ class SignupScreen extends StatelessWidget {
                         topLeft: 0,
                         bottomLeft: 0,
                         onPressed: () {
-                          controller.signup();
+                          controller.signup(); // handles both validation + loading + API
                         },
                       ),
                     ],
                   ),
+
 
                   Spacing.h20,
 

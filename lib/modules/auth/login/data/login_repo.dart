@@ -5,7 +5,7 @@ import 'login_response.dart';
 class LoginRepo {
   final GetConnectApiClient _apiClient = GetConnectApiClient.instance;
 
-  Future<void> getLogin(
+  Future<void> getLoginUser(
       Map<String, dynamic> body, {
         required Function(UiState<LoginResponse> state) callback,
       }) async {

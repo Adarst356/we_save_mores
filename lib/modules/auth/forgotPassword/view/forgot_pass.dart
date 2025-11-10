@@ -5,13 +5,10 @@ import '../../../../utils/app_strings.dart';
 import '../../../../utils/spacing.dart';
 import '../../../../widget/app_text.dart';
 import '../../../../widget/custom_button.dart';
-import '../../../../widget/custom_dialog.dart';
 import '../../../../widget/custom_textfield.dart';
 import 'forgot_pass_controller.dart';
 
-class ForgotPass extends StatelessWidget {
-  final controller = Get.put(ForgotPassController());
-
+class ForgotPass extends GetView<ForgotPassController> {
   ForgotPass({super.key});
 
   @override
@@ -23,7 +20,7 @@ class ForgotPass extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              /// 🧩 Header
+              /// Header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -45,6 +42,7 @@ class ForgotPass extends StatelessWidget {
                 ],
               ),
 
+              /// Logo
               ClipRRect(
                 child: Image.asset(
                   "assets/images/app_full_logo.png",
@@ -71,15 +69,13 @@ class ForgotPass extends StatelessWidget {
                 ),
               ),
 
-              /// 🧾 Card Container
+              /// Card Container
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0xFF1E1E1E)
-                        : Colors.white,
+                    color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
@@ -91,22 +87,24 @@ class ForgotPass extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Obx(() => CustomTextField(
-                        labelText: AppStrings.forgotMobile,
-                        prefixIcon: Icons.phone,
-                        maxLength: 10,
-                        controller: controller.mobileController,
-                        keyboardType: TextInputType.number,
-                        errorText: controller.mobileError.value,
-                        onChanged: controller.validateMobile,
-                      )),
+                      Obx(
+                            () => CustomTextField(
+                          labelText: AppStrings.forgotMobile,
+                          prefixIcon: Icons.phone,
+                          maxLength: 10,
+                          controller: controller.mobileController,
+                          keyboardType: TextInputType.number,
+                          errorText: controller.mobileError.value,
+                          onChanged: controller.validateMobile,
+                        ),
+                      ),
                       Spacing.h16,
                     ],
                   ),
                 ),
               ),
 
-              /// 🧠 Buttons
+              /// Buttons
               Spacing.h16,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,23 +126,7 @@ class ForgotPass extends StatelessWidget {
                     icon: Icons.key,
                     topRight: 0,
                     bottomRight: 0,
-                    onPressed: () {
-                      controller.validateMobile(controller.mobileController.text);
-                      if (controller.mobileError.value == null) {
-                        Get.dialog(
-                          OtpDialog(
-                            otpController: controller.otpController,
-                            passwordController: controller.passwordController,
-                            onResend: controller.resendOtp,
-                            onSubmit: controller.submitOtp,
-                            onCancel: controller.cancelDialog,
-                          ),
-                          barrierDismissible: false,
-                        );
-                      } else {
-                        Get.snackbar("Error", controller.mobileError.value!);
-                      }
-                    },
+                    onPressed: controller.sendOtpWithDialog,
                   ),
                 ],
               ),

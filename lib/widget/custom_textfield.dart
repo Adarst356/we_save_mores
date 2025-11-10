@@ -31,6 +31,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return TextFormField(
       controller: controller,
@@ -39,6 +40,11 @@ class CustomTextField extends StatelessWidget {
       maxLength: maxLength,
       onChanged: onChanged,
       validator: validator,
+      cursorColor: theme.primaryColor, // 👈 cursor color matches theme
+      style: TextStyle(
+        color: isDark ? Colors.white : Colors.black, // 👈 text color adaptive
+        fontFamily: "Poppins",
+      ),
       decoration: InputDecoration(
         prefixIcon: Icon(prefixIcon, color: theme.primaryColor),
         suffixIcon: suffixIcon != null
@@ -48,8 +54,11 @@ class CustomTextField extends StatelessWidget {
         )
             : null,
         labelText: labelText,
+        labelStyle: TextStyle(
+          color: isDark ? Colors.white70 : Colors.black54, // 👈 label color adaptive
+          fontFamily: "Poppins",
+        ),
         errorText: errorText,
-        labelStyle: const TextStyle(color: Colors.grey),
         errorStyle: const TextStyle(
           color: Colors.red,
           fontSize: 13,
@@ -59,8 +68,10 @@ class CustomTextField extends StatelessWidget {
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
         ),
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: isDark ? Colors.white38 : Colors.grey,
+          ),
         ),
         errorBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.red),

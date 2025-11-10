@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:we_save_more/modules/splash/view/splash_controller.dart';
+import 'package:we_save_more/modules/splash/splash_controller.dart';
 class SplashScreen extends GetView<SplashController> {
     const SplashScreen({super.key});
 

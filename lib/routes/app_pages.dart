@@ -5,10 +5,10 @@ import 'package:we_save_more/modules/auth/login/view/login_controller.dart';
 import 'package:we_save_more/modules/auth/login/view/login_screen.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_controller.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_screen.dart';
-import '../modules/splash/view/splash_screen.dart';
-import '../modules/splash/view/splash_controller.dart';
-import '../modules/onboarding/view/onboarding_screen.dart';
-import '../modules/onboarding/view/onboarding_controller.dart';
+import '../modules/splash/splash_screen.dart';
+import '../modules/splash/splash_controller.dart';
+import '../modules/onboarding/onboarding_screen.dart';
+import '../modules/onboarding/onboarding_controller.dart';
 import '../routes/app_routes.dart';
 
 class AppPages {

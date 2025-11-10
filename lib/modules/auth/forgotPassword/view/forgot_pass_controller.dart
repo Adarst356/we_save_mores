@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../api/ui_state.dart';
+import '../../../../widget/custom_dialog.dart';
 import '../data/forget_pass_repo.dart';
 import '../data/forget_response.dart';
 
@@ -21,7 +23,17 @@ class ForgotPassController extends GetxController {
 
   RxBool obscureText = true.obs;
 
-  /// ✅ Mobile Validation
+  /// Common Toast Function
+  void showToast(String msg, {Color? color}) {
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      fontSize: 16.0,
+    );
+  }
+
+  ///  Validate Mobile Number
   void validateMobile(String value) {
     if (value.isEmpty) {
       mobileError.value = "Please enter your mobile number";
@@ -34,7 +46,7 @@ class ForgotPassController extends GetxController {
     }
   }
 
-  /// ✅ OTP Validation
+  ///  Validate OTP
   void validateOtp(String value) {
     if (value.isEmpty) {
       otpError.value = "Please enter OTP";
@@ -45,7 +57,7 @@ class ForgotPassController extends GetxController {
     }
   }
 
-  /// ✅ Password Validation
+  ///  Validate Password
   void validatePassword(String value) {
     if (value.isEmpty) {
       passwordError.value = "Please enter new password";
@@ -56,12 +68,12 @@ class ForgotPassController extends GetxController {
     }
   }
 
-  /// 📩 Step 1: Send OTP Request
-  void sendOtp() {
+  ///  Step 1: Send OTP and show Dialog on success
+  Future<void> sendOtpWithDialog() async {
     validateMobile(mobileController.text);
 
     if (mobileError.value != null) {
-      Get.snackbar("Error", mobileError.value!);
+      showToast(mobileError.value!, color: Colors.red);
       return;
     }
 
@@ -97,25 +109,29 @@ class ForgotPassController extends GetxController {
             );
           },
           success: (data) {
-            if (Get.isDialogOpen == true) Get.back();
+            if (Get.isDialogOpen == true) Get.back(); // close loader
 
             if (data.statuscode == 2) {
-              Get.snackbar(
-                "OTP Sent",
-                data.msg ?? "OTP has been sent successfully.",
-                backgroundColor: Colors.green.shade100,
+              showToast(data.msg ?? "OTP sent successfully!", color: Colors.black);
+
+              /// Show OTP dialog
+              Get.dialog(
+                OtpDialog(
+                  otpController: otpController,
+                  passwordController: passwordController,
+                  onResend: resendOtp,
+                  onSubmit: submitOtp,
+                  onCancel: cancelDialog,
+                ),
+                barrierDismissible: false,
               );
             } else {
-              Get.snackbar(
-                "Error",
-                data.msg ?? "Failed to send OTP.",
-                backgroundColor: Colors.red.shade100,
-              );
+              showToast(data.msg ?? "Failed to send OTP.", color: Colors.red);
             }
           },
           error: (msg) {
             if (Get.isDialogOpen == true) Get.back();
-            Get.snackbar("Error", msg, backgroundColor: Colors.red.shade100);
+            showToast(msg, color: Colors.red);
           },
           none: () {},
         );
@@ -123,12 +139,15 @@ class ForgotPassController extends GetxController {
     );
   }
 
-  /// 📤 Step 2: Submit OTP + Password
+  ///  Step 2: Submit OTP + New Password
   void submitOtp() {
     validateOtp(otpController.text);
     validatePassword(passwordController.text);
 
-    if (otpError.value != null || passwordError.value != null) return;
+    if (otpError.value != null || passwordError.value != null) {
+      showToast("Please fill all fields correctly.", color: Colors.red);
+      return;
+    }
 
     final body = {
       "Mobile": mobileController.text.trim(),
@@ -165,23 +184,15 @@ class ForgotPassController extends GetxController {
             if (Get.isDialogOpen == true) Get.back();
 
             if (data.statuscode == 1) {
-              Get.back(); // close otp dialog
-              Get.snackbar(
-                "Success",
-                data.msg ?? "Password updated successfully!",
-                backgroundColor: Colors.green.shade100,
-              );
+              Get.back(); // close OTP dialog
+              showToast(data.msg ?? "Password updated successfully!", color: Colors.green);
             } else {
-              Get.snackbar(
-                "Error",
-                data.msg ?? "Invalid OTP or Password.",
-                backgroundColor: Colors.red.shade100,
-              );
+              showToast(data.msg ?? "Invalid OTP or Password.", color: Colors.red);
             }
           },
           error: (msg) {
             if (Get.isDialogOpen == true) Get.back();
-            Get.snackbar("Error", msg, backgroundColor: Colors.red.shade100);
+            showToast(msg, color: Colors.red);
           },
           none: () {},
         );
@@ -189,8 +200,10 @@ class ForgotPassController extends GetxController {
     );
   }
 
-  void resendOtp() => sendOtp();
+  ///  Resend OTP
+  void resendOtp() => sendOtpWithDialog();
 
+  ///  Cancel Dialog
   void cancelDialog() => Get.back();
 
   @override
