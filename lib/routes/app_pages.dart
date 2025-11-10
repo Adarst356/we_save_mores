@@ -43,7 +43,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.forgotPass,
-      page: () => const ForgotPass(),
+      page: () =>  ForgotPass(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ForgotPassController>(() => ForgotPassController());
       }),

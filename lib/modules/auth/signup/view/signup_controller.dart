@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart' show Lottie;
+
+import '../../../../api/ui_state.dart';
+import '../data/signup_response.dart';
+import '../data/signup_repo.dart';
 
 class SignupController extends GetxController {
   final formKey = GlobalKey<FormState>();
-
+  final repo = SignupRepo();
   // Text Controllers
   final nameController = TextEditingController();
   final mobileController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final signupState = Rx<UiState<SignupResponse>>(UiState.none());
+
 
   // Error messages (reactive)
   var nameError = RxnString();
@@ -86,5 +94,51 @@ class SignupController extends GetxController {
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
+  }
+
+  void signup() {
+    repo.signupUser({
+      "address": "Gomati Nagar",
+      "emailID": emailController.text.trim(),
+      "mobileNo": mobileController.text.trim(),
+      "name": nameController.text.trim(),
+      "password": passwordController.text.trim(),
+      "pincode": "226010",
+      "referralNo": "",
+      "roleID": 0,
+    }, callback: (state) {  signupState.value = state;
+
+      state.when(
+        success: (data) {
+          if (Get.isDialogOpen == true) Get.back();
+          if (data.statuscode == 1) {
+            Get.snackbar("Success", data.msg ?? "Signup successful",
+                backgroundColor: Colors.green.shade100);
+            Get.offAllNamed('/login');
+          } else {
+            Get.snackbar("Error", data.msg ?? "Signup failed",
+                backgroundColor: Colors.red.shade100);
+          }
+        },
+        error: (msg) {
+          if (Get.isDialogOpen == true) Get.back();
+          Get.snackbar("Error", msg, backgroundColor: Colors.red.shade100);
+        },        loading: () {
+          Get.dialog(
+            Center(
+              child: Lottie.asset(
+                'assets/svg/Loading circles.json',
+                width: 120,
+                height: 120,
+                fit: BoxFit.contain,
+              ),
+            ),
+            barrierDismissible: false,
+          );
+        },
+
+        none: () {},
+      );
+    });
   }
 }

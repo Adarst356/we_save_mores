@@ -1,20 +1,20 @@
 import '../../../../api/api_client.dart';
 import '../../../../api/ui_state.dart';
-import 'login_response.dart';
+import 'forget_response.dart';
 
-class LoginRepo {
+class ForgetPassRepo {
   final GetConnectApiClient _apiClient = GetConnectApiClient.instance;
 
-  Future<void> getLogin(
+  Future<void> getForgetPassword(
       Map<String, dynamic> body, {
-        required Function(UiState<LoginResponse> state) callback,
+        required Function(UiState<ForgetPassResponse> state) callback,
       }) async {
     callback(UiState.loading());
     try {
-      final res = await _apiClient.getLogin(body);
+      final res = await _apiClient.getForgetPass(body);
 
       if (res.status.isOk) {
-        final data = LoginResponse.fromJson(res.body);
+        final data = ForgetPassResponse.fromJson(res.body);
         callback(UiState.success(data));
       } else {
         callback(UiState.error("Failed to login"));

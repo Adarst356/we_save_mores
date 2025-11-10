@@ -1,1 +1,1 @@
-const baseUrls = "";
+const baseUrls = "https://admin.wesavemore.in/WebApp/";

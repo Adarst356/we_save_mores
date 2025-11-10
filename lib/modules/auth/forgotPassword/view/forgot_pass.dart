@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:we_save_more/routes/app_routes.dart';
-import 'package:we_save_more/widget/app_text.dart';
-
+import '../../../../routes/app_routes.dart';
 import '../../../../utils/app_strings.dart';
 import '../../../../utils/spacing.dart';
+import '../../../../widget/app_text.dart';
 import '../../../../widget/custom_button.dart';
+import '../../../../widget/custom_dialog.dart';
 import '../../../../widget/custom_textfield.dart';
+import 'forgot_pass_controller.dart';
 
 class ForgotPass extends StatelessWidget {
-  const ForgotPass({super.key});
+  final controller = Get.put(ForgotPassController());
+
+  ForgotPass({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Row(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              /// 🧩 Header
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
@@ -34,99 +38,129 @@ class ForgotPass extends StatelessWidget {
                   ),
                   Image.asset(
                     "assets/images/bg_circle_top.png",
-                    height: 200,
-                    width: 180,
+                    height: 180,
+                    width: 160,
                     color: Theme.of(context).primaryColor,
                   ),
                 ],
               ),
-            ),
-            ClipRRect(
-              child: Image.asset(
-                "assets/images/app_full_logo.png",
-                height: 150,
-              ),
-            ),
-            Spacing.h16,
-            AppText(
-              AppStrings.forgotPass1,
-              fontSize: 22,
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w800,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: AppText(
-                AppStrings.forgotSubtitle,
-                fontFamily: "Poppins",
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
 
-            /// card container
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Container(
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    CustomTextField(
-                      labelText: AppStrings.forgotMobile,
-                      prefixIcon: Icons.phone,
-                    ),
-                    Spacing.h16,
-                  ],
+              ClipRRect(
+                child: Image.asset(
+                  "assets/images/app_full_logo.png",
+                  height: 150,
                 ),
               ),
-            ),
-            Spacing.h16,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: (){Get.toNamed(AppRoutes.login);},
-                    child: AppText(
-                      "Cancel",
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: "Poppins",
-                    ),
+              Spacing.h16,
+
+              AppText(
+                AppStrings.forgotPass1,
+                fontSize: 22,
+                fontFamily: "Poppins",
+                fontWeight: FontWeight.w800,
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AppText(
+                  AppStrings.forgotSubtitle,
+                  fontFamily: "Poppins",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+
+              /// 🧾 Card Container
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? const Color(0xFF1E1E1E)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Obx(() => CustomTextField(
+                        labelText: AppStrings.forgotMobile,
+                        prefixIcon: Icons.phone,
+                        maxLength: 10,
+                        controller: controller.mobileController,
+                        keyboardType: TextInputType.number,
+                        errorText: controller.mobileError.value,
+                        onChanged: controller.validateMobile,
+                      )),
+                      Spacing.h16,
+                    ],
                   ),
                 ),
-                CustomButton(
-                  text: AppStrings.forgotSubmit,
-                  icon: Icons.key,
-                  topRight: 0,
-                  bottomRight: 0,
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            Align(
-              alignment:Alignment.bottomLeft,
-              child: Image.asset(
-                "assets/images/bg_circle_bottom.png",
-                height: 200,
-                width: 180,
-                color: Theme.of(context).primaryColor,
               ),
-            ),
-          ],
+
+              /// 🧠 Buttons
+              Spacing.h16,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () => Get.toNamed(AppRoutes.login),
+                      child: AppText(
+                        "Cancel",
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Poppins",
+                      ),
+                    ),
+                  ),
+                  CustomButton(
+                    text: AppStrings.forgotSubmit,
+                    icon: Icons.key,
+                    topRight: 0,
+                    bottomRight: 0,
+                    onPressed: () {
+                      controller.validateMobile(controller.mobileController.text);
+                      if (controller.mobileError.value == null) {
+                        Get.dialog(
+                          OtpDialog(
+                            otpController: controller.otpController,
+                            passwordController: controller.passwordController,
+                            onResend: controller.resendOtp,
+                            onSubmit: controller.submitOtp,
+                            onCancel: controller.cancelDialog,
+                          ),
+                          barrierDismissible: false,
+                        );
+                      } else {
+                        Get.snackbar("Error", controller.mobileError.value!);
+                      }
+                    },
+                  ),
+                ],
+              ),
+
+              /// Bottom Design
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Image.asset(
+                  "assets/images/bg_circle_bottom.png",
+                  height: 180,
+                  width: 160,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

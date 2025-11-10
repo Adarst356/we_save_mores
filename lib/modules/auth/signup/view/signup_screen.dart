@@ -60,7 +60,7 @@ class SignupScreen extends StatelessWidget {
                         child: Image.asset(
                           "assets/images/bg_circle_bottom.png",
                           height: 180,
-                          width: 180,
+                          width: 160,
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
@@ -154,7 +154,6 @@ class SignupScreen extends StatelessWidget {
                           Obx(() => CustomTextField(
                             labelText: AppStrings.passAuth,
                             prefixIcon: Icons.lock,
-                            maxLength: 6,
                             suffixIcon: controller.obscureText.value
                                 ? Icons.visibility_off
                                 : Icons.visibility,
@@ -179,7 +178,7 @@ class SignupScreen extends StatelessWidget {
                         topLeft: 0,
                         bottomLeft: 0,
                         onPressed: () {
-                          controller.validateForm();
+                          controller.signup();
                         },
                       ),
                     ],
@@ -225,7 +224,7 @@ class SignupScreen extends StatelessWidget {
                           Image.asset(
                             "assets/images/bg_circle_top.png",
                             height: 180,
-                            width: 180,
+                            width: 160,
                             color: Theme.of(context).primaryColor,
                           ),
                         ],
