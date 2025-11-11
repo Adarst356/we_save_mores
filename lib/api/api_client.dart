@@ -28,6 +28,7 @@ class GetConnectApiClient extends GetConnect with Printer {
     httpClient.addRequestModifier<dynamic>((request) {
       request.headers['appID'] = '6072874e1f4b7000991915fa914318ed';
       request.headers['version'] = '5.0';
+      request.headers['domain']= 'admin.wesavemore.in';
       if (kDebugMode) printRequest(request);
       return request;
     });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:lottie/lottie.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:we_save_more/routes/app_routes.dart';
@@ -9,12 +10,13 @@ import '../data/signup_response.dart';
 import '../data/signup_repo.dart';
 
 class SignupController extends GetxController {
-  final formKey = GlobalKey<FormState>();
+  final signupFormKey  = GlobalKey<FormState>();
   final repo = SignupRepo();
+  final box = GetStorage();
 
-  // Text Controllers
+  /// Text Controllers
   final nameController = TextEditingController();
-  final mobileController = TextEditingController();
+  final mobileController  = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -66,7 +68,7 @@ class SignupController extends GetxController {
     if (value.isEmpty) {
       passwordError.value = "Please enter password";
     } else if (value.length < 6) {
-      passwordError.value = "Password must be at least 6 characters";
+      passwordError.value = "Password min at least 6 characters";
     } else {
       passwordError.value = null;
     }
@@ -133,7 +135,6 @@ class SignupController extends GetxController {
             if (Get.isDialogOpen == true) Get.back();
             if (data.statuscode == 1) {
               CommonToast.showToastSuccess(data.msg ?? "Signup Successfully");
-
               Get.offAllNamed(AppRoutes.login);
             } else {
               CommonToast.showToastError(data.msg ?? "Signup failed");

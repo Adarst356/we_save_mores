@@ -18,7 +18,7 @@ class LoginScreen extends GetView<LoginController> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Form(
-            key: controller.formKey,
+            key: controller.loginFormKey,
             child: Column(
               children: [
                 Row(
@@ -210,7 +210,7 @@ class LoginScreen extends GetView<LoginController> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Get.toNamed(AppRoutes.signUp);
+                            Get.offAndToNamed(AppRoutes.signUp);
                           },
                           child: AppText(
                             AppStrings.signUp,

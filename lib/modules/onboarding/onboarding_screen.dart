@@ -99,6 +99,7 @@ class OnboardingScreen extends GetView<OnboardingController> {
                           ? "Get Started"
                           : "Next",
                       fontSize: 16,
+                      color: Colors.white,
                     ),
                   ),
                 ],

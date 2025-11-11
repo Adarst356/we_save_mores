@@ -8,10 +8,9 @@ import 'package:we_save_more/widget/custom_button.dart';
 import 'package:we_save_more/widget/custom_textfield.dart';
 import 'signup_controller.dart';
 
-class SignupScreen extends StatelessWidget {
-  SignupScreen({super.key});
+class SignupScreen extends GetView<SignupController> {
+  const SignupScreen({super.key});
 
-  final controller = Get.put(SignupController());
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class SignupScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 14),
             child: Form(
-              key: controller.formKey,
+              key: controller.signupFormKey ,
               child: Column(
                 children: [
                   /// Top section with close & logo
@@ -208,7 +207,7 @@ class SignupScreen extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 16),
                             child: GestureDetector(
                               onTap: () {
-                                Get.toNamed(AppRoutes.login);
+                                Get.offAndToNamed(AppRoutes.login);
                               },
                               child: AppText(
                                 AppStrings.login,

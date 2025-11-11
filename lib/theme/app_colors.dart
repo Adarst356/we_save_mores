@@ -12,6 +12,7 @@ class AppColors {
   final Color primary50 = const Color(0xFF804D267A);
   final Color primary20 = const Color(0xFF334D267A);
   final Color primaryAlpha = const Color(0xFFDC401D5D);
+  final Color ProfileAvtar = const  Color(0xff203752);
 
   /// Background Colors
   final Color backgroundLight = Colors.white;
