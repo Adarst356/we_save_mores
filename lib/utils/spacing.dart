@@ -8,6 +8,7 @@ class Spacing {
   static const SizedBox w16= SizedBox(width: 16);
   static const SizedBox w12 = SizedBox(width: 12);
   static const SizedBox w8 = SizedBox(width: 8);
+  static const SizedBox w10 = SizedBox(width: 10);
   static const SizedBox w4 = SizedBox(width: 4);
   static const SizedBox w2 = SizedBox(width: 2);
 
