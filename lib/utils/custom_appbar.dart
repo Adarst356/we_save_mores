@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/utils/spacing.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
@@ -38,12 +39,11 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
   });
 
-  final Color primaryColor = const Color(0xFF3E1F66);
+  // final Color primaryColor = const Color(0xFF3E1F66);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: primaryColor,
       elevation: 0,
       automaticallyImplyLeading: false,
       centerTitle: true,
@@ -207,7 +207,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                             width: 15,
                             height: 15,
                             decoration: const BoxDecoration(
-                              color: Colors.red,
+                              color: Colors.yellow,
                               shape: BoxShape.circle,
                             ),
                           ),

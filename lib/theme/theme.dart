@@ -19,7 +19,7 @@ final ThemeData lightTheme = ThemeData(
 
   /// AppBar
   appBarTheme: AppBarTheme(
-    backgroundColor: appColors.backgroundLight,
+    backgroundColor: appColors.primaryColor,
     elevation: 2,
     titleTextStyle: TextStyle(
       color: appColors.textDark,
@@ -69,7 +69,7 @@ final ThemeData darkTheme = ThemeData(
   ),
 
   appBarTheme: AppBarTheme(
-    backgroundColor: appColors.backgroundDark,
+    backgroundColor: appColors.primaryColor,
     elevation: 2,
     titleTextStyle: TextStyle(
       color: appColors.textLight,

@@ -15,9 +15,9 @@ class HomeScreen extends StatelessWidget {
       drawer: const SideDrawer(),
       appBar: CustomAppbar(
         showProfileLayout: true,
-        userName: "Vikash Kumar",
+        userName: "Adarsh Tiwari",
         role: "Customer",
-        mobileNumber: "9876543210",
+        mobileNumber: "8175044032",
         onMenuTap: () {
           _scaffoldKey.currentState?.openDrawer();
         },
