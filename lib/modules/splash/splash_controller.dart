@@ -18,7 +18,7 @@ class SplashController extends GetxController {
 
     if (isLoggedIn) {
       ///  If user already logged in → go to home
-      Get.offAllNamed(AppRoutes.homeScreen);
+      Get.offAllNamed(AppRoutes.bottomNav);
     } else {
       /// Otherwise → go to onboarding/login
       Get.offAllNamed(AppRoutes.onboarding);

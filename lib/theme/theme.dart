@@ -7,7 +7,6 @@ final ThemeData lightTheme = ThemeData(
   primaryColor: appColors.primaryColor,
   scaffoldBackgroundColor: appColors.backgroundLight,
 
-  ///Color scheme
   colorScheme: ColorScheme.light(
     primary: appColors.primaryColor,
     secondary: appColors.primaryLight,
@@ -17,7 +16,7 @@ final ThemeData lightTheme = ThemeData(
     onSurface: appColors.textDark,
   ),
 
-  /// AppBar
+  /// ✅ AppBar
   appBarTheme: AppBarTheme(
     backgroundColor: appColors.primaryColor,
     elevation: 2,
@@ -29,7 +28,24 @@ final ThemeData lightTheme = ThemeData(
     iconTheme: IconThemeData(color: appColors.textDark),
   ),
 
-  /// Elevated Button
+  /// ✅ Bottom Navigation Theme
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    backgroundColor: Colors.white,
+    selectedItemColor: appColors.primaryColor,
+    unselectedItemColor: appColors.textGrey,
+    showUnselectedLabels: true,
+    type: BottomNavigationBarType.fixed,
+  ),
+
+  // /// ✅ BottomAppBar Theme (for floating button)
+  // bottomAppBarTheme: BottomAppBarTheme(
+  //   color: Colors.white,
+  //   elevation: 8,
+  //   surfaceTintColor: Colors.white,
+  //   shadowColor: Colors.black12,
+  // ),
+
+  /// ✅ Elevated Button
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: appColors.primaryColor,
@@ -40,7 +56,7 @@ final ThemeData lightTheme = ThemeData(
     ),
   ),
 
-  /// Text theme
+  /// ✅ Text Theme
   textTheme: TextTheme(
     bodyLarge: TextStyle(color: appColors.textDark),
     bodyMedium: TextStyle(color: appColors.textDark),
@@ -53,6 +69,7 @@ final ThemeData lightTheme = ThemeData(
 );
 
 
+/// 🔹 Dark Theme
 final ThemeData darkTheme = ThemeData(
   useMaterial3: true,
   brightness: Brightness.dark,
@@ -79,6 +96,20 @@ final ThemeData darkTheme = ThemeData(
     iconTheme: IconThemeData(color: appColors.textLight),
   ),
 
+  /// ✅ Bottom Navigation Theme
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    backgroundColor: const Color(0xFF1E1E1E),
+    selectedItemColor: appColors.primaryLight,
+    unselectedItemColor: Colors.grey[500],
+    showUnselectedLabels: true,
+    type: BottomNavigationBarType.fixed,
+  ),
+  //
+  // bottomAppBarTheme: BottomAppBarTheme(
+  //   color: const Color(0xFF1E1E1E),
+  //   elevation: 8,
+  // ),
+
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: appColors.primaryColor,
@@ -90,13 +121,12 @@ final ThemeData darkTheme = ThemeData(
   ),
 
   textTheme: TextTheme(
-    bodyLarge: TextStyle(color: appColors.textDark),
-    bodyMedium: TextStyle(color: appColors.textDark),
-    bodySmall: TextStyle(color: appColors.textDark),
+    bodyLarge: TextStyle(color: appColors.textLight),
+    bodyMedium: TextStyle(color: appColors.textLight),
+    bodySmall: TextStyle(color: appColors.textLight),
     titleLarge: TextStyle(color: appColors.primaryColor, fontWeight: FontWeight.bold),
-    titleMedium: TextStyle(color: appColors.textDark),
+    titleMedium: TextStyle(color: appColors.textLight),
     labelLarge: TextStyle(color: appColors.primaryColor),
     labelMedium: TextStyle(color: appColors.textGrey),
   ),
-
 );

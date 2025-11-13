@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:we_save_more/modules/dashboard/home/home_screen.dart';
 import 'package:we_save_more/modules/dashboard/profile/profile_screen.dart';
 import 'package:we_save_more/modules/dashboard/refers/refers_screen.dart';
 import 'package:we_save_more/modules/dashboard/reports/report_screen.dart';
 import 'package:we_save_more/modules/dashboard/support/support_screen.dart';
-
-import '../home/home_screen.dart';
 import 'main_nav_controller.dart';
 
 class MainNav extends StatelessWidget {
@@ -14,124 +12,132 @@ class MainNav extends StatelessWidget {
 
   final List<Widget> _pages = [
     HomeScreen(),
-    SupportScreen(),
-    RefersScreen(),
-   ReportScreen(),
-    ProfileScreen()
+    const SupportScreen(),
+    const RefersScreen(),
+    const ReportScreen(),
+    const ProfileScreen(),
   ];
 
   MainNav({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isTablet = width >= 640;
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final isDarkMode = theme.brightness == Brightness.dark;
 
-
-    final navBackground = theme.bottomNavigationBarTheme.backgroundColor ??
-        theme.scaffoldBackgroundColor;
-    final selectedColor = theme.bottomNavigationBarTheme.selectedItemColor ??
-        colorScheme.primary;
-    final unselectedColor = theme.bottomNavigationBarTheme.unselectedItemColor ??
-        Colors.grey;
-
-    return WillPopScope(
-      onWillPop: () {
-        if (controller.selectedIndex.value == 0) {
-          return Future.value(true);
-        } else {
+    return Obx(() => WillPopScope(
+      onWillPop: () async {
+        if (controller.selectedIndex.value != 0) {
           controller.changeIndex(0);
-          return Future.value(false);
+          return false;
         }
+        return true;
       },
-      child: Obx(
-            () => Scaffold(
-          backgroundColor: theme.scaffoldBackgroundColor,
-          body: isTablet
-              ? Row(
-            children: [
-              NavigationRail(
-                backgroundColor: navBackground,
-                selectedIndex: controller.selectedIndex.value,
-                onDestinationSelected: controller.changeIndex,
-                labelType: NavigationRailLabelType.all,
-                selectedIconTheme:
-                IconThemeData(color: selectedColor, size: 28),
-                unselectedIconTheme:
-                IconThemeData(color: unselectedColor, size: 26),
-                selectedLabelTextStyle: TextStyle(
-                  color: selectedColor,
-                  fontWeight: FontWeight.bold,
-                ),
-                unselectedLabelTextStyle: TextStyle(
-                  color: unselectedColor,
-                ),
-                destinations: const [
-                  NavigationRailDestination(
-                    icon: Icon(Icons.home_outlined),
-                    selectedIcon: Icon(Icons.home),
-                    label: Text("Home"),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.search),
-                    selectedIcon: Icon(Icons.search),
-                    label: Text("Discover"),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.shopping_bag),
-                    selectedIcon: Icon(Icons.shopping_bag),
-                    label: Text("My Order"),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.person_outline),
-                    selectedIcon: Icon(Icons.person),
-                    label: Text("Profile"),
-                  ),
-                 ],
-              ),
-              Expanded(child: _pages[controller.selectedIndex.value]),
-            ],
-          )
-              : _pages[controller.selectedIndex.value],
+      child: Scaffold(
+        extendBody: true,
+        body: _pages[controller.selectedIndex.value],
 
-
-          bottomNavigationBar: isTablet
-              ? null
-              : BottomNavigationBar(
-            currentIndex: controller.selectedIndex.value,
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: navBackground,
-            selectedItemColor: selectedColor,
-            unselectedItemColor: unselectedColor,
-            onTap: controller.changeIndex,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined),
-                label: "Home",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                label: "Discover",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
-                label: "My Order",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline),
-                label: "Profile",
-              ),
+        /// Floating "Refer" Button
+        floatingActionButton: Container(
+          height: 58,
+          width: 58,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: controller.selectedIndex.value == 2
+                ? theme.primaryColor.withOpacity(0.9)
+                : theme.primaryColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              )
             ],
           ),
+          child: IconButton(
+            onPressed: () => controller.changeIndex(2),
+            icon: const Icon(Icons.share, color: Colors.white, size: 26),
+          ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+        // Bottom Navigation Bar
+        bottomNavigationBar: BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 8,
+          elevation: 10,
+          color: theme.cardColor,
+          child: SizedBox(
+            height: 65,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _navItem(Icons.home, "Home", 0, controller, isDarkMode, theme),
+                _navItem(Icons.support_agent, "Support", 1, controller, isDarkMode, theme),
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 22),
+                    Text(
+                      "Refer",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: controller.selectedIndex.value == 2
+                            ? (isDarkMode ? Colors.white : theme.primaryColor)
+                            : Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+
+                _navItem(Icons.receipt_long, "Reports", 3, controller, isDarkMode, theme),
+                _navItem(Icons.person, "Profile", 4, controller, isDarkMode, theme),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ));
+  }
+
+  /// ✅ Navigation Item
+  Widget _navItem(
+      IconData icon,
+      String label,
+      int index,
+      MainNavigationController controller,
+      bool isDarkMode,
+      ThemeData theme,
+      ) {
+    final isSelected = controller.selectedIndex.value == index;
+
+    return GestureDetector(
+      onTap: () => controller.changeIndex(index),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: isSelected
+                ? (isDarkMode ? Colors.white : theme.primaryColor)
+                : Colors.grey,
+            size: 26,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: isSelected
+                  ? (isDarkMode ? Colors.white : theme.primaryColor)
+                  : Colors.grey,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
-
-
-
-
-

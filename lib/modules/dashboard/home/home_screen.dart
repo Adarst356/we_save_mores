@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import '../../../utils/custom_appbar.dart';
-import '../../../widget/side_drawer.dart';
+import '../drawer/side_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
   final box = GetStorage();
