@@ -84,6 +84,7 @@ class CustomAppbarFlutter extends StatelessWidget
                           "- ${role ?? ""}",
                           overflow: TextOverflow.ellipsis,
                             color: Colors.white70,
+                            fontWeight: FontWeight.w500,
                             fontSize: 12.5,
                         ),
                       ),

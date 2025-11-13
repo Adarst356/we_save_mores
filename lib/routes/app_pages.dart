@@ -6,8 +6,10 @@ import 'package:we_save_more/modules/auth/login/view/login_screen.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_controller.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_screen.dart';
 import 'package:we_save_more/modules/dashboard/home/home_screen.dart';
+import 'package:we_save_more/modules/dashboard/main_nav/main_nav.dart';
 import 'package:we_save_more/modules/dashboard/notification/notification_screen.dart';
 import '../modules/dashboard/home/home_controller.dart';
+import '../modules/dashboard/main_nav/main_nav_controller.dart';
 import '../modules/dashboard/notification/notification_controller.dart';
 import '../modules/splash/splash_screen.dart';
 import '../modules/splash/splash_controller.dart';
@@ -64,6 +66,13 @@ class AppPages {
       page: () =>  NotificationScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<NotificationController>(() => NotificationController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.bottomNav,
+      page: () =>  MainNav(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<MainNavigationController>(() => MainNavigationController());
       }),
     ),
   ];

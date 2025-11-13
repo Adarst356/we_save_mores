@@ -146,7 +146,7 @@ class SideDrawer extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFfcf9f5),
+        color: const Color(0xFFf5efe4),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(

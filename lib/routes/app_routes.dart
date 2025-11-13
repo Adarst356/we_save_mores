@@ -6,6 +6,7 @@ class AppRoutes {
   static const forgotPass = "/ForgotPassword";
  static const homeScreen = "/HomeScreen";
  static const notification = "/Notification";
+ static const bottomNav = "/BottomNav";
 
 
 }

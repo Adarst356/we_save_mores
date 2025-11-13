@@ -6,6 +6,7 @@ import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import 'package:we_save_more/widget/custom_textfield.dart';
 import 'package:we_save_more/widget/custom_button.dart';
+import '../../../dashboard/main_nav/main_nav.dart';
 import 'login_controller.dart';
 
 class LoginScreen extends GetView<LoginController> {

@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:we_save_more/modules/dashboard/profile/profile_screen.dart';
+import 'package:we_save_more/modules/dashboard/refers/refers_screen.dart';
+import 'package:we_save_more/modules/dashboard/reports/report_screen.dart';
+import 'package:we_save_more/modules/dashboard/support/support_screen.dart';
 
+import '../home/home_screen.dart';
 import 'main_nav_controller.dart';
 
 class MainNav extends StatelessWidget {
-  final NavigationController controller = Get.put(NavigationController());
+  final MainNavigationController controller = Get.put(MainNavigationController());
 
   final List<Widget> _pages = [
-    // HomeScreen(),
-    // DiscoverScreen(),
-    // MyOrderScreen(),
-    // ProfileScreen(),
+    HomeScreen(),
+    SupportScreen(),
+    RefersScreen(),
+   ReportScreen(),
+    ProfileScreen()
   ];
 
   MainNav({super.key});
