@@ -26,36 +26,35 @@ class HomeScreen extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
         child: Builder(
-          builder: (context) =>
-              CustomAppbarFlutter(
-                userName: userName,
-                role: role,
-                mobileNumber: mobile,
+          builder: (context) => CustomAppbarFlutter(
+            userName: userName,
+            role: role,
+            mobileNumber: mobile,
 
-                leftWidget: GestureDetector(
-                  onTap: () => Scaffold.of(context).openDrawer(),
-                  child: SvgPicture.asset(
-                    "assets/svg/menu-fries-svgrepo-com.svg",
-                    width: 28,
-                    height: 28,
-                    color: Colors.white,
-                  ),
-                ),
-
-                rightWidget: Row(
-                  children: [
-                    SvgPicture.asset(
-                      "assets/svg/whatsapp-svgrepo-com.svg",
-                      width: 26,
-                      height: 26,
-                    ),
-                    Spacing.w10,
-                    Icon(Icons.refresh, color: Colors.white, size: 26),
-                    Spacing.w10,
-                    Icon(Icons.notifications, color: Colors.white, size: 28),
-                  ],
-                ),
+            leftWidget: GestureDetector(
+              onTap: () => Scaffold.of(context).openDrawer(),
+              child: SvgPicture.asset(
+                "assets/svg/menu-fries-svgrepo-com.svg",
+                width: 28,
+                height: 28,
+                color: Colors.white,
               ),
+            ),
+
+            rightWidget: Row(
+              children: [
+                SvgPicture.asset(
+                  "assets/svg/whatsapp-svgrepo-com.svg",
+                  width: 26,
+                  height: 26,
+                ),
+                Spacing.w10,
+                Icon(Icons.refresh, color: Colors.white, size: 26),
+                Spacing.w10,
+                Icon(Icons.notifications, color: Colors.white, size: 28),
+              ],
+            ),
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -115,8 +114,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            Stack(
-              clipBehavior: Clip.none,
+            Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(6.0),
@@ -142,7 +140,10 @@ class HomeScreen extends StatelessWidget {
                             serviceCircularItem("Add Money", Icons.add),
                             serviceCircularItem("Send Money", Icons.send),
                             serviceCircularItem("Report", Icons.receipt_long),
-                            serviceCircularItem("Wallet History", Icons.account_balance_wallet),
+                            serviceCircularItem(
+                              "Wallet History",
+                              Icons.account_balance_wallet,
+                            ),
                           ],
                         ),
                       ],
@@ -150,11 +151,10 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
 
-                Positioned(
-                  bottom: -460,
-                  left: 20,
-                  right: 20,
+                Transform.translate(
+                  offset: Offset(0, -68),
                   child: Container(
+                    margin: EdgeInsets.all(16),
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -169,6 +169,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 10, left: 10),
@@ -191,16 +192,21 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(height: 10),
 
                         /// ---------------- GRID VIEW ----------------
-                        GridView.count(
-                          crossAxisCount: 4,
+                        GridView(
                           shrinkWrap: true,
+                          padding: EdgeInsets.all(0),
                           physics: NeverScrollableScrollPhysics(),
-                          childAspectRatio: 0.75,
+
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 90,
+                                childAspectRatio: 0.75,
+                              ),
                           children: [
                             serviceItem("Recharge", Icons.phone_android),
                             serviceItem("Bill Pay", Icons.receipt_long),
                             serviceItem("UPI Pay", Icons.qr_code),
-                            serviceItem("Wallet", Icons.account_balance_wallet),
+                            serviceItem("Wallet", Icons.account_balance_wallet,),
 
                             serviceItem("Send Money", Icons.send),
                             serviceItem("Add Money", Icons.add_circle),
@@ -214,13 +220,12 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                       ],
-                    )
-
+                    ),
                   ),
                 ),
               ],
             ),
-          Spacing.h180,
+            Spacing.h180,
           ],
         ),
       ),
@@ -240,7 +245,6 @@ Widget _latestNews(String text) {
     ),
     child: Row(
       children: [
-
         /// Left Yellow Box
         Container(
           width: 70,
@@ -326,6 +330,7 @@ Widget serviceCircularItem(String title, IconData icon) {
     ),
   );
 }
+
 Widget serviceItem(String title, IconData icon) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -353,4 +358,3 @@ Widget serviceItem(String title, IconData icon) {
     ],
   );
 }
-
