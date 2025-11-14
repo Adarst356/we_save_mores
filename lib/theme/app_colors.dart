@@ -12,32 +12,61 @@ class AppColors {
   final Color primary50 = const Color(0xFF804D267A);
   final Color primary20 = const Color(0xFF334D267A);
   final Color primaryAlpha = const Color(0xFFDC401D5D);
-  final Color ProfileAvtar = const  Color(0xff203752);
+  final Color ProfileAvtar = const Color(0xff203752);
+
+  /// Static Colors
+  static const Color primary = Color(0xFF4CAF50);
+  static const Color secondary = Color(0xFF2196F3);
+  static const Color containerBg = Color(0xFFF5F5F5);
+
+  /// Latest News Widget Colors
+  final Color latestNewsBg = const Color(0xFFF3EFFF);
+  final Color latestNewsLabelBg = const Color(0xFFFFD54F);
+  final Color latestNewsText = const Color(0xFF000000);
 
   /// Background Colors
   final Color backgroundLight = Colors.white;
   final Color backgroundDark = Colors.black;
 
-
-  ///Text Colors
+  /// Text Colors
   final Color textDark = Colors.black;
   final Color textLight = Colors.white;
   final Color textPrimary = const Color(0xFF3E1F66);
-  final Color textGrey = Color(0xffE0E0E0);
+  final Color textGrey = const Color(0xffE0E0E0);
 
-
-  /// Neutral Utility Colors
+  /// Neutral Colors
   final Color gray = const Color(0xFF757575);
   final Color lightGray = const Color(0xFFF5F5F5);
   final Color borderColor = const Color(0xFFE0E0E0);
 
-  ///Accent Colors
+  /// Accent Colors
   final Color success = const Color(0xFF43A047);
   final Color error = const Color(0xFFE53935);
   final Color warning = const Color(0xFFFFA726);
 
-  /// Others (like avatars or tags)
+  /// Avatar Colors
   final Color avatarPurple = const Color(0xFF4D267A);
+
+  // ---------------------------------------------------------
+  // 🚀 NEW COLORS ADDED FOR YOUR UI (Services + Gradient UI)
+  // ---------------------------------------------------------
+
+  /// Top Services Gradient (Add Money, Send Money... UI)
+  final Color serviceGradientStart = const Color(0xFFD1C3EB);
+  final Color serviceGradientEnd = const Color(0xFFAB85F2);
+
+  /// White Shadow Service Container
+  final Color serviceCardBg = const Color(0xFFFFFFFF);
+
+  /// Light Icon Background
+  final Color serviceIconBg = const Color(0xFFF3EFFF);
+
+  /// Tab Gradient (same theme as screenshot)
+  final Color tabGradientStart = const Color(0xFF7B1FA2);
+  final Color tabGradientEnd = const Color(0xFF9C27B0);
+
+  /// Common shadow
+  final Color shadowColor = Colors.black12;
 }
 
 final appColors = AppColors();
