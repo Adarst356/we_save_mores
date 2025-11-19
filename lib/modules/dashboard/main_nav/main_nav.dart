@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:we_save_more/modules/dashboard/home/home_screen.dart';
 import 'package:we_save_more/modules/dashboard/profile/profile_screen.dart';
-import 'package:we_save_more/modules/dashboard/refers/refers_screen.dart';
+import 'package:we_save_more/modules/dashboard/refers/view/refers_screen.dart';
 import 'package:we_save_more/modules/dashboard/reports/report_screen.dart';
 import 'package:we_save_more/modules/dashboard/support/support_screen.dart';
 import 'main_nav_controller.dart';
@@ -13,7 +13,7 @@ class MainNav extends StatelessWidget {
   final List<Widget> _pages = [
     HomeScreen(),
     const SupportScreen(),
-    const RefersScreen(),
+     RefersScreen(),
     const ReportScreen(),
     const ProfileScreen(),
   ];

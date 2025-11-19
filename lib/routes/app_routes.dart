@@ -7,6 +7,7 @@ class AppRoutes {
  static const homeScreen = "/HomeScreen";
  static const notification = "/Notification";
  static const bottomNav = "/BottomNav";
+ static const referral ="/RefersScreen";
 
 
 }

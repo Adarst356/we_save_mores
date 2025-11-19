@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:we_save_more/utils/spacing.dart';
 
 class SideDrawer extends StatelessWidget {
   final Color primaryColor = const Color(0xFF3E1F66);
@@ -133,6 +134,7 @@ class SideDrawer extends StatelessWidget {
                     ],
                   ),
                 ),
+                Spacing.h24,
               ],
             ),
           ),

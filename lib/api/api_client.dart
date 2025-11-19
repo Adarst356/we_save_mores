@@ -29,6 +29,10 @@ class GetConnectApiClient extends GetConnect with Printer {
       request.headers['appID'] = '6072874e1f4b7000991915fa914318ed';
       request.headers['version'] = '5.0';
       request.headers['domain']= 'admin.wesavemore.in';
+      request.headers["sessionID"] ='396680';
+      request.headers["userID"] ='47520';
+      request.headers["version"] ='5.0';
+      request.headers['session'] ="5c24357951f20ccc52ab9b68ada8807a";
       if (kDebugMode) printRequest(request);
       return request;
     });
@@ -54,5 +58,8 @@ class GetConnectApiClient extends GetConnect with Printer {
 
   Future<Response> getProductDetailsId(int id) async {
     return await post("ProductDetails/$id", {});
+  }
+  Future<Response> getReferralContent(Object body) async {
+    return await post("GetAppRefferalContent", body);
   }
 }

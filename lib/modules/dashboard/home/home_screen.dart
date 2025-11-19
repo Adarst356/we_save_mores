@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:marquee/marquee.dart';
+
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import '../../../theme/app_colors.dart';
 import '../../../utils/custom_appbar.dart';
-import '../../../widget/OurServicesSection.dart';
 import '../drawer/side_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -23,6 +23,8 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: const SideDrawer(),
+
+      /// ======= APPBAR =======
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
         child: Builder(
@@ -57,9 +59,12 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+
+      /// ======= BODY STARTS =======
       body: SingleChildScrollView(
         child: Column(
           children: [
+            /// ======= WALLET BOX =======
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -95,10 +100,14 @@ class HomeScreen extends StatelessWidget {
                           color: Colors.grey,
                           fontSize: 16,
                         ),
-                        AppText(
-                          "₹ 3.40",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
+                        Align(
+                          alignment: Alignment.center,
+                          child: AppText(
+                            "₹ 3.40",
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.black,
+                          ),
                         ),
                       ],
                     ),
@@ -107,6 +116,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
+            /// ======= LATEST NEWS =======
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: _latestNews(
@@ -114,11 +124,13 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Container(
+            /// ======= MAIN CONTENT =======
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Column(
+                children: [
+                  /// ======= QUICK ACTIONS (Add Money etc) =======
+                  Container(
                     width: double.infinity,
                     height: 180,
                     decoration: BoxDecoration(
@@ -132,29 +144,28 @@ class HomeScreen extends StatelessWidget {
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            serviceCircularItem("Add Money", Icons.add),
-                            serviceCircularItem("Send Money", Icons.send),
-                            serviceCircularItem("Report", Icons.receipt_long),
-                            serviceCircularItem(
-                              "Wallet History",
-                              Icons.account_balance_wallet,
-                            ),
-                          ],
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 25),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          serviceCircularItem("Add Money", Icons.add),
+                          serviceCircularItem("Send Money", Icons.send),
+                          serviceCircularItem("Report", Icons.receipt_long),
+                          serviceCircularItem(
+                            "Wallet History",
+                            Icons.account_balance_wallet,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
 
-                Transform.translate(
-                  offset: Offset(0, -68),
-                  child: Container(
-                    margin: EdgeInsets.all(16),
+                  SizedBox(height: 12),
+
+                  /// ======= OUR SERVICES CARD (Above Quick Actions as requested) =======
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -169,69 +180,135 @@ class HomeScreen extends StatelessWidget {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10, left: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              AppText(
-                                "Our Services",
-                                fontSize: 20,
-                                fontWeight: FontWeight.w900,
-                              ),
-                              SvgPicture.asset(
-                                "assets/svg/youtube.svg",
-                                height: 80,
-                              ),
-                            ],
-                          ),
+                        /// Title Row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AppText(
+                              "Our Services",
+                              fontSize: 21,
+                              fontWeight: FontWeight.w900,
+                            ),
+                            SvgPicture.asset(
+                              "assets/svg/youtube.svg",
+                              height: 62,
+                            ),
+                          ],
                         ),
 
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10),
 
-                        /// ---------------- GRID VIEW ----------------
+                        /// GRID
                         GridView(
                           shrinkWrap: true,
-                          padding: EdgeInsets.all(0),
+                          padding: EdgeInsets.zero,
                           physics: NeverScrollableScrollPhysics(),
-
                           gridDelegate:
-                              SliverGridDelegateWithMaxCrossAxisExtent(
-                                maxCrossAxisExtent: 90,
-                                childAspectRatio: 0.75,
-                              ),
+                          SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 90,
+                            childAspectRatio: 0.80,
+                          ),
                           children: [
-                            serviceItem("Recharge", Icons.phone_android),
-                            serviceItem("Bill Pay", Icons.receipt_long),
-                            serviceItem("UPI Pay", Icons.qr_code),
-                            serviceItem("Wallet", Icons.account_balance_wallet,),
-
-                            serviceItem("Send Money", Icons.send),
-                            serviceItem("Add Money", Icons.add_circle),
-                            serviceItem("History", Icons.history),
-                            serviceItem("Support", Icons.support_agent),
-
-                            serviceItem("Offer", Icons.local_offer),
-                            serviceItem("Scan", Icons.qr_code_scanner),
-                            serviceItem("Report", Icons.report),
-                            serviceItem("More", Icons.more_horiz),
+                            serviceItem("Prepaid", "assets/svg/prepaid.svg"),
+                            serviceItem("DTH", "assets/svg/antenna.svg"),
+                            serviceItem("Landline", "assets/svg/telephone.svg"),
+                            serviceItem("Electricity",
+                                "assets/svg/bulb-svgrepo-com.svg"),
+                            serviceItem("Piped Gas", "assets/svg/pipe_gas.png"),
+                            serviceItem(
+                                "Broadband", "assets/svg/broadband.svg"),
+                            serviceItem("Water",
+                                "assets/svg/water-drop-svgrepo-com.svg"),
+                            serviceItem("Loan Repayment",
+                                "assets/svg/loan_repym.svg"),
+                            serviceItem(
+                                "LPG Cylinder", "assets/svg/gas-cylinder.png"),
+                            serviceItem("Insurance",
+                                "assets/svg/family-insurance.png"),
+                            serviceItem("FASTag", "assets/svg/parking.svg"),
+                            serviceItem("Play Voucher",
+                                "assets/svg/google-play-svgrepo-com.svg"),
                           ],
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+
+                  SizedBox(height: 10),
+
+                  /// ======= OTHER SERVICES CARD =======
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppText(
+                            "Other Services",
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+
+                          SizedBox(height: 12),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              otherServiceItem(
+                                "Refer\nEarn",
+                                "assets/images/refer_earn.gif",
+                              ),
+                              otherServiceItem(
+                                "Total\nCommission",
+                                "assets/svg/computer.svg",
+                              ),
+                              otherServiceItem(
+                                "Spin\nEarn",
+                                "assets/images/spin_new.png",
+                              ),
+                              otherServiceItem(
+                                "Scratch\nCard",
+                                "assets/images/scratch.gif",
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  /// ======= BOTTOM BANNER =======
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: Image.asset(
+                        "assets/images/wallet_transfer.jpg",
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Spacing.h180,
+
+            Spacing.h80,
           ],
         ),
       ),
     );
   }
 }
+
+
+/// WIDGET HELPERS
 
 Widget _latestNews(String text) {
   return Container(
@@ -245,10 +322,8 @@ Widget _latestNews(String text) {
     ),
     child: Row(
       children: [
-        /// Left Yellow Box
         Container(
           width: 70,
-          height: 50,
           decoration: BoxDecoration(
             color: appColors.latestNewsLabelBg,
             borderRadius: const BorderRadius.only(
@@ -256,18 +331,16 @@ Widget _latestNews(String text) {
               bottomLeft: Radius.circular(10),
             ),
           ),
-          alignment: Alignment.center,
-          child: const AppText(
-            "Latest\nNews",
-            align: TextAlign.center,
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
+          child: const Center(
+            child: AppText(
+              "Latest\nNews",
+              align: TextAlign.center,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
           ),
         ),
-
         Spacing.h12,
-
-        /// Marquee text
         Expanded(
           child: Marquee(
             text: text,
@@ -276,10 +349,8 @@ Widget _latestNews(String text) {
               fontWeight: FontWeight.w800,
               color: appColors.latestNewsText,
             ),
-            velocity: 40,
             blankSpace: 50,
-            startPadding: 10,
-            pauseAfterRound: Duration(seconds: 1),
+            velocity: 40,
           ),
         ),
       ],
@@ -288,73 +359,82 @@ Widget _latestNews(String text) {
 }
 
 Widget serviceCircularItem(String title, IconData icon) {
-  return Padding(
-    padding: const EdgeInsets.only(top: 16),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Container(
-          height: 55,
-          width: 55,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 4,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Icon(icon, size: 28, color: Colors.black87),
-        ),
-
-        SizedBox(height: 6),
-        SizedBox(
-          width: 70,
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-              height: 1.2,
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget serviceItem(String title, IconData icon) {
   return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Container(
+        height: 55,
+        width: 55,
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
           boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 4,
-              offset: Offset(0, 2),
-            ),
+            BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
           ],
         ),
-        child: Icon(icon, size: 26, color: Colors.blue),
+        child: Icon(icon, size: 28, color: Colors.black87),
+      ),
+      SizedBox(height: 6),
+      SizedBox(
+        width: 70,
+        child: AppText(
+          title,
+          align: TextAlign.center,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
+        ),
+      )
+    ],
+  );
+}
+
+Widget serviceItem(String title, String path) {
+  final isSvg = path.toLowerCase().endsWith(".svg");
+
+  return Column(
+    children: [
+      Container(
+        padding: EdgeInsets.all(6),
+        child: isSvg
+            ? SvgPicture.asset(path, height: 35, width: 35)
+            : Image.asset(path, height: 35, width: 35),
       ),
       SizedBox(height: 5),
-      Text(
+      AppText(
         title,
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+        align: TextAlign.center,
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
       ),
     ],
   );
+}
+
+Widget otherServiceItem(String title, dynamic iconPath) {
+  return Column(
+    children: [
+      Container(
+        padding: EdgeInsets.all(6),
+        child: _buildIcon(iconPath),
+      ),
+      SizedBox(height: 6),
+      AppText(
+        title,
+        align: TextAlign.center,
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+      ),
+    ],
+  );
+}
+
+Widget _buildIcon(dynamic icon) {
+  if (icon is IconData) {
+    return Icon(icon, size: 45);
+  } else if (icon is String && icon.endsWith(".svg")) {
+    return SvgPicture.asset(icon, height: 45, width: 45);
+  } else if (icon is String) {
+    return Image.asset(icon, height: 45, width: 45);
+  }
+  return SizedBox();
 }

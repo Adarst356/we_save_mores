@@ -8,9 +8,11 @@ import 'package:we_save_more/modules/auth/signup/view/signup_screen.dart';
 import 'package:we_save_more/modules/dashboard/home/home_screen.dart';
 import 'package:we_save_more/modules/dashboard/main_nav/main_nav.dart';
 import 'package:we_save_more/modules/dashboard/notification/notification_screen.dart';
+import 'package:we_save_more/modules/dashboard/refers/view/refers_controller.dart';
 import '../modules/dashboard/home/home_controller.dart';
 import '../modules/dashboard/main_nav/main_nav_controller.dart';
 import '../modules/dashboard/notification/notification_controller.dart';
+import '../modules/dashboard/refers/view/refers_screen.dart';
 import '../modules/splash/splash_screen.dart';
 import '../modules/splash/splash_controller.dart';
 import '../modules/onboarding/onboarding_screen.dart';
@@ -73,6 +75,13 @@ class AppPages {
       page: () =>  MainNav(),
       binding: BindingsBuilder(() {
         Get.lazyPut<MainNavigationController>(() => MainNavigationController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.referral,
+      page: () =>  RefersScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ReferralController>(() => ReferralController());
       }),
     ),
   ];
