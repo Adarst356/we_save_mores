@@ -6,26 +6,29 @@ import 'package:we_save_more/modules/dashboard/refers/view/refers_controller.dar
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 
-import '../../../../routes/app_routes.dart';
+import '../../../../utils/share_helper.dart';
 
-class RefersScreen extends StatelessWidget {
-  RefersScreen({super.key});
 
-  final ReferralController controller = Get.put(ReferralController());
+class RefersScreen extends GetView<ReferralController> {
+  const RefersScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(
-                onPressed: (){Get.back();},
-                icon: SvgPicture.asset(
-                  "assets/svg/close_button.svg",
-                  height: 35,
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: IconButton(
+                  onPressed: (){Get.back();},
+                  icon: SvgPicture.asset(
+                    "assets/svg/close_button.svg",
+                    height: 35,
+                  ),
                 ),
               ),
 
@@ -46,6 +49,16 @@ class RefersScreen extends StatelessWidget {
                           final imageUrl = controller.referralImages[index];
                           return Container(
                             margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                            /*  boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 8,
+                                  spreadRadius: 1,
+                                  offset: Offset(0, 2),
+                                )
+                              ]*/
+                            ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: imageUrl.startsWith('http')
@@ -116,7 +129,9 @@ class RefersScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      ShareHelper.shareWhatsapp(controller.shareMessage.value);
+                    },
                     icon: Image.asset(
                       "assets/icons/whatsapp.png",
                       height: 35,
@@ -126,7 +141,9 @@ class RefersScreen extends StatelessWidget {
                   Spacing.w4,
 
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                        ShareHelper.shareFacebook(controller.shareMessage.value);
+                    },
                     icon: Image.asset(
                       "assets/icons/facebook.png",
                       height: 35,
@@ -135,7 +152,9 @@ class RefersScreen extends StatelessWidget {
                   ),
                   Spacing.w4,
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      ShareHelper.shareTwitter(controller.shareMessage.value);
+                    },
                     icon: Image.asset(
                       "assets/icons/twitter.png",
                       height: 35,
@@ -144,7 +163,9 @@ class RefersScreen extends StatelessWidget {
                   ),
                   Spacing.w4,
                   IconButton(
-                    onPressed: () {},
+                    onPressed: (){
+                      ShareHelper.shareEmail(controller.shareMessage.value);
+                    },
                     icon: Image.asset(
                       "assets/icons/email.png",
                       height: 35,
@@ -153,7 +174,9 @@ class RefersScreen extends StatelessWidget {
                   ),
                   Spacing.w4,
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      ShareHelper.shareGeneral(controller.shareMessage.value);
+                    },
                     icon: Image.asset(
                       "assets/icons/share.png",
                       height: 35,

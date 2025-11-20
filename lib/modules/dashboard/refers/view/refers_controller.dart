@@ -7,9 +7,14 @@ import '../data/refers_response.dart';
 
 class ReferralController extends GetxController {
   ReferralRepo repo = ReferralRepo();
+  /// Single share message variable (Correct)
+  RxString shareMessage = "Install WeSaveMore App & Earn Rewards!".obs;
 
   final PageController pageController = PageController();
   RxDouble currentIndex = 0.0.obs;
+
+  RxBool isLoading = true.obs;
+
 
   final referralState = Rx<UiState<ReferralResponse>>(UiState.none());
   RxString referralContent = "".obs;
@@ -20,9 +25,8 @@ class ReferralController extends GetxController {
     "assets/images/wallet_transfer.jpg",
   ];
 
-  RxString shareMessage = "".obs;
+  // RxString shareMessage = "".obs;
 
-  /// Get images: API siteResourceUrl first, fallback if empty
   List<String> get referralImages {
     if (referralApiImages.isNotEmpty) {
       return referralApiImages
@@ -34,6 +38,8 @@ class ReferralController extends GetxController {
   }
 
   void getReferral() {
+    isLoading.value = true;
+
     repo.getReferral(
       body: {
         "IsB2C": false,
@@ -60,6 +66,8 @@ class ReferralController extends GetxController {
           loading: () {},
           none: () {},
         );
+
+        isLoading.value = false; // ✅ Stop loading
       },
     );
   }
@@ -70,3 +78,4 @@ class ReferralController extends GetxController {
     super.onInit();
   }
 }
+

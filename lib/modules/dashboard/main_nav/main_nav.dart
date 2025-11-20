@@ -3,8 +3,9 @@ import 'package:get/get.dart';
 import 'package:we_save_more/modules/dashboard/home/home_screen.dart';
 import 'package:we_save_more/modules/dashboard/profile/profile_screen.dart';
 import 'package:we_save_more/modules/dashboard/refers/view/refers_screen.dart';
-import 'package:we_save_more/modules/dashboard/reports/report_screen.dart';
-import 'package:we_save_more/modules/dashboard/support/support_screen.dart';
+import 'package:we_save_more/modules/dashboard/reports/view/report_screen.dart';
+import 'package:we_save_more/modules/dashboard/support/view/support_screen.dart';
+import '../../../routes/app_routes.dart';
 import 'main_nav_controller.dart';
 
 class MainNav extends StatelessWidget {
@@ -38,30 +39,25 @@ class MainNav extends StatelessWidget {
         body: _pages[controller.selectedIndex.value],
 
         /// Floating "Refer" Button
-        floatingActionButton: Container(
+        floatingActionButton: controller.selectedIndex.value == 2
+            ? null /// agar already main nav ka refer tab active ho, ya standalone screen pe nahi
+            : Container(
           height: 58,
           width: 58,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: controller.selectedIndex.value == 2
-                ? theme.primaryColor.withOpacity(0.9)
-                : theme.primaryColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 6,
-                offset: const Offset(0, 3),
-              )
-            ],
+            color: theme.primaryColor,
+            boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0,3))],
           ),
           child: IconButton(
-            onPressed: () => controller.changeIndex(2),
-            icon: const Icon(Icons.share, color: Colors.white, size: 26),
+            onPressed: () => Get.toNamed(AppRoutes.referral),
+            icon: Icon(Icons.share, color: Colors.white, size: 26),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-        // Bottom Navigation Bar
+
+        /// Bottom Navigation Bar
         bottomNavigationBar: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           notchMargin: 8,

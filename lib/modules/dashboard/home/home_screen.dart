@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:lottie/lottie.dart';
 import 'package:marquee/marquee.dart';
 
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import '../../../theme/app_colors.dart';
-import '../../../utils/custom_appbar.dart';
+import '../../../utils/home_appbar.dart';
 import '../drawer/side_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -161,7 +162,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
 
-                  SizedBox(height: 12),
+                  Spacing.h12,
 
                   /// ======= OUR SERVICES CARD (Above Quick Actions as requested) =======
                   Container(
@@ -196,8 +197,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-
-                        SizedBox(height: 10),
+                        Spacing.h10,
 
                         /// GRID
                         GridView(
@@ -205,37 +205,50 @@ class HomeScreen extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           physics: NeverScrollableScrollPhysics(),
                           gridDelegate:
-                          SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 90,
-                            childAspectRatio: 0.80,
-                          ),
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 90,
+                                childAspectRatio: 0.80,
+                              ),
                           children: [
                             serviceItem("Prepaid", "assets/svg/prepaid.svg"),
                             serviceItem("DTH", "assets/svg/antenna.svg"),
                             serviceItem("Landline", "assets/svg/telephone.svg"),
-                            serviceItem("Electricity",
-                                "assets/svg/bulb-svgrepo-com.svg"),
+                            serviceItem(
+                              "Electricity",
+                              "assets/svg/bulb-svgrepo-com.svg",
+                            ),
                             serviceItem("Piped Gas", "assets/svg/pipe_gas.png"),
                             serviceItem(
-                                "Broadband", "assets/svg/broadband.svg"),
-                            serviceItem("Water",
-                                "assets/svg/water-drop-svgrepo-com.svg"),
-                            serviceItem("Loan Repayment",
-                                "assets/svg/loan_repym.svg"),
+                              "Broadband",
+                              "assets/svg/broadband.svg",
+                            ),
                             serviceItem(
-                                "LPG Cylinder", "assets/svg/gas-cylinder.png"),
-                            serviceItem("Insurance",
-                                "assets/svg/family-insurance.png"),
+                              "Water",
+                              "assets/svg/water-drop-svgrepo-com.svg",
+                            ),
+                            serviceItem(
+                              "Loan Repayment",
+                              "assets/svg/loan_repym.svg",
+                            ),
+                            serviceItem(
+                              "LPG Cylinder",
+                              "assets/svg/gas-cylinder.png",
+                            ),
+                            serviceItem(
+                              "Insurance",
+                              "assets/svg/family-insurance.png",
+                            ),
                             serviceItem("FASTag", "assets/svg/parking.svg"),
-                            serviceItem("Play Voucher",
-                                "assets/svg/google-play-svgrepo-com.svg"),
+                            serviceItem(
+                              "Play Voucher",
+                              "assets/svg/google-play-svgrepo-com.svg",
+                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
-
-                  SizedBox(height: 10),
+                  Spacing.h10,
 
                   /// ======= OTHER SERVICES CARD =======
                   Card(
@@ -262,15 +275,15 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               otherServiceItem(
                                 "Refer\nEarn",
-                                "assets/images/refer_earn.gif",
+                                "assets/lottie/referral.json",
                               ),
                               otherServiceItem(
                                 "Total\nCommission",
-                                "assets/svg/computer.svg",
+                                "assets/lottie/commision.json",
                               ),
                               otherServiceItem(
                                 "Spin\nEarn",
-                                "assets/images/spin_new.png",
+                                "assets/lottie/spin_earn.json",
                               ),
                               otherServiceItem(
                                 "Scratch\nCard",
@@ -306,7 +319,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
 
 /// WIDGET HELPERS
 
@@ -368,7 +380,11 @@ Widget serviceCircularItem(String title, IconData icon) {
           color: Colors.white,
           shape: BoxShape.circle,
           boxShadow: [
-            BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
           ],
         ),
         child: Icon(icon, size: 28, color: Colors.black87),
@@ -383,7 +399,7 @@ Widget serviceCircularItem(String title, IconData icon) {
           fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
-      )
+      ),
     ],
   );
 }
@@ -411,11 +427,17 @@ Widget serviceItem(String title, String path) {
 }
 
 Widget otherServiceItem(String title, dynamic iconPath) {
+  double iconSize = 65;
+
   return Column(
     children: [
       Container(
         padding: EdgeInsets.all(6),
-        child: _buildIcon(iconPath),
+        child: SizedBox(
+          height: iconSize,
+          width: iconSize,
+          child: _buildIcon(iconPath),
+        ),
       ),
       SizedBox(height: 6),
       AppText(
@@ -430,11 +452,14 @@ Widget otherServiceItem(String title, dynamic iconPath) {
 
 Widget _buildIcon(dynamic icon) {
   if (icon is IconData) {
-    return Icon(icon, size: 45);
+    return Icon(icon, size: 50);
   } else if (icon is String && icon.endsWith(".svg")) {
-    return SvgPicture.asset(icon, height: 45, width: 45);
+    return SvgPicture.asset(icon, fit: BoxFit.contain);
+  } else if (icon is String && icon.endsWith(".json")) {
+    return Lottie.asset(icon, fit: BoxFit.contain);
   } else if (icon is String) {
-    return Image.asset(icon, height: 45, width: 45);
+    return Image.asset(icon, fit: BoxFit.contain);
   }
+
   return SizedBox();
 }
