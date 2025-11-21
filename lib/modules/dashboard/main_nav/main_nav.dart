@@ -6,10 +6,12 @@ import 'package:we_save_more/modules/dashboard/refers/view/refers_screen.dart';
 import 'package:we_save_more/modules/dashboard/reports/view/report_screen.dart';
 import 'package:we_save_more/modules/dashboard/support/view/support_screen.dart';
 import '../../../routes/app_routes.dart';
+import '../support/view/support_controller.dart';
 import 'main_nav_controller.dart';
 
 class MainNav extends StatelessWidget {
   final MainNavigationController controller = Get.put(MainNavigationController());
+  // final SupportController supportController = Get.put(SupportController());
 
   final List<Widget> _pages = [
     HomeScreen(),

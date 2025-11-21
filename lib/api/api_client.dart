@@ -62,4 +62,7 @@ class GetConnectApiClient extends GetConnect with Printer {
   Future<Response> getReferralContent(Object body) async {
     return await post("GetAppRefferalContent", body);
   }
+  Future<Response> getCompanyProfile(Object body) async {
+    return await post("GetCompanyProfile", body);
+  }
 }

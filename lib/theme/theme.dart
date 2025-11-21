@@ -9,12 +9,13 @@ final ThemeData lightTheme = ThemeData(
 
   colorScheme: ColorScheme.light(
     primary: appColors.primaryColor,
-    secondary: appColors.primaryLight,
+    secondary: appColors.yellow,
     background: appColors.backgroundLight,
     surface: Colors.white,
     onPrimary: appColors.textLight,
     onSurface: appColors.textDark,
   ),
+
 
   /// ✅ AppBar
   appBarTheme: AppBarTheme(
@@ -78,9 +79,8 @@ final ThemeData darkTheme = ThemeData(
 
   colorScheme: ColorScheme.dark(
     primary: appColors.primaryColor,
-    secondary: appColors.primaryLight,
-    background: appColors.backgroundDark,
-    surface: Colors.grey[850]!,
+    secondary: appColors.yellow,
+    surface: Colors.grey[900]!,
     onPrimary: appColors.textLight,
     onSurface: appColors.textLight,
   ),

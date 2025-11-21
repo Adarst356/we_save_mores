@@ -8,6 +8,7 @@ class AppRoutes {
  static const notification = "/Notification";
  static const bottomNav = "/BottomNav";
  static const referral ="/RefersScreen";
+ static const supportPage ="/SupportScreen";
 
 
 }

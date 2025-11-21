@@ -7,6 +7,7 @@ import '../data/refers_response.dart';
 
 class ReferralController extends GetxController {
   ReferralRepo repo = ReferralRepo();
+  static ReferralController to = Get.find();
   /// Single share message variable (Correct)
   RxString shareMessage = "Install WeSaveMore App & Earn Rewards!".obs;
 
@@ -67,7 +68,7 @@ class ReferralController extends GetxController {
           none: () {},
         );
 
-        isLoading.value = false; // ✅ Stop loading
+        isLoading.value = false; /// Stop loading
       },
     );
   }

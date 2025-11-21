@@ -13,6 +13,8 @@ class AppColors {
   final Color primary20 = const Color(0xFF334D267A);
   final Color primaryAlpha = const Color(0xFFDC401D5D);
   final Color ProfileAvtar = const Color(0xff203752);
+  final Color yellow = const Color(0xFFFFD54F);   // beautiful yellow
+  final Color yellowDark = const Color(0xFFFFC107); // dark theme match
 
   /// Static Colors
   static const Color primary = Color(0xFF4CAF50);

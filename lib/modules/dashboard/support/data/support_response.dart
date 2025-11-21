@@ -1,4 +1,4 @@
-class SupportResponse {
+class CompanyProfileResponse {
   String? name;
   String? address;
   String? emailId;
@@ -32,7 +32,7 @@ class SupportResponse {
   int? signupReferalID;
   bool? isOutletRequired;
 
-  SupportResponse(
+  CompanyProfileResponse(
       {this.name,
         this.address,
         this.emailId,
@@ -66,7 +66,7 @@ class SupportResponse {
         this.signupReferalID,
         this.isOutletRequired});
 
-  SupportResponse.fromJson(Map<String, dynamic> json) {
+  CompanyProfileResponse.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     address = json['address'];
     emailId = json['emailId'];

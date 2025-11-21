@@ -13,6 +13,8 @@ import '../modules/dashboard/home/home_controller.dart';
 import '../modules/dashboard/main_nav/main_nav_controller.dart';
 import '../modules/dashboard/notification/notification_controller.dart';
 import '../modules/dashboard/refers/view/refers_screen.dart';
+import '../modules/dashboard/support/view/support_controller.dart';
+import '../modules/dashboard/support/view/support_screen.dart';
 import '../modules/splash/splash_screen.dart';
 import '../modules/splash/splash_controller.dart';
 import '../modules/onboarding/onboarding_screen.dart';
@@ -74,6 +76,7 @@ class AppPages {
       name: AppRoutes.bottomNav,
       page: () =>  MainNav(),
       binding: BindingsBuilder(() {
+        Get.lazyPut<SupportController>(() => SupportController());
         Get.lazyPut<MainNavigationController>(() => MainNavigationController());
       }),
     ),
@@ -82,6 +85,13 @@ class AppPages {
       page: () =>  RefersScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ReferralController>(() => ReferralController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.supportPage,
+      page: () =>  SupportScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<SupportController>(() => SupportController());
       }),
     ),
   ];

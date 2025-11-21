@@ -35,6 +35,7 @@ class RefersScreen extends GetView<ReferralController> {
               Spacing.h24,
               Obx(
                     () => Column(
+                      mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(
                       height: 260,
