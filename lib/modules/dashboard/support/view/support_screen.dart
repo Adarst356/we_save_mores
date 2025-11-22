@@ -7,6 +7,7 @@ import 'package:we_save_more/utils/custom_appbar.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import '../../../../theme/app_colors.dart';
+import '../data/support_response.dart';
 
 
 class SupportScreen extends GetView<SupportController> {
@@ -53,9 +54,10 @@ class SupportScreen extends GetView<SupportController> {
 
             Spacing.h24,
 
-            _mainContactCard(context, "Customer Care"),
+            _mainContactCard(context, "Customer Care", SupportController.to.supportData.value!),
 
-            _mainContactCard(context, "Payment History"),
+
+            _mainContactCard(context, "Payment History",SupportController.to.supportData.value!),
 
 
             _socialCard(
@@ -69,6 +71,7 @@ class SupportScreen extends GetView<SupportController> {
               iconPath: "assets/icons/twitter.png",
               title: "Twitter",
               subtitle: "Follow us",
+              url: SupportController.to.supportData.value?.twitter,
             ),
 
             if (controller.hasAddress)
@@ -126,7 +129,7 @@ class SupportScreen extends GetView<SupportController> {
 }
 
 /// MAIN CONTACT CARD
-Widget _mainContactCard(BuildContext context, String title) {
+Widget _mainContactCard(BuildContext context, String title,CompanyProfileResponse data) {
   final theme = Theme.of(context);
   final yellow = appColors.yellow;
 
@@ -163,15 +166,21 @@ Widget _mainContactCard(BuildContext context, String title) {
           ),
 
           _sectionTitle("Call Us", "assets/svg/call.svg"),
-          _contactRow("9658585213", "assets/svg/phone.svg"),
+          if ((data.customerCareMobileNos ?? "").trim().isNotEmpty)
+            _contactRow(data.customerCareMobileNos!, "assets/svg/phone.svg"),
 
-          _contactRow("9658585213", "assets/svg/telephone.svg"),
+          if ((data.customerPhoneNos ?? "").trim().isNotEmpty)
+            _contactRow(data.customerPhoneNos!, "assets/svg/telephone.svg"),
 
           _sectionTitle("Whatsapp", "assets/svg/whatsapp_icon.svg"),
-          _contactRow("9658585213", "assets/svg/whatsapp-svgrepo-com.svg"),
+          if ((data.customerWhatsAppNos ?? "").trim().isNotEmpty)
+            _contactRow(data.customerWhatsAppNos!, "assets/svg/whatsapp-svgrepo-com.svg"),
+
 
           _sectionTitle("Email", "assets/svg/email-svgrepo-com.svg"),
-          _contactRow("support@wesavemore.in", "assets/svg/email.svg"),
+
+          if ((data.customerCareEmailIds ?? "").trim().isNotEmpty)
+            _contactRow(data.customerCareEmailIds!, "assets/svg/email.svg"),
         ],
       ),
     ),

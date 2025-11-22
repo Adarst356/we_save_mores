@@ -76,7 +76,7 @@ class AppPages {
       name: AppRoutes.bottomNav,
       page: () =>  MainNav(),
       binding: BindingsBuilder(() {
-        Get.lazyPut<SupportController>(() => SupportController());
+        // Get.lazyPut<SupportController>(() => SupportController());
         Get.lazyPut<MainNavigationController>(() => MainNavigationController());
       }),
     ),

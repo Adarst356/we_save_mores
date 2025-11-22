@@ -19,9 +19,9 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'We Save More',
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
+      // theme: lightTheme,
+      // darkTheme: darkTheme,
+      // themeMode: ThemeMode.system,
       initialRoute: AppRoutes.splash,
       getPages:  AppPages.routes,
     );
