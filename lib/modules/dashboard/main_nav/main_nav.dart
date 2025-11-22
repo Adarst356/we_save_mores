@@ -17,7 +17,7 @@ class MainNav extends StatelessWidget {
     HomeScreen(),
     const SupportScreen(),
      RefersScreen(),
-    const ReportScreen(),
+     ReportScreen(),
     const ProfileScreen(),
   ];
 

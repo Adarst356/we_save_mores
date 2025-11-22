@@ -1,4 +1,3 @@
-/*
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
@@ -131,4 +130,3 @@ final ThemeData darkTheme = ThemeData(
     labelMedium: TextStyle(color: appColors.textGrey),
   ),
 );
-*/

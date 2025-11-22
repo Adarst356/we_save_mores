@@ -9,7 +9,6 @@ import 'package:we_save_more/widget/app_text.dart';
 import '../../../../theme/app_colors.dart';
 import '../data/support_response.dart';
 
-
 class SupportScreen extends GetView<SupportController> {
   const SupportScreen({super.key});
 
@@ -54,12 +53,18 @@ class SupportScreen extends GetView<SupportController> {
 
             Spacing.h24,
 
-            _mainContactCard(context, "Customer Care", SupportController.to.supportData.value!),
-
-
-            _mainContactCard(context, "Payment History",SupportController.to.supportData.value!),
-
-
+            _mainContactCard(
+              context,
+              "Customer Care",
+              "assets/svg/customer-service.svg",
+              SupportController.to.supportData.value!,
+            ),
+            _mainContactCard(
+              context,
+              "Payment History",
+              "assets/svg/payment_enquiry.svg",
+              SupportController.to.supportData.value!,
+            ),
             _socialCard(
               iconPath: "assets/icons/instagram.png",
               title: "Instagram",
@@ -78,7 +83,9 @@ class SupportScreen extends GetView<SupportController> {
               _socialCard(
                 iconPath: "assets/icons/home.png",
                 title: "Address",
-                subtitle: SupportController.to.supportData.value!.address ?? "10/532 Indira Nagar",
+                subtitle:
+                    SupportController.to.supportData.value!.address ??
+                    "10/532 Indira Nagar",
               ),
 
             Spacing.h24,
@@ -88,7 +95,7 @@ class SupportScreen extends GetView<SupportController> {
               children: [
                 AppText("You Agree to Our"),
                 Spacing.w4,
-                AppText("Privacy Policy", decoration: TextDecoration.underline)
+                AppText("Privacy Policy", decoration: TextDecoration.underline),
               ],
             ),
 
@@ -98,10 +105,7 @@ class SupportScreen extends GetView<SupportController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                customInfoButton(
-                  icon: Icons.phone,
-                  title: "Mobile TollFree",
-                ),
+                customInfoButton(icon: Icons.phone, title: "Mobile TollFree"),
                 customInfoButton(
                   icon: Icons.phone,
                   title: "DTH TollFree",
@@ -116,7 +120,11 @@ class SupportScreen extends GetView<SupportController> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 customInfoButton(icon: Icons.message, title: "Ticket List"),
-                customInfoButton(icon: Icons.add_circle, title: "Create Ticket", backgroundColor: yellow),
+                customInfoButton(
+                  icon: Icons.add_circle,
+                  title: "Create Ticket",
+                  backgroundColor: yellow,
+                ),
               ],
             ),
 
@@ -129,10 +137,14 @@ class SupportScreen extends GetView<SupportController> {
 }
 
 /// MAIN CONTACT CARD
-Widget _mainContactCard(BuildContext context, String title,CompanyProfileResponse data) {
+Widget _mainContactCard(
+  BuildContext context,
+  String title,
+    String iconPath,
+    CompanyProfileResponse data,
+) {
   final theme = Theme.of(context);
   final yellow = appColors.yellow;
-
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: Container(
@@ -143,11 +155,7 @@ Widget _mainContactCard(BuildContext context, String title,CompanyProfileRespons
         border: Border.all(color: yellow, width: 2),
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
         ],
       ),
       child: Column(
@@ -155,39 +163,45 @@ Widget _mainContactCard(BuildContext context, String title,CompanyProfileRespons
         children: [
           Row(
             children: [
-              Icon(Icons.person, color: yellow, size: 30),
-              Spacing.w8,
-              AppText(
-                title,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+              SvgPicture.asset(
+                iconPath,      // <-- image from parameter
+                height: 30,
+                width: 30,
               ),
+              Spacing.w8,
+              AppText(title, fontSize: 18, fontWeight: FontWeight.bold),
             ],
           ),
 
           _sectionTitle("Call Us", "assets/svg/call.svg"),
-          if ((data.customerCareMobileNos ?? "").trim().isNotEmpty)
-            _contactRow(data.customerCareMobileNos!, "assets/svg/phone.svg"),
 
+          /// CALL 1
+          if ((data.customerCareMobileNos ?? "").trim().isNotEmpty)
+            _contactRow(data.customerCareMobileNos!, "assets/svg/phone.svg", 1),
+
+          /// CALL 2
           if ((data.customerPhoneNos ?? "").trim().isNotEmpty)
-            _contactRow(data.customerPhoneNos!, "assets/svg/telephone.svg"),
+            _contactRow(data.customerPhoneNos!, "assets/svg/telephone.svg", 2),
 
           _sectionTitle("Whatsapp", "assets/svg/whatsapp_icon.svg"),
+          // WHATSAPP
           if ((data.customerWhatsAppNos ?? "").trim().isNotEmpty)
-            _contactRow(data.customerWhatsAppNos!, "assets/svg/whatsapp-svgrepo-com.svg"),
-
+            _contactRow(
+              data.customerWhatsAppNos!,
+              "assets/svg/whatsapp-svgrepo-com.svg",
+              3,
+            ),
 
           _sectionTitle("Email", "assets/svg/email-svgrepo-com.svg"),
 
+          /// EMAIL
           if ((data.customerCareEmailIds ?? "").trim().isNotEmpty)
-            _contactRow(data.customerCareEmailIds!, "assets/svg/email.svg"),
+            _contactRow(data.customerCareEmailIds!, "assets/svg/email.svg", 4),
         ],
       ),
     ),
   );
 }
-
-
 
 Widget _sectionTitle(String title, String svgPath) {
   return Padding(
@@ -196,28 +210,34 @@ Widget _sectionTitle(String title, String svgPath) {
       children: [
         SvgPicture.asset(svgPath, height: 24, width: 24),
         SizedBox(width: 8),
-        Text(title, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+        Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+        ),
       ],
     ),
   );
 }
 
-Widget _contactRow(String text, String iconPath) {
+Widget _contactRow(String text, String iconPath, int type) {
   return Padding(
     padding: const EdgeInsets.only(left: 28, top: 6, bottom: 6),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          text,
-          style: TextStyle(
-            color: appColors.primaryColor,
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+    child: InkWell(
+      onTap: () => SupportController.to.handleContactTap(type, text),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              color: appColors.primaryColor,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-        SvgPicture.asset(iconPath, height: 24, width: 24),
-      ],
+          SvgPicture.asset(iconPath, height: 24, width: 24),
+        ],
+      ),
     ),
   );
 }
@@ -239,31 +259,20 @@ Widget _socialCard({
         border: Border.all(color: Colors.yellow, width: 2),
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
         ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            iconPath,
-            height: 35,
-          ),
+          Image.asset(iconPath, height: 35),
           SizedBox(width: 12),
 
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppText(
-                  title,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
+                AppText(title, fontSize: 18, fontWeight: FontWeight.w600),
                 SizedBox(height: 4),
                 InkWell(
                   onTap: () {
@@ -285,7 +294,8 @@ Widget _socialCard({
         ],
       ),
     ),
-  );}
+  );
+}
 
 /// REUSABLE INFO BUTTON
 Widget customInfoButton({
@@ -320,10 +330,7 @@ Widget customInfoButton({
         Flexible(
           child: Text(
             title,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
