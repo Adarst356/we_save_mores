@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:we_save_more/modules/dashboard/drawer/view/side_drawer_controller.dart';
 import 'package:we_save_more/utils/spacing.dart';
 
 class SideDrawer extends StatelessWidget {
-  final Color primaryColor = const Color(0xFF3E1F66);
-
-  const SideDrawer({super.key});
-
+   SideDrawer({super.key});
+  final SideDrawerController controller = Get.put(SideDrawerController());
+   final Color primaryColor = const Color(0xFF3E1F66);
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -66,11 +68,18 @@ class SideDrawer extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const Icon(
-                        Icons.power_settings_new,
-                        color: Colors.white,
-                        size: 28,
+                      GestureDetector(
+                        onTap: () {
+                          controller.showLogoutDialog();  // 🔥 पहले dialog खुलेगा
+                        },
+                        child: const Icon(
+                          Icons.power_settings_new,
+                          color: Colors.white,
+                          size: 28,
+                        ),
                       ),
+
+
                     ],
                   ),
                 ),

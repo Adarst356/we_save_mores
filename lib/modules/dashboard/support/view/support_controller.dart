@@ -6,7 +6,6 @@ import '../data/support_repo.dart';
 import '../data/support_response.dart';
 
 class SupportController extends GetxController{
-  static SupportController to = Get.find();
   final SupportRepo repo = SupportRepo();
   RxBool isLoading = true.obs;
 

@@ -87,6 +87,9 @@ class LoginController extends GetxController {
                box.write('isLoggedIn', true);
               box.write('mobile', mobileController.text.trim());
               box.write('password', passwordController.text.trim());
+              box.write('userID', data.userData?.userID??"");
+              box.write('session', data.userData?.session??"");
+              box.write('sessionID', data.userData?.sessionID??"");
               Get.offAllNamed(AppRoutes.bottomNav);
             } else {
               CommonToast.showToastError(data.msg ?? "Invalid credentials");

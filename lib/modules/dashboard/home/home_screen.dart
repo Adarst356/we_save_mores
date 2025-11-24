@@ -8,7 +8,7 @@ import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import '../../../theme/app_colors.dart';
 import '../../../utils/home_appbar.dart';
-import '../drawer/side_drawer.dart';
+import '../drawer/view/side_drawer_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final box = GetStorage();
@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: const SideDrawer(),
+      drawer:  SideDrawer(),
 
       /// ======= APPBAR =======
       appBar: PreferredSize(

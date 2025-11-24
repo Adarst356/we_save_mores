@@ -9,6 +9,7 @@ class AppRoutes {
  static const bottomNav = "/BottomNav";
  static const referral ="/RefersScreen";
  static const supportPage ="/SupportScreen";
-
+static const report ="/ReportScreen";
+static const sideDrawer ="/SideDrawer";
 
 }

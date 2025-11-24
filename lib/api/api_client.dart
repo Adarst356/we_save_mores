@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../utils/constant.dart';
 import '../utils/printer.dart';
@@ -26,13 +27,16 @@ class GetConnectApiClient extends GetConnect with Printer {
 
 
     httpClient.addRequestModifier<dynamic>((request) {
+      final box = GetStorage();
+
       request.headers['appID'] = '6072874e1f4b7000991915fa914318ed';
       request.headers['version'] = '5.0';
       request.headers['domain']= 'admin.wesavemore.in';
-      request.headers["sessionID"] ='396680';
-      request.headers["userID"] ='47520';
-      request.headers["version"] ='5.0';
-      request.headers['session'] ="5c24357951f20ccc52ab9b68ada8807a";
+
+      request.headers["sessionID"] = box.read("sessionID")?.toString() ?? "";
+      request.headers["userID"] = box.read("userID")?.toString() ?? "";
+      request.headers['session'] = box.read("session")?.toString() ?? "";
+
       if (kDebugMode) printRequest(request);
       return request;
     });
@@ -64,5 +68,11 @@ class GetConnectApiClient extends GetConnect with Printer {
   }
   Future<Response> getCompanyProfile(Object body) async {
     return await post("GetCompanyProfile", body);
+  }
+  Future<Response> getReport(Object body) async {
+    return await post("RechargeReport", body);
+  }
+  Future<Response> getLogout(Object body) async {
+    return await post("Logout", body);
   }
 }

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/utils/spacing.dart';
-import 'package:we_save_more/widget/app_text.dart';
 import '../../../../utils/custom_appbar.dart';
+import '../data/report_response.dart';
 import 'report_controller.dart';
 
 class ReportScreen extends StatelessWidget {
@@ -28,7 +26,7 @@ class ReportScreen extends StatelessWidget {
 
       body: Column(
         children: [
-          ///SEARCH BOX
+          // ---------------- SEARCH BOX ----------------
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
             child: Container(
@@ -42,10 +40,8 @@ class ReportScreen extends StatelessWidget {
                 children: [
                   Spacing.w10,
                   Icon(Icons.search, size: 22, color: Colors.grey),
-
                   Spacing.h8,
 
-                  /// Search TextField
                   Expanded(
                     child: TextField(
                       controller: controller.searchController,
@@ -59,177 +55,240 @@ class ReportScreen extends StatelessWidget {
                     ),
                   ),
 
-                  /// Clear Button
                   Obx(
-                    () => controller.searchText.value.isNotEmpty
+                        () => controller.searchText.value.isNotEmpty
                         ? IconButton(
-                            icon: Icon(Icons.clear, size: 18),
-                            onPressed: controller.clearSearch,
-                          )
-                        : const SizedBox(),
+                      icon: Icon(Icons.clear, size: 18),
+                      onPressed: controller.clearSearch,
+                    )
+                        : SizedBox(),
                   ),
                 ],
               ),
             ),
           ),
-          rechargeReportCard()
+
+          // --------------- API + LIST -----------------
+          Expanded(
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              if (!controller.hasData) {
+                return Center(
+                  child: Text("No Records Found"),
+                );
+              }
+
+              return ListView.builder(
+                itemCount: controller.rechargeList.length,
+                itemBuilder: (context, index) {
+                  final item = controller.rechargeList[index];
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          )
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // ------------------- DATE + STATUS -------------------
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.calendar_month, color: Colors.grey),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    item.entryDate ?? "--",
+                                    style: TextStyle(fontSize: 14, color: Colors.black87),
+                                  ),
+                                ],
+                              ),
+
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: item.type == "SUCCESS"
+                                      ? Color(0xffE8F7EF)
+                                      : item.type == "FAILED"
+                                      ? Color(0xffFEEAEA)
+                                      : Color(0xffFFF7E6),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      item.type == "SUCCESS"
+                                          ? Icons.check_circle
+                                          : item.type == "FAILED"
+                                          ? Icons.error
+                                          : Icons.access_time_filled,
+                                      color: item.type == "SUCCESS"
+                                          ? Colors.green
+                                          : item.type == "FAILED"
+                                          ? Colors.red
+                                          : Colors.orange,
+                                      size: 18,
+                                    ),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      item.type ?? "—",
+                                      style: TextStyle(
+                                        color: item.type == "SUCCESS"
+                                            ? Colors.green
+                                            : item.type == "FAILED"
+                                            ? Colors.red
+                                            : Colors.orange,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(height: 16),
+
+                          // ------------------- OPERATOR + NUMBER + AMOUNT -------------------
+                          Row(
+                            children: [
+                              Image.asset(
+                                "assets/images/app_logo.png",
+                                width: 60,
+                                height: 60,
+                              ),
+
+                              SizedBox(width: 12),
+
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.operator ?? "Unknown Operator",
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      item.customerNo ?? item.account ?? "--",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              Text(
+                                "₹ ${item.amount?.toStringAsFixed(2) ?? "0"}",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(height: 12),
+
+                          // ------------------- TRANSACTION DETAILS -------------------
+                          Text(
+                            "Transaction ID : ${item.transactionID ?? "--"}",
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            "Provider Ref Id : ${item.liveID ?? "--"}",
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+
+                          SizedBox(height: 16),
+
+                          // ------------------- DISPUTE + SHARE -------------------
+                          if (item.type == "SUCCESS")
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                // Dispute
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(color: Colors.yellow, width: 2),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.report_problem, size: 18, color: Colors.orange),
+                                      SizedBox(width: 6),
+                                      Text(
+                                        "Dispute",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                SizedBox(width: 12),
+
+                                // Share
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(color: Colors.yellow, width: 2),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.share, size: 18, color: Colors.purple),
+                                      SizedBox(width: 6),
+                                      Text(
+                                        "Share",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            }),
+          )
         ],
       ),
     );
   }
-}
-Widget rechargeReportCard() {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(14),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black12,
-          blurRadius: 4,
-          offset: Offset(0, 2),
-        )
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        /// -------- TOP ROW (DATE + STATUS) --------
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Icon(Icons.calendar_month, color: Colors.grey),
-
-            Row(
-              children: [
-                SvgPicture.asset("assets/svg/success.svg", height: 20),
-                Spacing.w6,
-                AppText(
-                  "SUCCESS",
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff058239),
-                ),
-              ],
-            ),
-          ],
-        ),
-
-        Spacing.h16,
-
-        /// -------- LOGO + OPERATOR NAME + NUMBER --------
-        Row(
-          children: [
-            Image.asset(
-              "assets/images/app_logo.png",
-              width: 60,
-              height: 60,
-            ),
-            Spacing.w12,
-            Expanded(
-              child: Row(
-                children: [
-                  /// LEFT SIDE – NAME + NUMBER
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppText(
-                        "Airtel",
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      Spacing.h4,
-                      AppText(
-                        "8953467777",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ],
-                  ),
-
-                  Spacer(), /// <-- VERY IMPORTANT
-
-                  /// RIGHT SIDE – AMOUNT
-                  AppText(
-                    "₹ 349",
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.blue,
-                  ),
-                ],
-              ),
-            )
-
-
-          ],
-        ),
-
-        Spacing.h12,
-
-        /// -------- TRANSACTION DETAILS --------
-        AppText(
-          "Transaction Id   :  3527383973972628303983",
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
-        AppText(
-          "Provider Ref Id  :  36g5g6727t7JWJ",
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
-
-        Spacing.h16,
-
-        /// -------- BUTTONS (DISPUTE & SHARE) --------
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            /// DISPUTE BUTTON
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.yellow, width: 2),
-              ),
-              child: Row(
-                children: [
-                  SvgPicture.asset("assets/svg/dispute.svg", height: 18),
-                  Spacing.w6,
-                  AppText(
-                    "Dispute",
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black87,
-                  ),
-                ],
-              ),
-            ),
-
-            Spacing.w12,
-
-            /// SHARE BUTTON
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.yellow, width: 2),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.share, size: 18, color: Colors.purple),
-                  Spacing.w6,
-                  AppText(
-                    "Share",
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black87,
-                  ),
-                ],
-              ),
-            )
-          ],
-        )
-      ],
-    ),
-  );
 }

@@ -11,11 +11,11 @@ import 'main_nav_controller.dart';
 
 class MainNav extends StatelessWidget {
   final MainNavigationController controller = Get.put(MainNavigationController());
-  final SupportController supportController = Get.put(SupportController());
+
 
   final List<Widget> _pages = [
     HomeScreen(),
-    const SupportScreen(),
+     SupportScreen(),
      RefersScreen(),
      ReportScreen(),
     const ProfileScreen(),

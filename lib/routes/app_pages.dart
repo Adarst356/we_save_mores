@@ -9,10 +9,12 @@ import 'package:we_save_more/modules/dashboard/home/home_screen.dart';
 import 'package:we_save_more/modules/dashboard/main_nav/main_nav.dart';
 import 'package:we_save_more/modules/dashboard/notification/notification_screen.dart';
 import 'package:we_save_more/modules/dashboard/refers/view/refers_controller.dart';
+import 'package:we_save_more/modules/dashboard/reports/view/report_screen.dart';
 import '../modules/dashboard/home/home_controller.dart';
 import '../modules/dashboard/main_nav/main_nav_controller.dart';
 import '../modules/dashboard/notification/notification_controller.dart';
 import '../modules/dashboard/refers/view/refers_screen.dart';
+import '../modules/dashboard/reports/view/report_controller.dart';
 import '../modules/dashboard/support/view/support_controller.dart';
 import '../modules/dashboard/support/view/support_screen.dart';
 import '../modules/splash/splash_screen.dart';
@@ -76,7 +78,8 @@ class AppPages {
       name: AppRoutes.bottomNav,
       page: () =>  MainNav(),
       binding: BindingsBuilder(() {
-        // Get.lazyPut<SupportController>(() => SupportController());
+        Get.lazyPut<SupportController>(() => SupportController());
+     Get.lazyPut<ReportController>(() => ReportController());
         Get.lazyPut<MainNavigationController>(() => MainNavigationController());
       }),
     ),
@@ -92,6 +95,27 @@ class AppPages {
       page: () =>  SupportScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<SupportController>(() => SupportController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.report,
+      page: () =>  ReportScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ReportController>(() => ReportController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.report,
+      page: () =>  ReportScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ReportController>(() => ReportController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.sideDrawer,
+      page: () =>  ReportScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ReportController>(() => ReportController());
       }),
     ),
   ];
