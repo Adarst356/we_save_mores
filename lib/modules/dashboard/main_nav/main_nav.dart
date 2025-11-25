@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:we_save_more/modules/dashboard/home/home_screen.dart';
-import 'package:we_save_more/modules/dashboard/profile/profile_screen.dart';
+import 'package:we_save_more/modules/dashboard/profile/view/profile_screen.dart';
 import 'package:we_save_more/modules/dashboard/refers/view/refers_screen.dart';
 import 'package:we_save_more/modules/dashboard/reports/view/report_screen.dart';
 import 'package:we_save_more/modules/dashboard/support/view/support_screen.dart';

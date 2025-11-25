@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/utils/spacing.dart';
+import 'package:we_save_more/widget/app_text.dart';
 import '../../../../utils/custom_appbar.dart';
-import '../data/report_response.dart';
 import 'report_controller.dart';
 
-class ReportScreen extends StatelessWidget {
-  ReportScreen({super.key});
-
-  final ReportController controller = Get.put(ReportController());
+class ReportScreen extends GetView<ReportController> {
+  const ReportScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +15,14 @@ class ReportScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppbar(
-        title: "Informations",
+        title: "Transaction Report",
+        showLeft: false,
         leftIcon: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Icon(Icons.arrow_back, color: theme.colorScheme.onPrimary),
         ),
         rightIcon: Icon(Icons.filter_list, color: theme.colorScheme.onPrimary),
       ),
-
       body: Column(
         children: [
           // ---------------- SEARCH BOX ----------------
@@ -41,12 +40,22 @@ class ReportScreen extends StatelessWidget {
                   Spacing.w10,
                   Icon(Icons.search, size: 22, color: Colors.grey),
                   Spacing.h8,
-
                   Expanded(
                     child: TextField(
-                      controller: controller.searchController,
-                      onChanged: controller.onSearchChanged,
-                      decoration: InputDecoration(
+                      controller: controller.searchTextController.value,
+                      textInputAction: TextInputAction.done,
+                      textCapitalization: TextCapitalization.none,
+
+                      onChanged: (value) {
+                        controller.searchQuery.value = value.trim();
+                      },
+
+                      onSubmitted: (value) {
+                        controller.searchQuery.value = value.trim();
+                        controller.searchTextController.value.text = value.trim();
+                      },
+
+                      decoration: const InputDecoration(
                         hintText: 'Search',
                         border: InputBorder.none,
                         isDense: true,
@@ -55,20 +64,30 @@ class ReportScreen extends StatelessWidget {
                     ),
                   ),
 
-                  Obx(
-                        () => controller.searchText.value.isNotEmpty
-                        ? IconButton(
-                      icon: Icon(Icons.clear, size: 18),
-                      onPressed: controller.clearSearch,
-                    )
-                        : SizedBox(),
-                  ),
+
+                  // Clear button - only show when there's text
+                  Obx(() {
+                    if (controller.searchQuery.value.isNotEmpty) {
+                      return GestureDetector(
+                        onTap: () {
+                          controller.searchTextController.value.clear(); // TextField clear
+                          controller.searchQuery.value = ''; // Filter reset
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(Icons.clear, size: 20, color: Colors.grey),
+                        ),
+                      );
+                    }
+                    return SizedBox.shrink();
+                  }),
+
                 ],
               ),
             ),
           ),
 
-          // --------------- API + LIST -----------------
+          /// --------------- API + LIST -----------------
           Expanded(
             child: Obx(() {
               if (controller.isLoading.value) {
@@ -77,16 +96,50 @@ class ReportScreen extends StatelessWidget {
                 );
               }
 
-              if (!controller.hasData) {
+              /// DATA EMPTY → Loader show until data arrives
+              if (controller.rechargeList.isEmpty) {
                 return Center(
-                  child: Text("No Records Found"),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                     Image.asset("assets/images/network_error.png"),
+                      Spacing.h16,
+                      AppText(
+                        "No transactions found",
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              /// Use filtered list instead of original list
+              final displayList = controller.filteredRechargeList;
+
+              /// Show "no results" if search returned empty
+              if (displayList.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.search_off, size: 64, color: Colors.grey),
+                      SizedBox(height: 16),
+                      AppText(
+                        "No results found for '${controller.searchQuery.value}'",
+                        fontSize: 16,
+                        color: Colors.grey,
+                        align: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 );
               }
 
               return ListView.builder(
-                itemCount: controller.rechargeList.length,
+                itemCount: displayList.length,
                 itemBuilder: (context, index) {
-                  final item = controller.rechargeList[index];
+                  final item = displayList[index];
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -107,7 +160,7 @@ class ReportScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // ------------------- DATE + STATUS -------------------
+                          /// ------------------- DATE + STATUS -------------------
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -115,13 +168,13 @@ class ReportScreen extends StatelessWidget {
                                 children: [
                                   Icon(Icons.calendar_month, color: Colors.grey),
                                   SizedBox(width: 8),
-                                  Text(
-                                    item.entryDate ?? "--",
-                                    style: TextStyle(fontSize: 14, color: Colors.black87),
+                                  AppText(
+                                    item.modifyDate ?? "--",
+                                    fontSize: 10,
+                                    color: Colors.black87,
                                   ),
                                 ],
                               ),
-
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                 decoration: BoxDecoration(
@@ -148,26 +201,23 @@ class ReportScreen extends StatelessWidget {
                                       size: 18,
                                     ),
                                     SizedBox(width: 6),
-                                    Text(
+                                    AppText(
                                       item.type ?? "—",
-                                      style: TextStyle(
-                                        color: item.type == "SUCCESS"
-                                            ? Colors.green
-                                            : item.type == "FAILED"
-                                            ? Colors.red
-                                            : Colors.orange,
-                                        fontWeight: FontWeight.w700,
-                                      ),
+                                      color: item.type == "SUCCESS"
+                                          ? Colors.green
+                                          : item.type == "FAILED"
+                                          ? Colors.red
+                                          : Colors.orange,
+                                      fontWeight: FontWeight.w700,
                                     ),
                                   ],
                                 ),
                               ),
                             ],
                           ),
+                          Spacing.h16,
 
-                          SizedBox(height: 16),
-
-                          // ------------------- OPERATOR + NUMBER + AMOUNT -------------------
+                          /// ------------------- OPERATOR + NUMBER + AMOUNT -------------------
                           Row(
                             children: [
                               Image.asset(
@@ -175,64 +225,55 @@ class ReportScreen extends StatelessWidget {
                                 width: 60,
                                 height: 60,
                               ),
-
-                              SizedBox(width: 12),
-
+                              Spacing.w12,
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
+                                    AppText(
                                       item.operator ?? "Unknown Operator",
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    SizedBox(height: 4),
-                                    Text(
+                                    Spacing.h4,
+                                    AppText(
                                       item.customerNo ?? item.account ?? "--",
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black87,
-                                      ),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
                                     ),
                                   ],
                                 ),
                               ),
-
-                              Text(
+                              AppText(
                                 "₹ ${item.amount?.toStringAsFixed(2) ?? "0"}",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.blue,
-                                ),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.blue,
                               ),
                             ],
                           ),
+                          Spacing.h12,
 
-                          SizedBox(height: 12),
-
-                          // ------------------- TRANSACTION DETAILS -------------------
-                          Text(
+                          /// ------------------- TRANSACTION DETAILS -------------------
+                          AppText(
                             "Transaction ID : ${item.transactionID ?? "--"}",
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
                           ),
-                          Text(
+                          AppText(
                             "Provider Ref Id : ${item.liveID ?? "--"}",
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
                           ),
+                          Spacing.h16,
 
-                          SizedBox(height: 16),
-
-                          // ------------------- DISPUTE + SHARE -------------------
+                          /// ------------------- DISPUTE + SHARE -------------------
                           if (item.type == "SUCCESS")
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                // Dispute
+                                /// Dispute
                                 Container(
                                   padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                                   decoration: BoxDecoration(
@@ -242,21 +283,18 @@ class ReportScreen extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Icon(Icons.report_problem, size: 18, color: Colors.orange),
-                                      SizedBox(width: 6),
-                                      Text(
+                                      Spacing.w6,
+                                      AppText(
                                         "Dispute",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.black87,
-                                        ),
+                                        fontWeight: FontWeight.w700,
+                                        color: appColors.primaryColor,
                                       ),
                                     ],
                                   ),
                                 ),
+                                Spacing.w12,
 
-                                SizedBox(width: 12),
-
-                                // Share
+                                /// Share
                                 Container(
                                   padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                                   decoration: BoxDecoration(
@@ -266,13 +304,11 @@ class ReportScreen extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Icon(Icons.share, size: 18, color: Colors.purple),
-                                      SizedBox(width: 6),
-                                      Text(
+                                      Spacing.w6,
+                                      AppText(
                                         "Share",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.black87,
-                                        ),
+                                        fontWeight: FontWeight.w700,
+                                        color: appColors.primaryColor,
                                       ),
                                     ],
                                   ),

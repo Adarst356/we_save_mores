@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:we_save_more/modules/dashboard/reports/data/report_repo.dart';
 import 'package:we_save_more/modules/dashboard/reports/data/report_response.dart';
@@ -7,27 +8,37 @@ import '../../../../api/ui_state.dart';
 class ReportController extends GetxController {
   final ReportRepo repo = ReportRepo();
 
-  /// LOADING STATE
-  RxBool isLoading = true.obs;
+  RxBool isLoading = false.obs; // Changed from true to false
+  Rx<TextEditingController> searchTextController = TextEditingController().obs;
+  /// 🔍 SEARCH QUERY
+  RxString searchQuery = ''.obs;
 
-  /// FULL API STATE
   final reportState = Rx<UiState<TransactionResponse>>(UiState.none());
 
-  /// MAIN DATA
   Rx<TransactionResponse?> reportData = Rx<TransactionResponse?>(null);
 
-  /// SEARCH FIELD
-  final TextEditingController searchController = TextEditingController();
-  RxString searchText = "".obs;
-
-  /// Short helper getters
-  List<RechargeReport> get rechargeList =>
-      reportData.value?.rechargeReport ?? [];
+  /// DIRECT LIST FROM API
+  List<RechargeReport> get rechargeList {
+    return reportData.value?.rechargeReport ?? [];
+  }
 
   bool get hasData => rechargeList.isNotEmpty;
 
+  /// 🔥 FILTERED LIST BASED ON SEARCH
+  List<RechargeReport> get filteredRechargeList {
+    if (searchQuery.value.isEmpty) return rechargeList;
 
-  /// -------------------- FETCH REPORT API --------------------
+    return rechargeList.where((item) {
+      final q = searchQuery.value.toLowerCase();
+
+      return (item.operator?.toLowerCase().contains(q) ?? false) ||
+          (item.customerNo?.toLowerCase().contains(q) ?? false) ||
+          (item.account?.toLowerCase().contains(q) ?? false) ||
+          (item.transactionID?.toLowerCase().contains(q) ?? false);
+    }).toList();
+  }
+
+  /// API CALL
   void getReport() {
     isLoading.value = true;
 
@@ -50,37 +61,59 @@ class ReportController extends GetxController {
 
         state.when(
           success: (data) {
-            reportData.value = data;
-          },
-          error: (msg) => print("Report API Error: $msg"),
-          loading: () {},
-          none: () {},
-        );
+            print("✅ Report Success");
+            print("📊 Status Code: ${data.statuscode}");
+            print("📋 Message: ${data.msg}");
+            print("📦 Total Records: ${data.rechargeReport?.length ?? 0}");
 
-        isLoading.value = false;
+            if (data.rechargeReport != null && data.rechargeReport!.isNotEmpty) {
+              print("🔍 First Record:");
+              print("   Operator: ${data.rechargeReport![0].operator}");
+              print("   Amount: ${data.rechargeReport![0].amount}");
+              print("   Type: ${data.rechargeReport![0].type}");
+              print("   Date: ${data.rechargeReport![0].entryDate}");
+            }
+
+            reportData.value = data;
+            isLoading.value = false; // Stop loading after success
+          },
+          error: (msg) {
+            print("❌ Report API Error: $msg");
+            isLoading.value = false; // Stop loading after error
+
+            /// Toast instead of Snackbar
+            Fluttertoast.showToast(
+              msg: msg,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+          },
+          loading: () {
+            print("⏳ Loading Report...");
+            isLoading.value = true;
+          },
+          none: () {
+            print("🔵 None state");
+            isLoading.value = false;
+          },
+        );
       },
     );
   }
 
-
-
-
-  // -------------------- SEARCH FUNCTION --------------------
-  void onSearchChanged(String query) {
-    getReport(); /// call api on search
-  }
-
-  void clearSearch() {
+  @override
+  void onInit() {
+    super.onInit();
+    print("🚀 ReportController Initialized");
     getReport();
   }
 
-
-  // -------------------- INIT --------------------
   @override
-  void onInit() {
-
-    getReport();  // initial load
-    super.onInit();
+  void onClose() {
+    print("🛑 ReportController Closed");
+    super.onClose();
   }
-
 }

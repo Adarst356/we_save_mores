@@ -185,13 +185,13 @@ class RechargeReport {
   int? switchingID;
   String? circleName;
 
-  int? refundStatus;   /// FIXED
-  String? refundStatusText; /// FIXED
+  int? refundStatus;
+  String? refundStatusText;
 
   bool? isWTR;
   bool? commType;
-  int? gstAmount;
-  int? tdsAmount;
+  double? gstAmount;    // FIXED: Changed from int? to double?
+  double? tdsAmount;    // FIXED: Changed from int? to double?
 
   String? customerNo;
   String? ccName;
@@ -217,74 +217,118 @@ class RechargeReport {
 
   RechargeReport();
 
+  // Helper method for safe double conversion
+  static double? _toDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value);
+    return null;
+  }
+
+  // Helper method for safe int conversion
+  static int? _toInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return int.tryParse(value);
+    return null;
+  }
+
   RechargeReport.fromJson(Map<String, dynamic> json) {
-    iServiceID = json['_ServiceID'];
-    tid = json['tid'];
-    transactionID = json['transactionID'];
-    prefix = json['prefix'];
-    userID = json['userID'];
-    role = json['role'];
-    outletNo = json['outletNo'];
-    outlet = json['outlet'];
-    account = json['account'];
-    oid = json['oid'];
-    operator = json['operator'];
-    lastBalance = (json['lastBalance'] ?? 0).toDouble();
-    requestedAmount = json['requestedAmount'];
-    amount = (json['amount'] ?? 0).toDouble();
-    balance = json['balance'];
-    slabCommType = json['slabCommType'];
-    commission = (json['commission'] ?? 0).toDouble();
-    entryDate = json['entryDate'];
-    api = json['api'];
-    liveID = json['liveID'];
-    iType = json['_Type'];
-    type = json['type_'];
-    vendorID = json['vendorID'];
-    apiRequestID = json['apiRequestID'];
-    modifyDate = json['modifyDate'];
+    try {
+      iServiceID = _toInt(json['_ServiceID']);
+      tid = _toInt(json['tid']);
+      transactionID = json['transactionID'];
+      prefix = json['prefix'];
+      userID = _toInt(json['userID']);
+      role = json['role'];
+      outletNo = json['outletNo'];
+      outlet = json['outlet'];
+      account = json['account'];
+      oid = _toInt(json['oid']);
+      operator = json['operator'];
 
-    optional1 = json['optional1'];
-    optional2 = json['optional2'];
-    optional3 = json['optional3'];
-    optional4 = json['optional4'];
+      lastBalance = _toDouble(json['lastBalance']);
+      requestedAmount = _toInt(json['requestedAmount']);
+      amount = _toDouble(json['amount']);
+      balance = _toInt(json['balance']);
 
-    display1 = json['display1'];
-    display2 = json['display2'];
-    display3 = json['display3'];
-    display4 = json['display4'];
+      slabCommType = json['slabCommType'];
+      commission = _toDouble(json['commission']);
 
-    switchingName = json['switchingName'];
-    switchingID = json['switchingID'];
-    circleName = json['circleName'];
+      entryDate = json['entryDate'];
+      api = json['api'];
+      liveID = json['liveID'];
+      iType = _toInt(json['_Type']);
+      type = json['type_'];
+      vendorID = json['vendorID'];
+      apiRequestID = json['apiRequestID'];
+      modifyDate = json['modifyDate'];
 
-    refundStatus = json['refundStatus'];
-    refundStatusText = json['refundStatus_']; /// FIXED
+      optional1 = json['optional1'];
+      optional2 = json['optional2'];
+      optional3 = json['optional3'];
+      optional4 = json['optional4'];
 
-    isWTR = json['isWTR'];
-    commType = json['commType'];
-    gstAmount = json['gstAmount'];
-    tdsAmount = json['tdsAmount'];
+      display1 = json['display1'];
+      display2 = json['display2'];
+      display3 = json['display3'];
+      display4 = json['display4'];
 
-    customerNo = json['customerNo'];
-    ccName = json['ccName'];
-    ccMobile = json['ccMobile'];
+      switchingName = json['switchingName'];
+      switchingID = _toInt(json['switchingID']);
+      circleName = json['circleName'];
 
-    apiCode = json['apiCode'];
-    extraParam = json['extraParam'];
-    requestMode = json['requestMode'];
-    requestIP = json['requestIP'];
+      refundStatus = _toInt(json['refundStatus']);
+      refundStatusText = json['refundStatus_'];
 
-    o8 = json['o8'];
-    o9 = json['o9'];
-    o10 = json['o10'];
-    o11 = json['o11'];
-    o15 = json['o15'];
+      isWTR = json['isWTR'];
+      commType = json['commType'];
 
-    requestModeID = json['requestModeID'];
-    groupID = json['groupID'];
+      // FIXED: Use _toDouble instead of direct assignment
+      gstAmount = _toDouble(json['gstAmount']);
+      tdsAmount = _toDouble(json['tdsAmount']);
 
-    rOfferAmount = json['rOfferAmount'];
-    beniName = json['beniName'];
+      customerNo = json['customerNo'];
+      ccName = json['ccName'];
+      ccMobile = json['ccMobile'];
+
+      apiCode = json['apiCode'];
+      extraParam = json['extraParam'];
+      requestMode = json['requestMode'];
+      requestIP = json['requestIP'];
+
+      o8 = json['o8'];
+      o9 = json['o9'];
+      o10 = json['o10'];
+      o11 = json['o11'];
+      o15 = json['o15'];
+
+      requestModeID = _toInt(json['requestModeID']);
+      groupID = _toInt(json['groupID']);
+
+      rOfferAmount = json['rOfferAmount'];
+      beniName = json['beniName'];
+    } catch (e) {
+      print('❌ Error parsing RechargeReport: $e');
+      print('   JSON: $json');
+      rethrow;
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_ServiceID': iServiceID,
+      'tid': tid,
+      'transactionID': transactionID,
+      'operator': operator,
+      'amount': amount,
+      'type_': type,
+      'entryDate': entryDate,
+      'account': account,
+      'customerNo': customerNo,
+      'liveID': liveID,
+    };
   }
 }

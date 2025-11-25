@@ -22,10 +22,8 @@ class SupportScreen extends GetView<SupportController> {
     return Scaffold(
       appBar: CustomAppbar(
         title: "Informations",
-        leftIcon: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Icon(Icons.arrow_back, color: theme.colorScheme.onPrimary),
-        ),
+        showLeft: false  ,
+        leftIcon: Icon(Icons.arrow_back, color: theme.colorScheme.onPrimary),
       ),
 
       body: SingleChildScrollView(

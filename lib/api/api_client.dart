@@ -59,7 +59,6 @@ class GetConnectApiClient extends GetConnect with Printer {
     return await post("ForgetPassword", body);
   }
 
-
   Future<Response> getProductDetailsId(int id) async {
     return await post("ProductDetails/$id", {});
   }
@@ -75,4 +74,8 @@ class GetConnectApiClient extends GetConnect with Printer {
   Future<Response> getLogout(Object body) async {
     return await post("Logout", body);
   }
+  Future<Response> getProfile(Object body) async {
+    return await post("GetProfile", body);
+  }
+
 }

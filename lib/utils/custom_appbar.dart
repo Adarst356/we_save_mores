@@ -3,12 +3,14 @@ import 'package:we_save_more/widget/app_text.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final bool showLeft;        // <-- NEW
   final Widget? leftIcon;
   final Widget? rightIcon;
 
   const CustomAppbar({
     super.key,
     required this.title,
+    this.showLeft = false,     // <-- DEFAULT false
     this.leftIcon,
     this.rightIcon,
   });
@@ -25,19 +27,21 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: [
-            /// LEFT ICON
-            if (leftIcon != null) leftIcon!,
+            /// LEFT ICON (showLeft true ho tab hi dikhaye)
+            if (showLeft && leftIcon != null) leftIcon!,
 
-            if (leftIcon != null) const SizedBox(width: 30),
+            if (showLeft && leftIcon != null) const SizedBox(width: 30),
 
-            /// TITLE (Left aligned)
+            /// TITLE
             AppText(
               title,
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
-            Spacer(),
+
+            const Spacer(),
+
             /// RIGHT ICON
             if (rightIcon != null) rightIcon!,
           ],

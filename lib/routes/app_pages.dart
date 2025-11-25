@@ -79,7 +79,8 @@ class AppPages {
       page: () =>  MainNav(),
       binding: BindingsBuilder(() {
         Get.lazyPut<SupportController>(() => SupportController());
-     Get.lazyPut<ReportController>(() => ReportController());
+        Get.lazyPut<ReportController>(() => ReportController());
+        Get.lazyPut<ReferralController>(() => ReferralController());
         Get.lazyPut<MainNavigationController>(() => MainNavigationController());
       }),
     ),
