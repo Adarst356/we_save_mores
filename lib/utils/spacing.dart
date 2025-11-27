@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 class Spacing {
+  static const SizedBox w34= SizedBox(width: 34);
   static const SizedBox w24= SizedBox(width: 24);
   static const SizedBox w20= SizedBox(width: 20);
   static const SizedBox w16= SizedBox(width: 16);
@@ -14,6 +15,7 @@ class Spacing {
   static const SizedBox w6 = SizedBox(width: 6);
 
   static const SizedBox h180= SizedBox(height: 180);
+  static const SizedBox h120= SizedBox(height: 120);
   static const SizedBox h100= SizedBox(height: 100);
   static const SizedBox h80= SizedBox(height: 80);
   static const SizedBox h60= SizedBox(height: 60);
@@ -28,4 +30,5 @@ class Spacing {
   static const SizedBox h10 = SizedBox(height: 10,);
   static const SizedBox h8 = SizedBox(height: 8);
   static const SizedBox h4 = SizedBox(height: 4);
+  static const SizedBox h2 = SizedBox(height: 2,);
 }

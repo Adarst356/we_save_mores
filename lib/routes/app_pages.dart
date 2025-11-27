@@ -5,11 +5,15 @@ import 'package:we_save_more/modules/auth/login/view/login_controller.dart';
 import 'package:we_save_more/modules/auth/login/view/login_screen.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_controller.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_screen.dart';
+import 'package:we_save_more/modules/dashboard/drawer/view/side_drawer_screen.dart';
 import 'package:we_save_more/modules/dashboard/home/home_screen.dart';
 import 'package:we_save_more/modules/dashboard/main_nav/main_nav.dart';
 import 'package:we_save_more/modules/dashboard/notification/notification_screen.dart';
+import 'package:we_save_more/modules/dashboard/profile/view/profile_controller.dart';
+import 'package:we_save_more/modules/dashboard/profile/view/profile_screen.dart';
 import 'package:we_save_more/modules/dashboard/refers/view/refers_controller.dart';
 import 'package:we_save_more/modules/dashboard/reports/view/report_screen.dart';
+import '../modules/dashboard/drawer/view/side_drawer_controller.dart';
 import '../modules/dashboard/home/home_controller.dart';
 import '../modules/dashboard/main_nav/main_nav_controller.dart';
 import '../modules/dashboard/notification/notification_controller.dart';
@@ -81,6 +85,7 @@ class AppPages {
         Get.lazyPut<SupportController>(() => SupportController());
         Get.lazyPut<ReportController>(() => ReportController());
         Get.lazyPut<ReferralController>(() => ReferralController());
+        Get.lazyPut<ProfileController>(() => ProfileController());
         Get.lazyPut<MainNavigationController>(() => MainNavigationController());
       }),
     ),
@@ -106,17 +111,17 @@ class AppPages {
       }),
     ),
     GetPage(
-      name: AppRoutes.report,
-      page: () =>  ReportScreen(),
+      name: AppRoutes.sideDrawer,
+      page: () =>  SideDrawer(),
       binding: BindingsBuilder(() {
-        Get.lazyPut<ReportController>(() => ReportController());
+        Get.lazyPut<SideDrawerController>(() => SideDrawerController());
       }),
     ),
     GetPage(
-      name: AppRoutes.sideDrawer,
-      page: () =>  ReportScreen(),
+      name: AppRoutes.profile,
+      page: () =>  ProfileScreen(),
       binding: BindingsBuilder(() {
-        Get.lazyPut<ReportController>(() => ReportController());
+        Get.lazyPut<ProfileController>(() => ProfileController());
       }),
     ),
   ];

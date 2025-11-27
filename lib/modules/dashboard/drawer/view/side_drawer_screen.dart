@@ -1,165 +1,189 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:we_save_more/modules/dashboard/drawer/view/side_drawer_controller.dart';
 import 'package:we_save_more/utils/spacing.dart';
+import 'package:we_save_more/widget/app_text.dart';
+
+import '../../profile/view/profile_controller.dart';
 
 class SideDrawer extends StatelessWidget {
-   SideDrawer({super.key});
+  SideDrawer({super.key});
+
   final SideDrawerController controller = Get.put(SideDrawerController());
-   final Color primaryColor = const Color(0xFF3E1F66);
+  final ProfileController profileController = Get.find();
+
+  final Color primaryColor = const Color(0xFF3E1F66);
+
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      width: MediaQuery.of(context).size.width * 0.78,
-      child: Container(
-        color: primaryColor,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // ===== Top Profile Section =====
-                Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const CircleAvatar(
-                        radius: 25,
-                        backgroundColor: Colors.white24,
-                        child: Text(
-                          "VK",
-                          style: TextStyle(
+    return Obx(() {
+      final profile = profileController.profileData.value;
+
+      final initials = profileController.getInitials(profile?.name);
+
+      return Drawer(
+        width: MediaQuery.of(context).size.width * 0.78,
+        child: Container(
+          color: primaryColor,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  /// ===== TOP PROFILE SECTION =====
+                  Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 25),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        /// ------- DYNAMIC PROFILE PHOTO -------
+                        CircleAvatar(
+                          radius: 28,
+                          backgroundColor: Colors.white24,
+                          backgroundImage: (profile?.profilePic != null &&
+                              profile!.profilePic.toString().isNotEmpty)
+                              ? NetworkImage(
+                            profile.profilePic.toString(),
+                          )
+                              : null,
+                          child: (profile?.profilePic == null ||
+                              profile!.profilePic.toString().isEmpty)
+                              ? AppText(
+                            initials,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                          ),
+                            fontSize: 18,
+                          )
+                              : null,
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Vikash Kumar - Customer",
-                              style: TextStyle(
+
+                        Spacing.w12,
+
+                        /// ------- DYNAMIC NAME + MOBILE + EMAIL -------
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AppText(
+                                profile?.name ?? "User Name",
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 15,
                               ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              "9798374412",
-                              style: TextStyle(
+                              Spacing.h4,
+                              AppText(
+                                profile?.mobileNo ?? "N/A",
                                 color: Colors.white70,
                                 fontSize: 13,
                               ),
-                            ),
-                            Text(
-                              "vikashk66606@gmail.com",
-                              style: TextStyle(
+                              AppText(
+                                profile?.emailID ?? "N/A",
                                 color: Colors.white70,
                                 fontSize: 13,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          controller.showLogoutDialog();  // 🔥 पहले dialog खुलेगा
-                        },
-                        child: const Icon(
-                          Icons.power_settings_new,
-                          color: Colors.white,
-                          size: 28,
+
+                        /// ------- LOGOUT BUTTON -------
+                        GestureDetector(
+                          onTap: () {
+                            controller.showLogoutDialog();
+                          },
+                          child: const Icon(
+                            Icons.power_settings_new,
+                            color: Colors.white,
+                            size: 28,
+                          ),
                         ),
-                      ),
-
-
-                    ],
+                      ],
+                    ),
                   ),
-                ),
 
-                // ===== Light Buttons Section =====
-                Container(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  color: Colors.white,
-                  child: Column(
+                  /// =====================================================
+                  /// LIGHT BUTTON SECTION
+                  /// =====================================================
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 10),
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        _menuButton("Transaction Report",
+                            Icons.receipt_long, Colors.purple),
+                        _menuButton("Wallet History",
+                            Icons.account_balance_wallet, Colors.pink),
+                        _menuButton(
+                            "Add Money", Icons.add_circle, Colors.orange),
+                        _menuButton(
+                            "Send To Mobile No", Icons.send, Colors.green),
+                      ],
+                    ),
+                  ),
+
+              Spacing.h10,
+
+                  /// =====================================================
+                  // DARK GRID BUTTONS
+                  /// =====================================================
+                  GridView.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
+                    childAspectRatio: 1.3,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
                     children: [
-                      _menuButton("Transaction Report", Icons.receipt_long,
-                          Colors.purple),
-                      _menuButton("Wallet History",
-                          Icons.account_balance_wallet, Colors.pink),
-                      _menuButton(
-                          "Add Money", Icons.add_circle, Colors.orange),
-                      _menuButton(
-                          "Send To Mobile No", Icons.send, Colors.green),
+                      _darkButton("Change Password", Icons.key),
+                      _darkButton("Change Pin Password", Icons.lock),
+                      _darkButton("Customer Support", Icons.headset_mic),
+                      _darkButton("Refer & Earn", Icons.share),
                     ],
                   ),
-                ),
 
-                const SizedBox(height: 10),
-
-                // ===== Dark Buttons Section (Grid) =====
-                GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
-                  childAspectRatio: 1.3,
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  children: [
-                    _darkButton("Change Password", Icons.key),
-                    _darkButton("Change Pin Password", Icons.lock),
-                    _darkButton("Customer Support", Icons.headset_mic),
-                    _darkButton("Refer & Earn", Icons.share),
-                  ],
-                ),
-
-                // ===== Bottom Logo Section =====
-                Container(
-                  color: primaryColor,
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/images/app_full_logo.png',
-                        height: 70,
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        "Powered by RSK online service pvt Ltd",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                  /// =====================================================
+                  /// BOTTOM LOGO AREA
+                  /// =====================================================
+                  Container(
+                    color: primaryColor,
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'assets/images/app_full_logo.png',
+                          height: 70,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 8),
+                        const AppText(
+                          "Powered by RSK online service pvt Ltd",
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Spacing.h24,
-              ],
+
+                  Spacing.h24,
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  // ===== Light Menu Button =====
+  /// ===== LIGHT MENU BUTTON =====
   Widget _menuButton(String title, IconData icon, Color bgColor) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
         color: const Color(0xFFf5efe4),
         borderRadius: BorderRadius.circular(10),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 3,
@@ -194,7 +218,7 @@ class SideDrawer extends StatelessWidget {
     );
   }
 
-  // ===== Dark Grid Buttons =====
+  /// ===== DARK GRID BUTTON =====
   Widget _darkButton(String title, IconData icon) {
     return Padding(
       padding: const EdgeInsets.all(3.0),
@@ -207,15 +231,13 @@ class SideDrawer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: Colors.amber[200], size: 30),
-            const SizedBox(height: 8),
-            Text(
+          Spacing.h8,
+            AppText(
               title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-              ),
+              align: TextAlign.center,
+              color: Colors.white,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
             ),
           ],
         ),

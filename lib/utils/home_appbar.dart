@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 
-class CustomAppbarFlutter extends StatelessWidget
-    implements PreferredSizeWidget {
+class CustomAppbarFlutter extends StatelessWidget implements PreferredSizeWidget {
   final String? userName;
   final String? role;
   final String? mobileNumber;
@@ -10,6 +10,7 @@ class CustomAppbarFlutter extends StatelessWidget
 
   final Widget? leftWidget;
   final Widget? rightWidget;
+  final VoidCallback? onTapAvatar; /// New callback
 
   const CustomAppbarFlutter({
     super.key,
@@ -19,6 +20,7 @@ class CustomAppbarFlutter extends StatelessWidget
     this.profileImage,
     this.leftWidget,
     this.rightWidget,
+    this.onTapAvatar,
   });
 
   @override
@@ -34,20 +36,23 @@ class CustomAppbarFlutter extends StatelessWidget
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            /// ===== Left Widget (like menu icon etc.) =====
+            /// Left Widget
             if (leftWidget != null) leftWidget!,
-
             if (leftWidget != null) const SizedBox(width: 15),
 
-            /// ===== Avatar =====
-            CircleAvatar(
-              radius: 20,
-              backgroundColor: const Color(0xff203752),
-              backgroundImage: profileImage != null
-                  ? NetworkImage(profileImage!)
-                  : null,
-              child: profileImage == null
-                  ? Text(
+            /// Avatar + Name + Mobile
+            GestureDetector(
+              onTap: onTapAvatar,
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundColor: const Color(0xff203752),
+                    backgroundImage: profileImage != null
+                        ? NetworkImage(profileImage!)
+                        : null,
+                    child: profileImage == null
+                        ? Text(
                       _getInitials(userName ?? ""),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -55,54 +60,54 @@ class CustomAppbarFlutter extends StatelessWidget
                         fontSize: 14,
                       ),
                     )
-                  : null,
-            ),
+                        : null,
+                  ),
+                  const SizedBox(width: 10),
 
-            const SizedBox(width: 10),
-
-            /// ===== User Info =====
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+                  /// User details
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Flexible(
-                        child: AppText(
-                          userName ?? "",
-                          overflow: TextOverflow.ellipsis,
+                      Row(
+                        children: [
+                          AppText(
+                            userName ?? "",
+                            overflow: TextOverflow.ellipsis,
                             color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Flexible(
-                        child: AppText(
-                          "- ${role ?? ""}",
-                          overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(width: 4),
+                          AppText(
+                            "- ${role ?? ""}",
+                            overflow: TextOverflow.ellipsis,
                             color: Colors.white70,
                             fontWeight: FontWeight.w500,
                             fontSize: 12.5,
-                        ),
+                          ),
+                        ],
+                      ),
+                      AppText(
+                        mobileNumber ?? "",
+                        color: Colors.white70,
+                        fontSize: 12,
                       ),
                     ],
-                  ),
-                  AppText(
-                    mobileNumber ?? "",
-                 color: Colors.white70, fontSize: 12
                   ),
                 ],
               ),
             ),
 
-            /// ===== Right Widget (like actions/icons) =====
+            /// ==== THIS FIXES ICONS TO RIGHT END ====
+            const Spacer(),
+
+            /// Right Icons
             if (rightWidget != null) rightWidget!,
           ],
         ),
       ),
+
     );
   }
 
@@ -112,7 +117,7 @@ class CustomAppbarFlutter extends StatelessWidget
     return parts.length == 1
         ? parts.first.substring(0, 1).toUpperCase()
         : (parts.first.substring(0, 1) + parts.last.substring(0, 1))
-              .toUpperCase();
+        .toUpperCase();
   }
 
   @override

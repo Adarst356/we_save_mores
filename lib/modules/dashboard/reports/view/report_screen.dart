@@ -4,6 +4,7 @@ import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import '../../../../utils/custom_appbar.dart';
+import '../../../../widget/custom_bottom_sheet.dart';
 import 'report_controller.dart';
 
 class ReportScreen extends GetView<ReportController> {
@@ -21,11 +22,19 @@ class ReportScreen extends GetView<ReportController> {
           onTap: () => Navigator.pop(context),
           child: Icon(Icons.arrow_back, color: theme.colorScheme.onPrimary),
         ),
-        rightIcon: Icon(Icons.filter_list, color: theme.colorScheme.onPrimary),
+        rightIcon: GestureDetector(
+          onTap: () {
+            FilterBottomSheet.show(context);
+          },
+          child: Icon(
+            Icons.filter_list,
+            color: theme.colorScheme.onPrimary,
+          ),
+        ),
       ),
       body: Column(
         children: [
-          // ---------------- SEARCH BOX ----------------
+          /// ---------------- SEARCH BOX ----------------
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
             child: Container(

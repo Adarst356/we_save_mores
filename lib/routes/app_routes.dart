@@ -11,5 +11,6 @@ class AppRoutes {
  static const supportPage ="/SupportScreen";
 static const report ="/ReportScreen";
 static const sideDrawer ="/SideDrawer";
+static const profile ="/ProfileScreen";
 
 }

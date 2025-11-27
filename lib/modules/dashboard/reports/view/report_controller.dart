@@ -13,6 +13,7 @@ class ReportController extends GetxController {
   /// 🔍 SEARCH QUERY
   RxString searchQuery = ''.obs;
 
+
   final reportState = Rx<UiState<TransactionResponse>>(UiState.none());
 
   Rx<TransactionResponse?> reportData = Rx<TransactionResponse?>(null);

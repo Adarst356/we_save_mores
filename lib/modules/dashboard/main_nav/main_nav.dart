@@ -38,6 +38,7 @@ class MainNav extends StatelessWidget {
       },
       child: Scaffold(
         extendBody: true,
+        resizeToAvoidBottomInset: false,   /// ← ADD THIS LINE isse fix ho jata hai floating button
         body: _pages[controller.selectedIndex.value],
 
         /// Floating "Refer" Button
