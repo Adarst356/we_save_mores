@@ -5,22 +5,23 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:lottie/lottie.dart';
 import 'package:marquee/marquee.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:we_save_more/routes/app_routes.dart';
 
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
-import '../../../theme/app_colors.dart';
-import '../../../utils/home_appbar.dart';
-import '../drawer/view/side_drawer_screen.dart';
-import '../profile/view/profile_controller.dart';
-import '../profile/view/profile_screen.dart';
+import '../../../../theme/app_colors.dart';
+
+import '../../drawer/view/side_drawer_screen.dart';
+import '../../profile/view/profile_controller.dart';
+import '../../profile/view/profile_screen.dart';
+import '../home_appbar/home_appbar.dart';
 
 class HomeScreen extends StatelessWidget {
   final box = GetStorage();
 
   HomeScreen({super.key});
   final profileController = Get.put(ProfileController());
-
   @override
   Widget build(BuildContext context) {
     final role = box.read('role') ?? 'Customer';
@@ -52,15 +53,38 @@ class HomeScreen extends StatelessWidget {
 
             rightWidget: Row(
               children: [
-                SvgPicture.asset(
-                  "assets/svg/whatsapp-svgrepo-com.svg",
-                  width: 26,
-                  height: 26,
+                /// WHATSAPP ICON
+                GestureDetector(
+                  onTap: () {
+                    final mobile = profileController.profileData.value?.mobileNo ?? "";
+                    final whatsapp = "https://wa.me/91$mobile";
+                    launchUrl(Uri.parse(whatsapp), mode: LaunchMode.externalApplication);
+                  },
+                  child: SvgPicture.asset(
+                    "assets/svg/whatsapp-svgrepo-com.svg",
+                    width: 26,
+                    height: 26,
+                  ),
                 ),
                 Spacing.w10,
-                const Icon(Icons.refresh, color: Colors.white, size: 26),
-                Spacing.w10,
-                const Icon(Icons.notifications, color: Colors.white, size: 28),
+                /// REFRESH ICON
+                GestureDetector(
+                  onTap: () {
+                    profileController.getProfile();
+                    Get.snackbar(
+                      "Refreshing...",
+                      "Profile data updated",
+                      snackPosition: SnackPosition.TOP,
+                    );
+                  },
+                  child: const Icon(Icons.refresh, color: Colors.white, size: 26),
+                ),                Spacing.w10,
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(AppRoutes.notification);
+                  },
+                  child: const Icon(Icons.notifications, color: Colors.white, size: 28),
+                ),
               ],
             ),
 
@@ -324,7 +348,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            Spacing.h80,
+            Spacing.h100,
           ],
         ),
       ),

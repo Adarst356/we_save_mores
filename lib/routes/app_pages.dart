@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:we_save_more/modules/auth/change_password/view/change_pass_controller.dart';
+import 'package:we_save_more/modules/auth/change_password/view/change_pass_screen.dart';
 import 'package:we_save_more/modules/auth/forgotPassword/view/forgot_pass.dart';
 import 'package:we_save_more/modules/auth/forgotPassword/view/forgot_pass_controller.dart';
 import 'package:we_save_more/modules/auth/login/view/login_controller.dart';
@@ -6,7 +8,6 @@ import 'package:we_save_more/modules/auth/login/view/login_screen.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_controller.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_screen.dart';
 import 'package:we_save_more/modules/dashboard/drawer/view/side_drawer_screen.dart';
-import 'package:we_save_more/modules/dashboard/home/home_screen.dart';
 import 'package:we_save_more/modules/dashboard/main_nav/main_nav.dart';
 import 'package:we_save_more/modules/dashboard/notification/notification_screen.dart';
 import 'package:we_save_more/modules/dashboard/profile/view/profile_controller.dart';
@@ -14,7 +15,8 @@ import 'package:we_save_more/modules/dashboard/profile/view/profile_screen.dart'
 import 'package:we_save_more/modules/dashboard/refers/view/refers_controller.dart';
 import 'package:we_save_more/modules/dashboard/reports/view/report_screen.dart';
 import '../modules/dashboard/drawer/view/side_drawer_controller.dart';
-import '../modules/dashboard/home/home_controller.dart';
+import '../modules/dashboard/home_dashboard/view/home_controller.dart';
+import '../modules/dashboard/home_dashboard/view/home_screen.dart';
 import '../modules/dashboard/main_nav/main_nav_controller.dart';
 import '../modules/dashboard/notification/notification_controller.dart';
 import '../modules/dashboard/refers/view/refers_screen.dart';
@@ -122,6 +124,20 @@ class AppPages {
       page: () =>  ProfileScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ProfileController>(() => ProfileController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.notification,
+      page: () =>  NotificationScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<NotificationController>(() => NotificationController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.changePassword,
+      page: () =>  ChangePassScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ChangePassController>(() => ChangePassController());
       }),
     ),
   ];

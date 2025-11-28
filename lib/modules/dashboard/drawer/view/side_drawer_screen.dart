@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:we_save_more/modules/dashboard/drawer/view/side_drawer_controller.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
-
+import '../../main_nav/main_nav_controller.dart';
 import '../../profile/view/profile_controller.dart';
 
 class SideDrawer extends StatelessWidget {
@@ -18,7 +18,6 @@ class SideDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       final profile = profileController.profileData.value;
-
       final initials = profileController.getInitials(profile?.name);
 
       return Drawer(
@@ -32,8 +31,7 @@ class SideDrawer extends StatelessWidget {
                   /// ===== TOP PROFILE SECTION =====
                   Container(
                     margin: const EdgeInsets.only(top: 20),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 25),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -43,9 +41,7 @@ class SideDrawer extends StatelessWidget {
                           backgroundColor: Colors.white24,
                           backgroundImage: (profile?.profilePic != null &&
                               profile!.profilePic.toString().isNotEmpty)
-                              ? NetworkImage(
-                            profile.profilePic.toString(),
-                          )
+                              ? NetworkImage(profile.profilePic.toString())
                               : null,
                           child: (profile?.profilePic == null ||
                               profile!.profilePic.toString().isEmpty)
@@ -105,24 +101,55 @@ class SideDrawer extends StatelessWidget {
                   /// LIGHT BUTTON SECTION
                   /// =====================================================
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     color: Colors.white,
                     child: Column(
                       children: [
-                        _menuButton("Transaction Report",
-                            Icons.receipt_long, Colors.purple),
-                        _menuButton("Wallet History",
-                            Icons.account_balance_wallet, Colors.pink),
                         _menuButton(
-                            "Add Money", Icons.add_circle, Colors.orange),
+                          "Transaction Report",
+                          Icons.receipt_long,
+                          Colors.purple,
+                              () {
+                            // Close drawer first
+                                Get.back();
+
+                            // Switch to Reports tab (index 3)
+                            final mainNavController = Get.find<MainNavigationController>();
+                            mainNavController.changeIndex(3);
+                          },
+                        ),
                         _menuButton(
-                            "Send To Mobile No", Icons.send, Colors.green),
+                          "Wallet History",
+                          Icons.account_balance_wallet,
+                          Colors.pink,
+                              () {
+                                Get.back();
+                            // TODO: Add navigation or functionality
+                          },
+                        ),
+                        _menuButton(
+                          "Add Money",
+                          Icons.add_circle,
+                          Colors.orange,
+                              () {
+                                Get.back();
+                            // TODO: Add navigation or functionality
+                          },
+                        ),
+                        _menuButton(
+                          "Send To Mobile No",
+                          Icons.send,
+                          Colors.green,
+                              () {
+                                Get.back();
+                            // TODO: Add navigation or functionality
+                          },
+                        ),
                       ],
                     ),
                   ),
 
-              Spacing.h10,
+                  Spacing.h10,
 
                   /// =====================================================
                   // DARK GRID BUTTONS
@@ -135,10 +162,24 @@ class SideDrawer extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     children: [
-                      _darkButton("Change Password", Icons.key),
-                      _darkButton("Change Pin Password", Icons.lock),
-                      _darkButton("Customer Support", Icons.headset_mic),
-                      _darkButton("Refer & Earn", Icons.share),
+                      _darkButton("Change Password", Icons.key, () {
+                        Navigator.pop(context);
+                        // TODO: Add navigation
+                      }),
+                      _darkButton("Change Pin Password", Icons.lock, () {
+                        Navigator.pop(context);
+                        // TODO: Add navigation
+                      }),
+                      _darkButton("Customer Support", Icons.headset_mic, () {
+                        Navigator.pop(context);
+                        final mainNavController = Get.find<MainNavigationController>();
+                        mainNavController.changeIndex(1); // Support tab
+                      }),
+                      _darkButton("Refer & Earn", Icons.share, () {
+                        Navigator.pop(context);
+                        final mainNavController = Get.find<MainNavigationController>();
+                        mainNavController.changeIndex(2); // Refer tab
+                      }),
                     ],
                   ),
 
@@ -157,10 +198,9 @@ class SideDrawer extends StatelessWidget {
                         const SizedBox(height: 8),
                         const AppText(
                           "Powered by RSK online service pvt Ltd",
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
                         ),
                       ],
                     ),
@@ -177,7 +217,7 @@ class SideDrawer extends StatelessWidget {
   }
 
   /// ===== LIGHT MENU BUTTON =====
-  Widget _menuButton(String title, IconData icon, Color bgColor) {
+  Widget _menuButton(String title, IconData icon, Color bgColor, VoidCallback onTap) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
@@ -213,33 +253,36 @@ class SideDrawer extends StatelessWidget {
           size: 16,
           color: Colors.black54,
         ),
-        onTap: () {},
+        onTap: onTap,
       ),
     );
   }
 
   /// ===== DARK GRID BUTTON =====
-  Widget _darkButton(String title, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.all(3.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFF2D1450),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.amber[200], size: 30),
-          Spacing.h8,
-            AppText(
-              title,
-              align: TextAlign.center,
-              color: Colors.white,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
-          ],
+  Widget _darkButton(String title, IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(3.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF2D1450),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: Colors.amber[200], size: 30),
+              Spacing.h8,
+              AppText(
+                title,
+                align: TextAlign.center,
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ],
+          ),
         ),
       ),
     );

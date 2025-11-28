@@ -4,7 +4,7 @@ import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import '../../../../utils/custom_appbar.dart';
-import '../../../../widget/custom_bottom_sheet.dart';
+import '../bottomsheet/filter_bottomsheet_screen.dart';
 import 'report_controller.dart';
 
 class ReportScreen extends GetView<ReportController> {
@@ -24,7 +24,13 @@ class ReportScreen extends GetView<ReportController> {
         ),
         rightIcon: GestureDetector(
           onTap: () {
-            FilterBottomSheet.show(context);
+            FilterBottomSheet.show(
+              context,
+              onFilterApplied: (filterData) {
+                /// Apply filters to controller
+                controller.applyFilters(filterData);
+              },
+            );
           },
           child: Icon(
             Icons.filter_list,
@@ -54,16 +60,13 @@ class ReportScreen extends GetView<ReportController> {
                       controller: controller.searchTextController.value,
                       textInputAction: TextInputAction.done,
                       textCapitalization: TextCapitalization.none,
-
                       onChanged: (value) {
                         controller.searchQuery.value = value.trim();
                       },
-
                       onSubmitted: (value) {
                         controller.searchQuery.value = value.trim();
                         controller.searchTextController.value.text = value.trim();
                       },
-
                       decoration: const InputDecoration(
                         hintText: 'Search',
                         border: InputBorder.none,
@@ -72,15 +75,13 @@ class ReportScreen extends GetView<ReportController> {
                       ),
                     ),
                   ),
-
-
                   // Clear button - only show when there's text
                   Obx(() {
                     if (controller.searchQuery.value.isNotEmpty) {
                       return GestureDetector(
                         onTap: () {
-                          controller.searchTextController.value.clear(); // TextField clear
-                          controller.searchQuery.value = ''; // Filter reset
+                          controller.searchTextController.value.clear();
+                          controller.searchQuery.value = '';
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(right: 10),
@@ -90,35 +91,61 @@ class ReportScreen extends GetView<ReportController> {
                     }
                     return SizedBox.shrink();
                   }),
-
                 ],
               ),
             ),
           ),
 
-          /// --------------- API + LIST -----------------
+          /// --------------- API + LIST WITH PULL TO REFRESH -----------------
           Expanded(
             child: Obx(() {
+              // Show loader while loading
               if (controller.isLoading.value) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              /// DATA EMPTY → Loader show until data arrives
-              if (controller.rechargeList.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                     Image.asset("assets/images/network_error.png"),
+                      CircularProgressIndicator(),
                       Spacing.h16,
                       AppText(
-                        "No transactions found",
-                        fontSize: 16,
+                        "Loading transactions...",
+                        fontSize: 14,
                         color: Colors.grey,
                       ),
                     ],
+                  ),
+                );
+              }
+
+              /// DATA EMPTY after loading
+              if (controller.rechargeList.isEmpty) {
+                return RefreshIndicator(
+                  onRefresh: controller.refreshReport,
+                  child: SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height - 200,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset("assets/images/network_error.png"),
+                            Spacing.h16,
+                            AppText(
+                              "No transactions found",
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                            Spacing.h12,
+                            AppText(
+                              "Pull down to refresh",
+                              fontSize: 12,
+                              color: Colors.grey.shade400,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 );
               }
@@ -128,207 +155,227 @@ class ReportScreen extends GetView<ReportController> {
 
               /// Show "no results" if search returned empty
               if (displayList.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.search_off, size: 64, color: Colors.grey),
-                      SizedBox(height: 16),
-                      AppText(
-                        "No results found for '${controller.searchQuery.value}'",
-                        fontSize: 16,
-                        color: Colors.grey,
-                        align: TextAlign.center,
+                return RefreshIndicator(
+                  onRefresh: controller.refreshReport,
+                  child: SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height - 200,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.search_off, size: 64, color: Colors.grey),
+                            SizedBox(height: 16),
+                            AppText(
+                              "No results found for '${controller.searchQuery.value}'",
+                              fontSize: 16,
+                              color: Colors.grey,
+                              align: TextAlign.center,
+                            ),
+                            Spacing.h12,
+                            AppText(
+                              "Pull down to refresh",
+                              fontSize: 12,
+                              color: Colors.grey.shade400,
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
                 );
               }
 
-              return ListView.builder(
-                itemCount: displayList.length,
-                itemBuilder: (context, index) {
-                  final item = displayList[index];
+              /// Show list with pull to refresh
+              return RefreshIndicator(
+                onRefresh: controller.refreshReport,
+                child: ListView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: displayList.length,
+                  itemBuilder: (context, index) {
+                    final item = displayList[index];
 
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          )
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          /// ------------------- DATE + STATUS -------------------
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(Icons.calendar_month, color: Colors.grey),
-                                  SizedBox(width: 8),
-                                  AppText(
-                                    item.modifyDate ?? "--",
-                                    fontSize: 10,
-                                    color: Colors.black87,
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: item.type == "SUCCESS"
-                                      ? Color(0xffE8F7EF)
-                                      : item.type == "FAILED"
-                                      ? Color(0xffFEEAEA)
-                                      : Color(0xffFFF7E6),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Row(
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            )
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            /// ------------------- DATE + STATUS -------------------
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
                                   children: [
-                                    Icon(
-                                      item.type == "SUCCESS"
-                                          ? Icons.check_circle
-                                          : item.type == "FAILED"
-                                          ? Icons.error
-                                          : Icons.access_time_filled,
-                                      color: item.type == "SUCCESS"
-                                          ? Colors.green
-                                          : item.type == "FAILED"
-                                          ? Colors.red
-                                          : Colors.orange,
-                                      size: 18,
-                                    ),
-                                    SizedBox(width: 6),
+                                    Icon(Icons.calendar_month, color: Colors.grey),
+                                    SizedBox(width: 8),
                                     AppText(
-                                      item.type ?? "—",
-                                      color: item.type == "SUCCESS"
-                                          ? Colors.green
-                                          : item.type == "FAILED"
-                                          ? Colors.red
-                                          : Colors.orange,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Spacing.h16,
-
-                          /// ------------------- OPERATOR + NUMBER + AMOUNT -------------------
-                          Row(
-                            children: [
-                              Image.asset(
-                                "assets/images/app_logo.png",
-                                width: 60,
-                                height: 60,
-                              ),
-                              Spacing.w12,
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AppText(
-                                      item.operator ?? "Unknown Operator",
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    Spacing.h4,
-                                    AppText(
-                                      item.customerNo ?? item.account ?? "--",
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
+                                      item.modifyDate ?? "--",
+                                      fontSize: 10,
                                       color: Colors.black87,
                                     ),
                                   ],
                                 ),
-                              ),
-                              AppText(
-                                "₹ ${item.amount?.toStringAsFixed(2) ?? "0"}",
-                                fontSize: 20,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.blue,
-                              ),
-                            ],
-                          ),
-                          Spacing.h12,
-
-                          /// ------------------- TRANSACTION DETAILS -------------------
-                          AppText(
-                            "Transaction ID : ${item.transactionID ?? "--"}",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          AppText(
-                            "Provider Ref Id : ${item.liveID ?? "--"}",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          Spacing.h16,
-
-                          /// ------------------- DISPUTE + SHARE -------------------
-                          if (item.type == "SUCCESS")
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                /// Dispute
                                 Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: Colors.yellow, width: 2),
+                                    color: item.type == "SUCCESS"
+                                        ? Color(0xffE8F7EF)
+                                        : item.type == "FAILED"
+                                        ? Color(0xffFEEAEA)
+                                        : Color(0xffFFF7E6),
+                                    borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Row(
                                     children: [
-                                      Icon(Icons.report_problem, size: 18, color: Colors.orange),
-                                      Spacing.w6,
-                                      AppText(
-                                        "Dispute",
-                                        fontWeight: FontWeight.w700,
-                                        color: appColors.primaryColor,
+                                      Icon(
+                                        item.type == "SUCCESS"
+                                            ? Icons.check_circle
+                                            : item.type == "FAILED"
+                                            ? Icons.error
+                                            : Icons.access_time_filled,
+                                        color: item.type == "SUCCESS"
+                                            ? Colors.green
+                                            : item.type == "FAILED"
+                                            ? Colors.red
+                                            : Colors.orange,
+                                        size: 18,
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                Spacing.w12,
-
-                                /// Share
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: Colors.yellow, width: 2),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.share, size: 18, color: Colors.purple),
-                                      Spacing.w6,
+                                      SizedBox(width: 6),
                                       AppText(
-                                        "Share",
+                                        item.type ?? "—",
+                                        color: item.type == "SUCCESS"
+                                            ? Colors.green
+                                            : item.type == "FAILED"
+                                            ? Colors.red
+                                            : Colors.orange,
                                         fontWeight: FontWeight.w700,
-                                        color: appColors.primaryColor,
                                       ),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
-                        ],
+                            Spacing.h16,
+
+                            /// ------------------- OPERATOR + NUMBER + AMOUNT -------------------
+                            Row(
+                              children: [
+                                Image.asset(
+                                  "assets/images/app_logo.png",
+                                  width: 60,
+                                  height: 60,
+                                ),
+                                Spacing.w12,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      AppText(
+                                        item.operator ?? "Unknown Operator",
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      Spacing.h4,
+                                      AppText(
+                                        item.customerNo ?? item.account ?? "--",
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                AppText(
+                                  "₹ ${item.amount?.toStringAsFixed(2) ?? "0"}",
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.blue,
+                                ),
+                              ],
+                            ),
+                            Spacing.h12,
+
+                            /// ------------------- TRANSACTION DETAILS -------------------
+                            AppText(
+                              "Transaction ID : ${item.transactionID ?? "--"}",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            AppText(
+                              "Provider Ref Id : ${item.liveID ?? "--"}",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            Spacing.h16,
+
+                            /// ------------------- DISPUTE + SHARE -------------------
+                            if (item.type == "SUCCESS")
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  /// Dispute
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: Colors.yellow, width: 2),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.report_problem, size: 18, color: Colors.orange),
+                                        Spacing.w6,
+                                        AppText(
+                                          "Dispute",
+                                          fontWeight: FontWeight.w700,
+                                          color: appColors.primaryColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Spacing.w12,
+
+                                  /// Share
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: Colors.yellow, width: 2),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.share, size: 18, color: Colors.purple),
+                                        Spacing.w6,
+                                        AppText(
+                                          "Share",
+                                          fontWeight: FontWeight.w700,
+                                          color: appColors.primaryColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               );
             }),
           )

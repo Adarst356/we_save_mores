@@ -77,5 +77,8 @@ class GetConnectApiClient extends GetConnect with Printer {
   Future<Response> getProfile(Object body) async {
     return await post("GetProfile", body);
   }
+  Future<Response> getChangePassPin(Object body) async {
+    return await post("ChangePinOrPassword", body);
+  }
 
 }

@@ -12,5 +12,7 @@ class AppRoutes {
 static const report ="/ReportScreen";
 static const sideDrawer ="/SideDrawer";
 static const profile ="/ProfileScreen";
+  static const changePassword ="/ChangePassScreen";
+  static const changePin ="/ChangePinScreen";
 
 }

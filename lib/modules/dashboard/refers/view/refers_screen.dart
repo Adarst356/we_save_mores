@@ -5,13 +5,10 @@ import 'package:get/get.dart';
 import 'package:we_save_more/modules/dashboard/refers/view/refers_controller.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
-
 import '../../../../utils/share_helper.dart';
-
 
 class RefersScreen extends GetView<ReferralController> {
   const RefersScreen({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +21,9 @@ class RefersScreen extends GetView<ReferralController> {
               Padding(
                 padding: const EdgeInsets.all(12),
                 child: IconButton(
-                  onPressed: (){Get.back();},
+                  onPressed: () {
+                    Get.back();
+                  },
                   icon: SvgPicture.asset(
                     "assets/svg/close_button.svg",
                     height: 35,
@@ -33,9 +32,33 @@ class RefersScreen extends GetView<ReferralController> {
               ),
 
               Spacing.h24,
-              Obx(
-                    () => Column(
-                      mainAxisSize: MainAxisSize.min,
+
+              /// IMAGE CAROUSEL WITH LOADER
+              Obx(() {
+                /// Show loader while images are being fetched
+                if (controller.referralImages.isEmpty) {
+                  return SizedBox(
+                    height: 260,
+                    width: double.infinity,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                          Spacing.h16,
+                          AppText(
+                            "Loading images...",
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(
                       height: 260,
@@ -49,17 +72,8 @@ class RefersScreen extends GetView<ReferralController> {
                         itemBuilder: (context, index) {
                           final imageUrl = controller.referralImages[index];
                           return Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                            /*  boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 8,
-                                  spreadRadius: 1,
-                                  offset: Offset(0, 2),
-                                )
-                              ]*/
-                            ),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: imageUrl.startsWith('http')
@@ -68,12 +82,76 @@ class RefersScreen extends GetView<ReferralController> {
                                 fit: BoxFit.fill,
                                 width: double.infinity,
                                 height: double.infinity,
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        CircularProgressIndicator(
+                                          value: loadingProgress.expectedTotalBytes != null
+                                              ? loadingProgress.cumulativeBytesLoaded /
+                                              loadingProgress.expectedTotalBytes!
+                                              : null,
+                                        ),
+                                        Spacing.h12,
+                                        AppText(
+                                          "Loading image...",
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.broken_image,
+                                          size: 64,
+                                          color: Colors.grey,
+                                        ),
+                                        Spacing.h12,
+                                        AppText(
+                                          "Failed to load image",
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               )
                                   : Image.asset(
                                 imageUrl,
                                 fit: BoxFit.fill,
                                 width: double.infinity,
                                 height: double.infinity,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.broken_image,
+                                          size: 64,
+                                          color: Colors.grey,
+                                        ),
+                                        Spacing.h12,
+                                        AppText(
+                                          "Image not found",
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           );
@@ -83,24 +161,27 @@ class RefersScreen extends GetView<ReferralController> {
 
                     Spacing.h40,
 
-                    DotsIndicator(
-                      dotsCount: controller.referralImages.length,
-                      position: controller.currentIndex.value,
-                      decorator: DotsDecorator(
-                        activeColor: Colors.blue,
-                        color: Colors.grey,
-                        size: const Size.square(8),
-                        activeSize: const Size(8.0, 8),
-                        activeShape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
+                    // Show dots indicator only when images are loaded
+                    if (controller.referralImages.isNotEmpty)
+                      DotsIndicator(
+                        dotsCount: controller.referralImages.length,
+                        position: controller.currentIndex.value,
+                        decorator: DotsDecorator(
+                          activeColor: Colors.blue,
+                          color: Colors.grey,
+                          size: const Size.square(8),
+                          activeSize: const Size(8.0, 8),
+                          activeShape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
                         ),
                       ),
-                    ),
                   ],
-                ),
-              ),
+                );
+              }),
 
               Spacing.h40,
+
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(12),
@@ -125,7 +206,6 @@ class RefersScreen extends GetView<ReferralController> {
                 ),
               ),
 
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -140,10 +220,9 @@ class RefersScreen extends GetView<ReferralController> {
                     ),
                   ),
                   Spacing.w4,
-
                   IconButton(
                     onPressed: () {
-                        ShareHelper.shareFacebook(controller.shareMessage.value);
+                      ShareHelper.shareFacebook(controller.shareMessage.value);
                     },
                     icon: Image.asset(
                       "assets/icons/facebook.png",
@@ -164,7 +243,7 @@ class RefersScreen extends GetView<ReferralController> {
                   ),
                   Spacing.w4,
                   IconButton(
-                    onPressed: (){
+                    onPressed: () {
                       ShareHelper.shareEmail(controller.shareMessage.value);
                     },
                     icon: Image.asset(

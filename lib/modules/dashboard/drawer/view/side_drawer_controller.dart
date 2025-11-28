@@ -21,7 +21,7 @@ class SideDrawerController extends GetxController {
     isLoading.value = true;
 
     repo.getLogoutUser(
-      body: {},    // 🔥 Correct: EMPTY BODY
+      body: {},    /// 🔥 Correct: EMPTY BODY
       callback: (state) {
         logoutState.value = state;
 

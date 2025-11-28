@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class FilterBottomSheet extends StatelessWidget {
+  final Function(Map<String, String>) onFilterApplied;
+
+  FilterBottomSheet({super.key, required this.onFilterApplied});
+
   final TextEditingController fromDateController = TextEditingController();
   final TextEditingController toDateController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
@@ -12,18 +16,37 @@ class FilterBottomSheet extends StatelessWidget {
   final RxString selectedStatus = 'All'.obs;
 
   final List<String> topOptions = ['All', '10', '20', '50', '100'];
-  final List<String> statusOptions = ['All', 'Success', 'Pending', 'Failed'];
+  final List<String> statusOptions = ['All', 'Success', 'Pending', 'Failed', 'Refund'];
 
-  FilterBottomSheet({super.key});
-
-  /// ---------- STATIC METHOD (Fixed) ----------
-  static void show(BuildContext context) {
+  /// ---------- STATIC METHOD ----------
+  static void show(BuildContext context, {required Function(Map<String, String>) onFilterApplied}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => FilterBottomSheet(),
+      builder: (_) => FilterBottomSheet(onFilterApplied: onFilterApplied),
     );
+  }
+
+  /// Convert status to API format
+  String getStatusValue() {
+    switch (selectedStatus.value) {
+      case 'Success':
+        return '2';
+      case 'Pending':
+        return '1';
+      case 'Failed':
+        return '3';
+      case 'Refund':
+        return '4';
+      default:
+        return '0'; // All
+    }
+  }
+
+  /// Convert Top to API format
+  String getTopValue() {
+    return selectedTop.value == 'All' ? '50' : selectedTop.value;
   }
 
   @override
@@ -42,12 +65,6 @@ class FilterBottomSheet extends StatelessWidget {
           /// Header
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
             child: const Center(
               child: Text(
                 "Filter by",
@@ -66,45 +83,60 @@ class FilterBottomSheet extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
-                  ///----------------- DATE RANGE -----------------
+                  /// ----------------- DATE RANGE -----------------
                   Row(
                     children: [
-                      Expanded(child: _datePickerField("From Date", fromDateController, context)),
+                      Expanded(
+                        child: customFormField(
+                          label: "From Date",
+                          controller: fromDateController,
+                          readOnly: true,
+                          icon: Icons.calendar_today,
+                          onTap: () => pickDate(context, fromDateController),
+                        ),
+                      ),
                       const SizedBox(width: 12),
-                      Expanded(child: _datePickerField("To Date", toDateController, context)),
+                      Expanded(
+                        child: customFormField(
+                          label: "To Date",
+                          controller: toDateController,
+                          readOnly: true,
+                          icon: Icons.calendar_today,
+                          onTap: () => pickDate(context, toDateController),
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 16),
 
-                  // ---------------- MOBILE NUMBER ----------------
-                  _inputBox(
-                    "Child Mobile Number",
-                    mobileController,
-                    Icons.phone_android,
-                    TextInputType.phone,
+                  /// ---------------- MOBILE NUMBER ----------------
+                  customFormField(
+                    label: "Child Mobile Number",
+                    controller: mobileController,
+                    keyboardType: TextInputType.phone,
+                    icon: Icons.phone_android,
                   ),
                   const SizedBox(height: 16),
 
-                  // ---------------- ACCOUNT NUMBER ----------------
-                  _inputBox(
-                    "Account Number/Recharge Number",
-                    accountController,
-                    Icons.account_balance,
-                    TextInputType.number,
+                  /// ---------------- ACCOUNT ----------------
+                  customFormField(
+                    label: "Account Number/Recharge Number",
+                    controller: accountController,
+                    keyboardType: TextInputType.number,
+                    icon: Icons.account_balance,
                   ),
                   const SizedBox(height: 16),
 
-                  // ---------------- TRANSACTION ID ----------------
-                  _inputBox(
-                    "Transaction Id",
-                    transactionController,
-                    Icons.receipt_long,
-                    TextInputType.text,
+                  /// ---------------- TRANSACTION ----------------
+                  customFormField(
+                    label: "Transaction Id",
+                    controller: transactionController,
+                    keyboardType: TextInputType.text,
+                    icon: Icons.receipt_long,
                   ),
                   const SizedBox(height: 16),
 
-                  // ---------------- TOP ----------------
+                  /// ---------------- TOP ----------------
                   const Text(
                     "Choose Top",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
@@ -146,9 +178,9 @@ class FilterBottomSheet extends StatelessWidget {
                         .toList(),
                     onChanged: (value) => selectedStatus.value = value!,
                   )),
-
                   const SizedBox(height: 24),
 
+                  /// FILTER BUTTON
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -160,15 +192,22 @@ class FilterBottomSheet extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        Get.back(result: {
-                          "fromDate": fromDateController.text,
-                          "toDate": toDateController.text,
+                        final filterData = {
+                          "fromDate": fromDateController.text.isEmpty
+                              ? "01-Jan-2024"
+                              : fromDateController.text,
+                          "toDate": toDateController.text.isEmpty
+                              ? "31-Dec-2025"
+                              : toDateController.text,
                           "mobile": mobileController.text,
                           "account": accountController.text,
                           "transaction": transactionController.text,
-                          "top": selectedTop.value,
-                          "status": selectedStatus.value,
-                        });
+                          "top": getTopValue(),
+                          "status": getStatusValue(),
+                        };
+
+                        Get.back();
+                        onFilterApplied(filterData);
                       },
                       child: const Text(
                         "Filter",
@@ -191,59 +230,60 @@ class FilterBottomSheet extends StatelessWidget {
     );
   }
 
-  /// ---------------- HELPER WIDGETS ----------------
+  /// ------------------- GENERIC HELPER FIELD -------------------
 
-  Widget _datePickerField(String title, TextEditingController controller, BuildContext context) {
+  final Color primaryColor = const Color(0xFF3E1F66);
+
+  Widget customFormField({
+    required String label,
+    required TextEditingController controller,
+    IconData? icon,
+    TextInputType? keyboardType,
+    bool readOnly = false,
+    VoidCallback? onTap,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
-          readOnly: true,
+          readOnly: readOnly,
+          keyboardType: keyboardType,
           decoration: InputDecoration(
-            hintText: "Select Date",
-            prefixIcon: const Icon(Icons.calendar_today),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            hintText: label,
+            prefixIcon: icon != null ? Icon(icon, color: primaryColor) : null,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
-          onTap: () async {
-            DateTime? date = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(2020),
-              lastDate: DateTime(2035),
-            );
-            if (date != null) {
-              controller.text = "${date.day}-${_monthName(date.month)}-${date.year}";
-            }
-          },
+          onTap: onTap,
         ),
       ],
     );
   }
 
-  Widget _inputBox(String title, TextEditingController ctrl, IconData icon, TextInputType type) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-        const SizedBox(height: 8),
-        TextField(
-          controller: ctrl,
-          keyboardType: type,
-          decoration: InputDecoration(
-            prefixIcon: Icon(icon),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            hintText: title,
-          ),
-        )
-      ],
+  /// ------------------- DATE PICKER -------------------
+
+  Future<void> pickDate(BuildContext context, TextEditingController controller) async {
+    DateTime? date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2035),
     );
+
+    if (date != null) {
+      controller.text = "${date.day}-${_monthName(date.month)}-${date.year}";
+    }
   }
 
   String _monthName(int m) {
-    const mList = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const mList = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
     return mList[m - 1];
   }
 }
