@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:we_save_more/modules/dashboard/profile/view/profile_controller.dart';
+import 'package:we_save_more/routes/app_routes.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 
@@ -312,16 +313,18 @@ class ProfileScreen extends StatelessWidget {
                         size: 32,
                       ),
                     ),
-                    title: const Text(
-                      'Change Password',
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    title: GestureDetector(
+                      onTap: (){Get.toNamed(AppRoutes.changePassword);},
+                      child: const AppText(
+                        'Change Password',
+                       fontWeight: FontWeight.bold, fontSize: 16
+                      ),
                     ),
                     subtitle: const Padding(
                       padding: EdgeInsets.only(top: 4),
-                      child: Text(
+                      child: AppText(
                         'Change login password every week or month to secure account.',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                       fontSize: 12, color: Colors.grey
                       ),
                     ),
                     trailing: const Icon(
@@ -354,17 +357,23 @@ class ProfileScreen extends StatelessWidget {
                       child:
                       const Icon(Icons.pin, color: Colors.blue, size: 32),
                     ),
-                    title: const Text(
-                      'Change Pin Password',
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    title: GestureDetector(
+                      onTap: (){
+                        Get.toNamed(AppRoutes.changePin);
+                      },
+                      child: const AppText(
+                        'Change Pin Password',
+                      fontWeight: FontWeight.bold, fontSize: 16
+                      ),
                     ),
+
                     subtitle: const Padding(
                       padding: EdgeInsets.only(top: 4),
-                      child: Text(
+                      child: AppText(
                         'Change pin password to secure transaction.',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                     fontSize: 12, color: Colors.grey
                       ),
+
                     ),
                     trailing: const Icon(
                       Icons.arrow_forward_ios,

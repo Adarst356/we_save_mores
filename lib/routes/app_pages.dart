@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:we_save_more/modules/auth/change_password/view/change_pass_controller.dart';
 import 'package:we_save_more/modules/auth/change_password/view/change_pass_screen.dart';
+import 'package:we_save_more/modules/auth/change_pin/change_pin_screen.dart';
 import 'package:we_save_more/modules/auth/forgotPassword/view/forgot_pass.dart';
 import 'package:we_save_more/modules/auth/forgotPassword/view/forgot_pass_controller.dart';
 import 'package:we_save_more/modules/auth/login/view/login_controller.dart';
@@ -14,6 +15,7 @@ import 'package:we_save_more/modules/dashboard/profile/view/profile_controller.d
 import 'package:we_save_more/modules/dashboard/profile/view/profile_screen.dart';
 import 'package:we_save_more/modules/dashboard/refers/view/refers_controller.dart';
 import 'package:we_save_more/modules/dashboard/reports/view/report_screen.dart';
+import '../modules/auth/change_pin/chnage_pin_controller.dart';
 import '../modules/dashboard/drawer/view/side_drawer_controller.dart';
 import '../modules/dashboard/home_dashboard/view/home_controller.dart';
 import '../modules/dashboard/home_dashboard/view/home_screen.dart';
@@ -138,6 +140,13 @@ class AppPages {
       page: () =>  ChangePassScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ChangePassController>(() => ChangePassController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.changePin,
+      page: () =>  ChangePinScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ChangePinController>(() => ChangePinController());
       }),
     ),
   ];
