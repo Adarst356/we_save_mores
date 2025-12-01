@@ -313,18 +313,15 @@ class ProfileScreen extends StatelessWidget {
                         size: 32,
                       ),
                     ),
-                    title: GestureDetector(
-                      onTap: (){Get.toNamed(AppRoutes.changePassword);},
-                      child: const AppText(
+                    title: const AppText(
                         'Change Password',
-                       fontWeight: FontWeight.bold, fontSize: 16
-                      ),
+                        fontWeight: FontWeight.bold, fontSize: 16
                     ),
                     subtitle: const Padding(
                       padding: EdgeInsets.only(top: 4),
                       child: AppText(
-                        'Change login password every week or month to secure account.',
-                       fontSize: 12, color: Colors.grey
+                          'Change login password every week or month to secure account.',
+                          fontSize: 12, color: Colors.grey
                       ),
                     ),
                     trailing: const Icon(
@@ -332,7 +329,9 @@ class ProfileScreen extends StatelessWidget {
                       size: 16,
                       color: Colors.grey,
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Get.toNamed(AppRoutes.changePassword);
+                    },
                   ),
                 ),
               ),
@@ -357,14 +356,9 @@ class ProfileScreen extends StatelessWidget {
                       child:
                       const Icon(Icons.pin, color: Colors.blue, size: 32),
                     ),
-                    title: GestureDetector(
-                      onTap: (){
-                        Get.toNamed(AppRoutes.changePin);
-                      },
-                      child: const AppText(
-                        'Change Pin Password',
-                      fontWeight: FontWeight.bold, fontSize: 16
-                      ),
+                    title: const AppText(
+                      'Change Pin Password',
+                    fontWeight: FontWeight.bold, fontSize: 16
                     ),
 
                     subtitle: const Padding(
@@ -380,7 +374,7 @@ class ProfileScreen extends StatelessWidget {
                       size: 16,
                       color: Colors.grey,
                     ),
-                    onTap: () {},
+                    onTap: () {  Get.toNamed(AppRoutes.changePin);},
                   ),
                 ),
               ),
@@ -426,7 +420,9 @@ class ProfileScreen extends StatelessWidget {
                       size: 16,
                       color: Colors.grey,
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Get.toNamed(AppRoutes.updateProfile);
+                    },
                   ),
                 ),
               ),

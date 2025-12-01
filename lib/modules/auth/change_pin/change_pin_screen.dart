@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:we_save_more/modules/auth/change_pin/chnage_pin_controller.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import 'package:we_save_more/widget/custom_password_field.dart';
 
+import 'chnage_pin_controller.dart';
 
 class ChangePinScreen extends StatelessWidget {
   final controller = Get.put(ChangePinController());
@@ -23,10 +23,9 @@ class ChangePinScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                /// Close button
                 IconButton(
-                  onPressed: () {
-                    Get.back();
-                  },
+                  onPressed: () => Get.back(),
                   icon: SvgPicture.asset(
                     "assets/svg/close_button.svg",
                     height: 35,
@@ -36,14 +35,11 @@ class ChangePinScreen extends StatelessWidget {
 
                 /// Logo
                 Center(
-                  child: Center(
-                    child: Image.asset(
-                      'assets/images/app_full_logo.png',
-                      height: 100,
-                    ),
+                  child: Image.asset(
+                    'assets/images/app_full_logo.png',
+                    height: 100,
                   ),
                 ),
-
                 Spacing.h20,
 
                 /// Title
@@ -55,48 +51,52 @@ class ChangePinScreen extends StatelessWidget {
                     color: Color(0xFF4A148C),
                   ),
                 ),
-
                 Spacing.h30,
 
-                /// Old Password Field
-                CustomPasswordField(
+                /// OLD PIN
+                Obx(() => CustomPasswordField(
                   controller: controller.oldPassController,
-                  hintText: 'Enter Old Password',
-                  labelText: 'Enter Old Password :',
+                  hintText: 'Enter Old Pin',
+                  labelText: 'Enter Old Pin :',
                   obscureText: controller.oldPassVisible,
+                  onChanged: controller.validateOldPass,
+                  errorText: controller.oldPassError.value,
                   showLabel: true,
-                ),
-
+                )),
                 Spacing.h20,
 
-                /// New Password Field
-                CustomPasswordField(
+                /// NEW PIN
+                Obx(() => CustomPasswordField(
                   controller: controller.newPassController,
-                  hintText: 'Enter New Pin Password',
-                  labelText: 'Enter New Pin Password :',
+                  hintText: 'Enter New Pin',
+                  labelText: 'Enter New Pin :',
                   obscureText: controller.newPassVisible,
+                  onChanged: controller.validateNewPass,
+                  errorText: controller.newPassError.value,
                   showLabel: true,
-                ),
-
+                )),
                 Spacing.h20,
 
-                /// Confirm Password Field
-                CustomPasswordField(
+                /// CONFIRM PIN
+                Obx(() => CustomPasswordField(
                   controller: controller.confirmPassController,
-                  hintText: 'Enter Confirm Pin Password',
-                  labelText: 'Enter Confirm Pin Password :',
+                  hintText: 'Enter Confirm Pin',
+                  labelText: 'Enter Confirm Pin :',
                   obscureText: controller.confirmPassVisible,
+                  onChanged: controller.validateConfirmPass,
+                  errorText: controller.confirmPassError.value,
                   showLabel: true,
-                ),
+                )),
 
                 Spacing.h30,
 
-                /// Change Password Button
-                SizedBox(
+                /// SUBMIT BUTTON
+                Obx(() => SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () => controller.onSubmit(),
+                    onPressed:
+                    controller.isLoading.value ? null : controller.onSubmit,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4A148C),
                       shape: RoundedRectangleBorder(
@@ -104,19 +104,19 @@ class ChangePinScreen extends StatelessWidget {
                       ),
                       elevation: 0,
                     ),
-                    child: const AppText(
+                    child: controller.isLoading.value
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const AppText(
                       'CHANGE PASSWORD',
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      letterSpacing: 0.5,
                     ),
                   ),
-                ),
-
+                )),
                 Spacing.h30,
 
-                /// Instructions
+                /// PASSWORD RULES
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -133,12 +133,9 @@ class ChangePinScreen extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                       Spacing.h8,
-                      _buildBulletPoint('Is longer than 7 characters'),
-                      _buildBulletPoint('Does not match or significantly contain your username, e.g. do not use \'username123\''),
-                      _buildBulletPoint('Password is case sensitive'),
-                      _buildBulletPoint('Must contain at least 1 number'),
-                      _buildBulletPoint('Should be different for multiple Ids'),
-                      _buildBulletPoint('Does not have spaces, symbol and written in a-z/a-z 0-9 not user \'username123\''),
+                      _buildRule('Is exactly 4 digits'),
+                      _buildRule('Should not match old pin'),
+                      _buildRule('Pin must contain only 0–9'),
                     ],
                   ),
                 ),
@@ -150,28 +147,15 @@ class ChangePinScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBulletPoint(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const AppText(
-            '• ',
-            fontSize: 13,
-            color: Colors.red,
-            height: 1.5,
-          ),
-          Expanded(
-            child: AppText(
-              text,
-              fontSize: 12,
-              color: Colors.red,
-              height: 1.5,
-            ),
-          ),
-        ],
-      ),
+  Widget _buildRule(String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const AppText('• ', color: Colors.red, fontSize: 13),
+        Expanded(
+          child: AppText(text, color: Colors.red, fontSize: 12),
+        ),
+      ],
     );
   }
 }

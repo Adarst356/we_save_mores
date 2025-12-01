@@ -1,3 +1,5 @@
+// lib/widget/custom_password_field.dart
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,9 +15,9 @@ class CustomPasswordField extends StatelessWidget {
   final double? borderRadius;
   final EdgeInsetsGeometry? contentPadding;
   final TextInputType? keyboardType;
-  final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final bool showLabel;
+  final String? errorText;
 
   const CustomPasswordField({
     Key? key,
@@ -30,9 +32,9 @@ class CustomPasswordField extends StatelessWidget {
     this.borderRadius,
     this.contentPadding,
     this.keyboardType,
-    this.validator,
     this.onChanged,
     this.showLabel = false,
+    this.errorText,
   }) : super(key: key);
 
   @override
@@ -76,22 +78,29 @@ class CustomPasswordField extends StatelessWidget {
               filled: true,
               fillColor: fillColor ?? Colors.white,
               contentPadding: contentPadding,
+              errorText: errorText,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(borderRadius ?? 8),
                 borderSide: BorderSide(
-                  color: enabledBorderColor ?? Colors.grey[300]!,
+                  color: errorText != null
+                      ? Colors.red
+                      : (enabledBorderColor ?? Colors.grey[300]!),
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(borderRadius ?? 8),
                 borderSide: BorderSide(
-                  color: enabledBorderColor ?? Colors.grey[300]!,
+                  color: errorText != null
+                      ? Colors.red
+                      : (enabledBorderColor ?? Colors.grey[300]!),
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(borderRadius ?? 8),
                 borderSide: BorderSide(
-                  color: focusedBorderColor ?? const Color(0xFF4A148C),
+                  color: errorText != null
+                      ? Colors.red
+                      : (focusedBorderColor ?? const Color(0xFF4A148C)),
                 ),
               ),
               errorBorder: OutlineInputBorder(

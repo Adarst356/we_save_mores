@@ -285,7 +285,7 @@ class SupportScreen extends GetView<SupportController> {
                          subtitle,
                          decoration: TextDecoration.underline,
                          fontWeight: FontWeight.w800,
-                         color: Colors.yellow,
+                         color: appColors.primaryColor,
                          fontSize: 17,
                        ),
                      ),

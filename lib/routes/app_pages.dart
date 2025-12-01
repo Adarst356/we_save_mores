@@ -21,6 +21,7 @@ import '../modules/dashboard/home_dashboard/view/home_controller.dart';
 import '../modules/dashboard/home_dashboard/view/home_screen.dart';
 import '../modules/dashboard/main_nav/main_nav_controller.dart';
 import '../modules/dashboard/notification/notification_controller.dart';
+import '../modules/dashboard/profile/view/update_profile_screen.dart';
 import '../modules/dashboard/refers/view/refers_screen.dart';
 import '../modules/dashboard/reports/view/report_controller.dart';
 import '../modules/dashboard/support/view/support_controller.dart';
@@ -35,7 +36,7 @@ class AppPages {
   static final routes = [
     GetPage(
       name: AppRoutes.splash,
-      page: () =>  SplashScreen(),
+      page: () => SplashScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<SplashController>(() => SplashController());
       }),
@@ -49,42 +50,42 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.login,
-      page: () =>  LoginScreen(),
+      page: () => LoginScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<LoginController>(() => LoginController());
       }),
     ),
     GetPage(
       name: AppRoutes.signUp,
-      page: () =>  SignupScreen(),
+      page: () => SignupScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<SignupController>(() => SignupController());
       }),
     ),
     GetPage(
       name: AppRoutes.forgotPass,
-      page: () =>  ForgotPass(),
+      page: () => ForgotPass(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ForgotPassController>(() => ForgotPassController());
       }),
     ),
     GetPage(
       name: AppRoutes.homeScreen,
-      page: () =>  HomeScreen(),
+      page: () => HomeScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<HomeController>(() => HomeController());
       }),
     ),
     GetPage(
       name: AppRoutes.notification,
-      page: () =>  NotificationScreen(),
+      page: () => NotificationScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<NotificationController>(() => NotificationController());
       }),
     ),
     GetPage(
       name: AppRoutes.bottomNav,
-      page: () =>  MainNav(),
+      page: () => MainNav(),
       binding: BindingsBuilder(() {
         Get.lazyPut<SupportController>(() => SupportController());
         Get.lazyPut<ReportController>(() => ReportController());
@@ -95,56 +96,63 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.referral,
-      page: () =>  RefersScreen(),
+      page: () => RefersScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ReferralController>(() => ReferralController());
       }),
     ),
     GetPage(
       name: AppRoutes.supportPage,
-      page: () =>  SupportScreen(),
+      page: () => SupportScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<SupportController>(() => SupportController());
       }),
     ),
     GetPage(
       name: AppRoutes.report,
-      page: () =>  ReportScreen(),
+      page: () => ReportScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ReportController>(() => ReportController());
       }),
     ),
     GetPage(
       name: AppRoutes.sideDrawer,
-      page: () =>  SideDrawer(),
+      page: () => SideDrawer(),
       binding: BindingsBuilder(() {
         Get.lazyPut<SideDrawerController>(() => SideDrawerController());
       }),
     ),
     GetPage(
       name: AppRoutes.profile,
-      page: () =>  ProfileScreen(),
+      page: () => ProfileScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ProfileController>(() => ProfileController());
       }),
     ),
     GetPage(
       name: AppRoutes.notification,
-      page: () =>  NotificationScreen(),
+      page: () => NotificationScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<NotificationController>(() => NotificationController());
       }),
     ),
     GetPage(
       name: AppRoutes.changePassword,
-      page: () =>  ChangePassScreen(),
+      page: () => ChangePassScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ChangePassController>(() => ChangePassController());
       }),
     ),
     GetPage(
       name: AppRoutes.changePin,
-      page: () =>  ChangePinScreen(),
+      page: () => ChangePinScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ChangePinController>(() => ChangePinController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.updateProfile,
+      page: () => UpdateProfileScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ChangePinController>(() => ChangePinController());
       }),

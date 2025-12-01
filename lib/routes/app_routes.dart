@@ -4,15 +4,15 @@ class AppRoutes {
   static const login = '/login';
   static const signUp = '/SignUp';
   static const forgotPass = "/ForgotPassword";
- static const homeScreen = "/HomeScreen";
- static const notification = "/Notification";
- static const bottomNav = "/BottomNav";
- static const referral ="/RefersScreen";
- static const supportPage ="/SupportScreen";
-static const report ="/ReportScreen";
-static const sideDrawer ="/SideDrawer";
-static const profile ="/ProfileScreen";
-  static const changePassword ="/ChangePassScreen";
-  static const changePin ="/ChangePinScreen";
-
+  static const homeScreen = "/HomeScreen";
+  static const notification = "/Notification";
+  static const bottomNav = "/BottomNav";
+  static const referral = "/RefersScreen";
+  static const supportPage = "/SupportScreen";
+  static const report = "/ReportScreen";
+  static const sideDrawer = "/SideDrawer";
+  static const profile = "/ProfileScreen";
+  static const changePassword = "/ChangePassScreen";
+  static const changePin = "/ChangePinScreen";
+  static const updateProfile = "/UpdateProfileScreen";
 }
