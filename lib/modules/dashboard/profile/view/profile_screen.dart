@@ -6,6 +6,7 @@ import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 
 import '../../drawer/view/side_drawer_controller.dart';
+import 'balance_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -13,8 +14,8 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ProfileController controller = Get.put(ProfileController());
+    final BalanceController balanceController = Get.put(BalanceController());
     final SideDrawerController logoutController = Get.put(SideDrawerController());
-
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -195,20 +196,23 @@ class ProfileScreen extends StatelessWidget {
                                   Column(
                                     crossAxisAlignment:
                                     CrossAxisAlignment.start,
-                                    children: const [
-                                      AppText(
+                                    children: [
+                                      const AppText(
                                         'PREPAID WALLET',
                                         fontSize: 12,
                                         color: Colors.white70,
                                         letterSpacing: 0.5,
                                       ),
                                       Spacing.h4,
-                                      AppText(
-                                        '₹ 3.40',
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
+                                      Obx(() {
+
+                                        return AppText(
+                                          '₹ ${balanceController.balance.value.toStringAsFixed(1)}',
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        );
+                                      }),
                                     ],
                                   ),
                                   ElevatedButton.icon(
@@ -278,8 +282,7 @@ class ProfileScreen extends StatelessWidget {
                           ],
                         ),
                         Spacing.h16,
-                        _buildAddressRow(
-                            'Outlet Name', profile?.outletName ?? 'N/A'),
+                        _buildAddressRow('Outlet Name', profile?.outletName ?? 'N/A'),
                         _buildAddressRow('City', profile?.city ?? 'N/A'),
                         _buildAddressRow('State', profile?.state ?? 'N/A'),
                         _buildAddressRow('Address', profile?.address ?? 'N/A'),
@@ -434,7 +437,11 @@ class ProfileScreen extends StatelessWidget {
       }),
     );
   }
-  Widget _buildAddressRow(String label, String value) {
+  Widget _buildAddressRow(String label, String? value) {
+    if (value == null || value.trim().isEmpty || value == "null") {
+      return const SizedBox(); // hide row
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -443,7 +450,7 @@ class ProfileScreen extends StatelessWidget {
           SizedBox(
             width: 100,
             child: Text(
-              '$label',
+              label,
               style: const TextStyle(color: Colors.grey, fontSize: 14),
             ),
           ),
@@ -458,6 +465,7 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
+
 }
 
 

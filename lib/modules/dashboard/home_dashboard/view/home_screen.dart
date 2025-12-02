@@ -186,7 +186,9 @@ class HomeScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          serviceCircularItem("Add Money", Icons.add),
+                          GestureDetector(
+                            onTap: (){Get.toNamed(AppRoutes.addMoney);},
+                              child: serviceCircularItem("Add Money", Icons.add)),
                           serviceCircularItem("Send Money", Icons.send),
                           serviceCircularItem("Report", Icons.receipt_long),
                           serviceCircularItem(

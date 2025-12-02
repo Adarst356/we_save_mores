@@ -12,7 +12,6 @@ import '../data/support_response.dart';
 class SupportScreen extends GetView<SupportController> {
      const SupportScreen({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -23,7 +22,9 @@ class SupportScreen extends GetView<SupportController> {
       appBar: CustomAppbar(
         title: "Informations",
         showLeft: false  ,
-        leftIcon: Icon(Icons.arrow_back, color: theme.colorScheme.onPrimary),
+        leftIcon: GestureDetector(
+          onTap: (){Get.back();},
+            child: Icon(Icons.arrow_back, color: theme.colorScheme.onPrimary)),
       ),
 
       body: SingleChildScrollView(
@@ -128,7 +129,7 @@ class SupportScreen extends GetView<SupportController> {
                 ],
               ),
 
-              Spacing.h180,
+              Spacing.h120,
             ],
           ),
         ),

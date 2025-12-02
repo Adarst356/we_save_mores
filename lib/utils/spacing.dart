@@ -15,6 +15,7 @@ class Spacing {
   static const SizedBox w6 = SizedBox(width: 6);
 
   static const SizedBox h180= SizedBox(height: 180);
+  static const SizedBox h140= SizedBox(height: 140);
   static const SizedBox h120= SizedBox(height: 120);
   static const SizedBox h100= SizedBox(height: 100);
   static const SizedBox h80= SizedBox(height: 80);

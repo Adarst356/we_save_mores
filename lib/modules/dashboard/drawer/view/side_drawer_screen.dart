@@ -3,8 +3,11 @@ import 'package:get/get.dart';
 import 'package:we_save_more/modules/dashboard/drawer/view/side_drawer_controller.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
+import '../../../../routes/app_routes.dart';
 import '../../main_nav/main_nav_controller.dart';
 import '../../profile/view/profile_controller.dart';
+import '../../refers/view/refers_controller.dart';
+import '../../refers/view/refers_screen.dart';
 
 class SideDrawer extends StatelessWidget {
   SideDrawer({super.key});
@@ -31,7 +34,10 @@ class SideDrawer extends StatelessWidget {
                   /// ===== TOP PROFILE SECTION =====
                   Container(
                     margin: const EdgeInsets.only(top: 20),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 25,
+                    ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -39,18 +45,20 @@ class SideDrawer extends StatelessWidget {
                         CircleAvatar(
                           radius: 28,
                           backgroundColor: Colors.white24,
-                          backgroundImage: (profile?.profilePic != null &&
-                              profile!.profilePic.toString().isNotEmpty)
+                          backgroundImage:
+                              (profile?.profilePic != null &&
+                                  profile!.profilePic.toString().isNotEmpty)
                               ? NetworkImage(profile.profilePic.toString())
                               : null,
-                          child: (profile?.profilePic == null ||
-                              profile!.profilePic.toString().isEmpty)
+                          child:
+                              (profile?.profilePic == null ||
+                                  profile!.profilePic.toString().isEmpty)
                               ? AppText(
-                            initials,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          )
+                                  initials,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                )
                               : null,
                         ),
 
@@ -101,7 +109,10 @@ class SideDrawer extends StatelessWidget {
                   /// LIGHT BUTTON SECTION
                   /// =====================================================
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
                     color: Colors.white,
                     child: Column(
                       children: [
@@ -109,12 +120,13 @@ class SideDrawer extends StatelessWidget {
                           "Transaction Report",
                           Icons.receipt_long,
                           Colors.purple,
-                              () {
+                          () {
                             // Close drawer first
-                                Get.back();
+                            Get.back();
 
                             // Switch to Reports tab (index 3)
-                            final mainNavController = Get.find<MainNavigationController>();
+                            final mainNavController =
+                                Get.find<MainNavigationController>();
                             mainNavController.changeIndex(3);
                           },
                         ),
@@ -122,8 +134,8 @@ class SideDrawer extends StatelessWidget {
                           "Wallet History",
                           Icons.account_balance_wallet,
                           Colors.pink,
-                              () {
-                                Get.back();
+                          () {
+                            Get.back();
                             // TODO: Add navigation or functionality
                           },
                         ),
@@ -131,8 +143,8 @@ class SideDrawer extends StatelessWidget {
                           "Add Money",
                           Icons.add_circle,
                           Colors.orange,
-                              () {
-                                Get.back();
+                          () {
+                           Get.toNamed(AppRoutes.addMoney);
                             // TODO: Add navigation or functionality
                           },
                         ),
@@ -140,8 +152,8 @@ class SideDrawer extends StatelessWidget {
                           "Send To Mobile No",
                           Icons.send,
                           Colors.green,
-                              () {
-                                Get.back();
+                          () {
+                            Get.back();
                             // TODO: Add navigation or functionality
                           },
                         ),
@@ -163,22 +175,20 @@ class SideDrawer extends StatelessWidget {
                     shrinkWrap: true,
                     children: [
                       _darkButton("Change Password", Icons.key, () {
-                        Navigator.pop(context);
-                        // TODO: Add navigation
+                        Get.back();
+                        Get.toNamed(AppRoutes.changePassword);
                       }),
                       _darkButton("Change Pin Password", Icons.lock, () {
-                        Navigator.pop(context);
-                        // TODO: Add navigation
+                        Get.back();
+                        Get.toNamed(AppRoutes.changePin);
                       }),
                       _darkButton("Customer Support", Icons.headset_mic, () {
-                        Navigator.pop(context);
-                        final mainNavController = Get.find<MainNavigationController>();
-                        mainNavController.changeIndex(1); // Support tab
+                        Get.back();
+                        Get.toNamed(AppRoutes.supportPage);
                       }),
                       _darkButton("Refer & Earn", Icons.share, () {
-                        Navigator.pop(context);
-                        final mainNavController = Get.find<MainNavigationController>();
-                        mainNavController.changeIndex(2); // Refer tab
+                        Get.back();
+                        Get.toNamed(AppRoutes.referral);
                       }),
                     ],
                   ),
@@ -217,29 +227,26 @@ class SideDrawer extends StatelessWidget {
   }
 
   /// ===== LIGHT MENU BUTTON =====
-  Widget _menuButton(String title, IconData icon, Color bgColor, VoidCallback onTap) {
+  Widget _menuButton(
+    String title,
+    IconData icon,
+    Color bgColor,
+    VoidCallback onTap,
+  ) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
         color: const Color(0xFFf5efe4),
         borderRadius: BorderRadius.circular(10),
         boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 3,
-            offset: Offset(0, 1),
-          ),
+          BoxShadow(color: Colors.black12, blurRadius: 3, offset: Offset(0, 1)),
         ],
       ),
       child: ListTile(
         leading: CircleAvatar(
           radius: 18,
           backgroundColor: bgColor,
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 20,
-          ),
+          child: Icon(icon, color: Colors.white, size: 20),
         ),
         title: Text(
           title,

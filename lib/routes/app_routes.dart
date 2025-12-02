@@ -15,4 +15,5 @@ class AppRoutes {
   static const changePassword = "/ChangePassScreen";
   static const changePin = "/ChangePinScreen";
   static const updateProfile = "/UpdateProfileScreen";
+  static const addMoney = "/AddMoneyScreen";
 }

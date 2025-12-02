@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:we_save_more/modules/dashboard/profile/data/profile_repo.dart';
 import 'package:we_save_more/modules/dashboard/profile/data/profile_response.dart';
 import '../../../../api/ui_state.dart';
+import '../data/balance_repo.dart';
+import '../data/balance_response.dart';
 
 class ProfileController extends GetxController {
   ProfileRepo repo = ProfileRepo();

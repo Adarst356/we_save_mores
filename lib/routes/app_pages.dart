@@ -9,14 +9,18 @@ import 'package:we_save_more/modules/auth/login/view/login_screen.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_controller.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_screen.dart';
 import 'package:we_save_more/modules/dashboard/drawer/view/side_drawer_screen.dart';
+import 'package:we_save_more/modules/dashboard/home_dashboard/view/add_money_screen.dart';
 import 'package:we_save_more/modules/dashboard/main_nav/main_nav.dart';
 import 'package:we_save_more/modules/dashboard/notification/notification_screen.dart';
+import 'package:we_save_more/modules/dashboard/profile/view/balance_controller.dart';
 import 'package:we_save_more/modules/dashboard/profile/view/profile_controller.dart';
 import 'package:we_save_more/modules/dashboard/profile/view/profile_screen.dart';
+import 'package:we_save_more/modules/dashboard/profile/view/update_profile_controller.dart';
 import 'package:we_save_more/modules/dashboard/refers/view/refers_controller.dart';
 import 'package:we_save_more/modules/dashboard/reports/view/report_screen.dart';
 import '../modules/auth/change_pin/chnage_pin_controller.dart';
 import '../modules/dashboard/drawer/view/side_drawer_controller.dart';
+import '../modules/dashboard/home_dashboard/view/add_money_controller.dart';
 import '../modules/dashboard/home_dashboard/view/home_controller.dart';
 import '../modules/dashboard/home_dashboard/view/home_screen.dart';
 import '../modules/dashboard/main_nav/main_nav_controller.dart';
@@ -154,7 +158,16 @@ class AppPages {
       name: AppRoutes.updateProfile,
       page: () => UpdateProfileScreen(),
       binding: BindingsBuilder(() {
-        Get.lazyPut<ChangePinController>(() => ChangePinController());
+        Get.lazyPut<UpdateProfileController>(() => UpdateProfileController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.addMoney,
+      page: () => AddMoneyScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<AddMoneyController>(() => AddMoneyController());
+        Get.lazyPut<BalanceController>(() => BalanceController()); // 👈 यह जोड़ो
+
       }),
     ),
   ];

@@ -1,24 +1,20 @@
-import 'package:we_save_more/modules/dashboard/profile/data/profile_response.dart';
-import 'package:we_save_more/modules/dashboard/profile/data/update_profile_response.dart';
-
+import 'package:we_save_more/modules/dashboard/profile/data/balance_response.dart';
 import '../../../../../../api/api_client.dart';
 import '../../../../../../api/ui_state.dart';
 
-
-
-class  UpdateProfileRepo{
+class  BalanceRepo{
   final GetConnectApiClient _apiClient = GetConnectApiClient.instance;
-  Future<void> getUpdateProfileData({
+  Future<void> getBalanceData({
     required Map<String, dynamic> body,
-    required Function(UiState<UpdateProfileResponse> state) callback,
+    required Function(UiState<BalanceResponse> state) callback,
   }) async {
     callback(UiState.loading());
 
     try {
-      final res = await _apiClient.getUpdateProfile(body);
+      final res = await _apiClient.getBalance(body);
 
       if (res.status.isOk) {
-        final data = UpdateProfileResponse.fromJson(res.body);
+        final data = BalanceResponse.fromJson(res.body);
         callback(UiState.success(data));
       } else {
         callback(UiState.error("Failed to fetch referral data"));
