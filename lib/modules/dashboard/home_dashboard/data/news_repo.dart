@@ -1,24 +1,24 @@
-import 'package:we_save_more/modules/dashboard/home_dashboard/data/pg_details_response.dart';
+import 'package:we_save_more/modules/dashboard/home_dashboard/data/news_response.dart';
 import '../../../../../../api/api_client.dart';
 import '../../../../../../api/ui_state.dart';
 
-class PgDetailsRepo {
+class NewsRepo {
   final GetConnectApiClient _apiClient = GetConnectApiClient.instance;
 
-  Future<void> getPGDetails({
+  Future<void> getNewsDetailsData({
     required Map<String, dynamic> body,
-    required Function(UiState<GetPGDetailResponse> state) callback,
+    required Function(UiState<NewsResponse> state) callback,
   }) async {
     callback(UiState.loading());
 
     try {
-      final res = await _apiClient.getPGDetails(body);
+      final res = await _apiClient.getNewsDetail(body);
 
       if (res.status.isOk) {
-        final data = GetPGDetailResponse.fromJson(res.body);
+        final data = NewsResponse.fromJson(res.body);
         callback(UiState.success(data));
       } else {
-        callback(UiState.error("Failed to fetch PG details data"));
+        callback(UiState.error("Failed to fetch News Details"));
       }
     } catch (e) {
       callback(UiState.error("Error: $e"));

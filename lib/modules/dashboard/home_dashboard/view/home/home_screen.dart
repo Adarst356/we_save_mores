@@ -1,34 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:lottie/lottie.dart';
-import 'package:marquee/marquee.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:we_save_more/routes/app_routes.dart';
-
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
-import '../../../../theme/app_colors.dart';
+import '../../../../../theme/app_colors.dart';
+import '../../../drawer/view/side_drawer_screen.dart';
+import '../../../profile/view/balance_controller.dart';
+import '../../../profile/view/profile_controller.dart';
+import '../../home_appbar/home_appbar.dart';
+import '../news/news_widget.dart';
+import 'banner_controller.dart';
+import 'home_controller.dart';
 
-import '../../drawer/view/side_drawer_screen.dart';
-import '../../profile/view/profile_controller.dart';
-import '../../profile/view/profile_screen.dart';
-import '../home_appbar/home_appbar.dart';
 
 class HomeScreen extends StatelessWidget {
   final box = GetStorage();
 
   HomeScreen({super.key});
+
   final profileController = Get.put(ProfileController());
+  final balanceController = Get.put(BalanceController());
+  final homeController = Get.put(HomeController());
+  final BannerController controller = Get.put(BannerController());
+
+
   @override
   Widget build(BuildContext context) {
     final role = box.read('role') ?? 'Customer';
 
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer:  SideDrawer(),
+      drawer: SideDrawer(),
 
       /// ======= APPBAR =======
       appBar: PreferredSize(
@@ -50,7 +56,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             rightWidget: Row(
               children: [
                 /// WHATSAPP ICON
@@ -67,6 +72,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 Spacing.w10,
+
                 /// REFRESH ICON
                 GestureDetector(
                   onTap: () {
@@ -78,7 +84,10 @@ class HomeScreen extends StatelessWidget {
                     );
                   },
                   child: const Icon(Icons.refresh, color: Colors.white, size: 26),
-                ),                Spacing.w10,
+                ),
+                Spacing.w10,
+
+                /// NOTIFICATION ICON
                 GestureDetector(
                   onTap: () {
                     Get.toNamed(AppRoutes.notification);
@@ -87,11 +96,8 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-
-            /// ===== CLICK Avatar/Name/Mobile → ProfileScreen
             onTapAvatar: () {
-             Get.toNamed(AppRoutes.profile
-              );
+              Get.toNamed(AppRoutes.profile);
             },
           );
         }),
@@ -110,7 +116,7 @@ class HomeScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 8,
@@ -120,8 +126,8 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 child: Row(
-                  children: [
-                    SizedBox(width: 15),
+                  children:  [
+                    const SizedBox(width: 15),
                     SvgPicture.asset(
                       "assets/svg/wallet-svgrepo-com.svg",
                       height: 50,
@@ -132,35 +138,31 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        AppText(
+                        const AppText(
                           "PREPAID WALLET",
                           color: Colors.grey,
                           fontSize: 16,
                         ),
                         Align(
                           alignment: Alignment.center,
-                          child: AppText(
-                            "₹ 3.40",
+                          child: Obx(() => AppText(
+                            '₹ ${balanceController.balance.value.toStringAsFixed(2)}',
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
                             color: Colors.black,
-                          ),
-                        ),
+                          )),
+                        )
                       ],
                     ),
                   ],
                 ),
               ),
             ),
-
-            /// ======= LATEST NEWS =======
+            /// ======= LATEST NEWS - NOW USING API =======
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: _latestNews(
-                "PLEASE SWITCH TO RESKPAY APP  कृपया RESKPAY ऐप पर शिफ्ट हो जाएं",
-              ),
+              child: LatestNewsWidget(),
             ),
-
             /// ======= MAIN CONTENT =======
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -187,8 +189,11 @@ class HomeScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           GestureDetector(
-                            onTap: (){Get.toNamed(AppRoutes.addMoney);},
-                              child: serviceCircularItem("Add Money", Icons.add)),
+                            onTap: () {
+                              Get.toNamed(AppRoutes.addMoney);
+                            },
+                            child: serviceCircularItem("Add Money", Icons.add),
+                          ),
                           serviceCircularItem("Send Money", Icons.send),
                           serviceCircularItem("Report", Icons.receipt_long),
                           serviceCircularItem(
@@ -202,14 +207,14 @@ class HomeScreen extends StatelessWidget {
 
                   Spacing.h12,
 
-                  /// ======= OUR SERVICES CARD (Above Quick Actions as requested) =======
+                  /// ======= OUR SERVICES CARD =======
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    padding: EdgeInsets.all(12),
+                    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black12,
                           blurRadius: 10,
@@ -224,7 +229,7 @@ class HomeScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            AppText(
+                            const AppText(
                               "Our Services",
                               fontSize: 21,
                               fontWeight: FontWeight.w900,
@@ -241,12 +246,12 @@ class HomeScreen extends StatelessWidget {
                         GridView(
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           gridDelegate:
-                              SliverGridDelegateWithMaxCrossAxisExtent(
-                                maxCrossAxisExtent: 90,
-                                childAspectRatio: 0.80,
-                              ),
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 90,
+                            childAspectRatio: 0.80,
+                          ),
                           children: [
                             serviceItem("Prepaid", "assets/svg/prepaid.svg"),
                             serviceItem("DTH", "assets/svg/antenna.svg"),
@@ -294,20 +299,18 @@ class HomeScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          AppText(
+                          const AppText(
                             "Other Services",
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
-
-                          SizedBox(height: 12),
-
+                          const SizedBox(height: 12),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -360,61 +363,13 @@ class HomeScreen extends StatelessWidget {
 
 /// WIDGET HELPERS
 
-Widget _latestNews(String text) {
-  return Container(
-    height: 50,
-    decoration: BoxDecoration(
-      color: appColors.latestNewsBg,
-      borderRadius: BorderRadius.circular(10),
-      boxShadow: const [
-        BoxShadow(color: Colors.black12, blurRadius: 5, offset: Offset(0, 3)),
-      ],
-    ),
-    child: Row(
-      children: [
-        Container(
-          width: 70,
-          decoration: BoxDecoration(
-            color: appColors.latestNewsLabelBg,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(10),
-              bottomLeft: Radius.circular(10),
-            ),
-          ),
-          child: const Center(
-            child: AppText(
-              "Latest\nNews",
-              align: TextAlign.center,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-          ),
-        ),
-        Spacing.h12,
-        Expanded(
-          child: Marquee(
-            text: text,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: appColors.latestNewsText,
-            ),
-            blankSpace: 50,
-            velocity: 40,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
 Widget serviceCircularItem(String title, IconData icon) {
   return Column(
     children: [
       Container(
         height: 55,
         width: 55,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
           boxShadow: [
@@ -427,7 +382,7 @@ Widget serviceCircularItem(String title, IconData icon) {
         ),
         child: Icon(icon, size: 28, color: Colors.black87),
       ),
-      SizedBox(height: 6),
+      const SizedBox(height: 6),
       SizedBox(
         width: 70,
         child: AppText(
@@ -448,12 +403,12 @@ Widget serviceItem(String title, String path) {
   return Column(
     children: [
       Container(
-        padding: EdgeInsets.all(6),
+        padding: const EdgeInsets.all(6),
         child: isSvg
             ? SvgPicture.asset(path, height: 35, width: 35)
             : Image.asset(path, height: 35, width: 35),
       ),
-      SizedBox(height: 5),
+      const SizedBox(height: 5),
       AppText(
         title,
         align: TextAlign.center,
@@ -465,19 +420,19 @@ Widget serviceItem(String title, String path) {
 }
 
 Widget otherServiceItem(String title, dynamic iconPath) {
-  double iconSize = 65;
+  const double iconSize = 65;
 
   return Column(
     children: [
       Container(
-        padding: EdgeInsets.all(6),
+        padding: const EdgeInsets.all(6),
         child: SizedBox(
           height: iconSize,
           width: iconSize,
           child: _buildIcon(iconPath),
         ),
       ),
-      SizedBox(height: 6),
+      const SizedBox(height: 6),
       AppText(
         title,
         align: TextAlign.center,
@@ -499,5 +454,5 @@ Widget _buildIcon(dynamic icon) {
     return Image.asset(icon, fit: BoxFit.contain);
   }
 
-  return SizedBox();
+  return const SizedBox();
 }

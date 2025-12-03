@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
-import '../../../../utils/custom_appbar.dart';
-import '../../profile/view/balance_controller.dart';
+import '../../../../../utils/custom_appbar.dart';
+import '../../../profile/view/balance_controller.dart';
 import 'add_money_controller.dart';
 
 class AddMoneyScreen extends StatelessWidget {
@@ -72,7 +72,7 @@ class AddMoneyScreen extends StatelessWidget {
                             ),
                             Spacing.h8,
                             AppText(
-                              '₹ ${controller.balanceController.balance.value.toStringAsFixed(1)}',
+                              '₹ ${controller.balanceController.balance.value.toStringAsFixed(2)}',
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,

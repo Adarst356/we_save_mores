@@ -5,27 +5,32 @@ import 'package:we_save_more/modules/dashboard/home_dashboard/data/paymentmode_r
 import 'package:we_save_more/modules/dashboard/home_dashboard/data/pg_details_response.dart';
 import 'package:we_save_more/modules/dashboard/home_dashboard/data/paymentmode_repo.dart';
 import 'package:we_save_more/modules/dashboard/home_dashboard/data/pg_details_repo.dart';
-import '../../profile/view/balance_controller.dart';
+import 'package:we_save_more/modules/dashboard/home_dashboard/view/payment_waveview.dart';
+import '../../../profile/view/balance_controller.dart';
 
 class AddMoneyController extends GetxController {
   final TextEditingController amountController = TextEditingController();
   final RxString selectedPaymentMethod = 'UPI Collect'.obs;
   final RxBool isProcessing = false.obs;
 
-  // Repositories
+  /// Repositories
   final PaymentModeRepo paymentModeRepo = PaymentModeRepo();
   final PgDetailsRepo pgDetailsRepo = PgDetailsRepo();
 
-  // Get BalanceController instance
+  /// Get BalanceController instance
   final BalanceController balanceController = Get.find<BalanceController>();
 
-  // Payment mode data
+  /// Payment mode data
   final RxList<Operators> paymentModes = <Operators>[].obs;
   final RxBool isLoadingPaymentModes = false.obs;
   final Rx<PaymentModeResponse?> paymentModeData = Rx<PaymentModeResponse?>(null);
 
   // Selected operator
   Rx<Operators?> selectedOperator = Rx<Operators?>(null);
+
+  /// Track last transaction time to prevent duplicate calls
+  DateTime? _lastTransactionTime;
+  static const _minimumTimeBetweenCalls = Duration(seconds: 1);
 
   @override
   void onInit() {
@@ -49,7 +54,6 @@ class AddMoneyController extends GetxController {
 
             if (data.data?.operators != null && data.data!.operators!.isNotEmpty) {
               paymentModes.value = data.data!.operators!;
-              // Set first operator as selected
               selectedOperator.value = paymentModes.first;
               selectedPaymentMethod.value = paymentModes.first.name ?? 'UPI Collect';
             }
@@ -79,7 +83,25 @@ class AddMoneyController extends GetxController {
   }
 
   /// Add money to wallet
-  void addMoney() {
+  Future<void> addMoney() async {
+    // CRITICAL: Prevent duplicate submissions
+    if (isProcessing.value) {
+      print("⚠️ Already processing, please wait...");
+      _showToast('Please wait, processing...', isError: true);
+      return;
+    }
+
+    // Check time between calls to prevent "Do not Refresh" error
+    if (_lastTransactionTime != null) {
+      final timeSinceLastCall = DateTime.now().difference(_lastTransactionTime!);
+      if (timeSinceLastCall < _minimumTimeBetweenCalls) {
+        final waitTime = _minimumTimeBetweenCalls.inSeconds - timeSinceLastCall.inSeconds;
+        print("⚠️ Too soon since last call (${timeSinceLastCall.inSeconds}s)");
+        _showToast('Please wait $waitTime seconds before trying again', isError: true);
+        return;
+      }
+    }
+
     if (amountController.text.isEmpty) {
       _showToast('Please enter amount', isError: true);
       return;
@@ -111,12 +133,16 @@ class AddMoneyController extends GetxController {
     }
 
     // Call payment gateway API
-    initiatePayment(amount, operator);
+    await initiatePayment(amount, operator);
   }
 
   /// Initiate payment through gateway
-  void initiatePayment(double amount, Operators operator) {
+  Future<void> initiatePayment(double amount, Operators operator) async {
+    // Set processing flag IMMEDIATELY to prevent duplicate calls
     isProcessing.value = true;
+    _lastTransactionTime = DateTime.now();
+
+    print("🔒 Processing locked at $_lastTransactionTime");
 
     Map<String, dynamic> body = {
       "a": amount,
@@ -133,6 +159,7 @@ class AddMoneyController extends GetxController {
         state.when(
           success: (data) {
             print("✅ PG Details Success");
+            print("📋 Response statuscode: ${data.statuscode}");
             print("📋 TID: ${data.pGModelForWeb?.tid}");
             print("🔗 URL: ${data.pGModelForWeb?.url}");
 
@@ -140,7 +167,7 @@ class AddMoneyController extends GetxController {
 
             if (data.statuscode == 1 && data.pGModelForWeb != null) {
               // Navigate to payment gateway
-              _openPaymentGateway(data.pGModelForWeb!);
+              _openPaymentGateway(data.pGModelForWeb!, data.pGModelForWeb!.tid ?? 0);
             } else {
               _showToast(data.msg ?? 'Payment initiation failed', isError: true);
             }
@@ -148,12 +175,20 @@ class AddMoneyController extends GetxController {
           error: (msg) {
             print("❌ PG Details Error: $msg");
             isProcessing.value = false;
-            _showToast(msg, isError: true);
+
+            // Handle "Do not Refresh" error specifically
+            if (msg.contains("Do not Refresh") || msg.contains("Failed to fetch")) {
+              _showToast('Transaction in progress. Wait 3 seconds.', isError: true);
+            } else {
+              _showToast(msg, isError: true);
+            }
           },
           loading: () {
+            print("⏳ Loading state...");
             isProcessing.value = true;
           },
           none: () {
+            print("⚪ None state");
             isProcessing.value = false;
           },
         );
@@ -162,33 +197,45 @@ class AddMoneyController extends GetxController {
   }
 
   /// Open payment gateway
-  void _openPaymentGateway(PGModelForWeb pgModel) {
-    // TODO: Implement WebView or external browser navigation
-    // For now, just showing success message
-
+  void _openPaymentGateway(PGModelForWeb pgModel, int tid) {
     print("💳 Opening Payment Gateway");
     print("URL: ${pgModel.url}");
-    print("TID: ${pgModel.tid}");
+    print("TID: $tid");
 
-    if (pgModel.keyVals != null) {
-      print("encRequest: ${pgModel.keyVals!.encRequest}");
-      print("access_code: ${pgModel.keyVals!.accessCode}");
+    if (pgModel.keyVals == null ||
+        pgModel.keyVals!.encRequest == null ||
+        pgModel.keyVals!.accessCode == null) {
+      _showToast('Payment configuration error', isError: true);
+      return;
     }
 
-    // You can navigate to WebView screen here
-    // Get.to(() => PaymentWebView(
-    //   url: pgModel.url!,
-    //   encRequest: pgModel.keyVals?.encRequest,
-    //   accessCode: pgModel.keyVals?.accessCode,
-    //   tid: pgModel.tid,
-    // ));
+    print("encRequest: ${pgModel.keyVals!.encRequest}");
+    print("access_code: ${pgModel.keyVals!.accessCode}");
 
-    _showToast('Payment gateway opened - TID: ${pgModel.tid}');
-    amountController.clear();
+    /// Navigate to WebView with proper parameters
+    Get.to(
+          () => PaymentWebView(
+        url: pgModel.url!,
+        encRequest: pgModel.keyVals!.encRequest!,
+        accessCode: pgModel.keyVals!.accessCode!,
+        tid: tid,
+      ),
+    )?.then((result) {
+      // When returning from payment gateway
+      print("🔄 Returned from payment gateway with result: $result");
 
-    // Refresh balance after some time (in real app, do this after payment success callback)
-    Future.delayed(const Duration(seconds: 3), () {
+      // Clear the form
+      amountController.clear();
+
+      // Refresh balance
       balanceController.getBalance();
+
+      // Show appropriate message based on result
+      if (result == true) {
+        _showToast('Payment completed successfully!');
+      } else if (result == false) {
+        _showToast('Payment was cancelled', isError: true);
+      }
     });
   }
 
