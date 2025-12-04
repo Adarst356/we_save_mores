@@ -5,7 +5,7 @@ import 'package:we_save_more/modules/dashboard/home_dashboard/data/paymentmode_r
 import 'package:we_save_more/modules/dashboard/home_dashboard/data/pg_details_response.dart';
 import 'package:we_save_more/modules/dashboard/home_dashboard/data/paymentmode_repo.dart';
 import 'package:we_save_more/modules/dashboard/home_dashboard/data/pg_details_repo.dart';
-import 'package:we_save_more/modules/dashboard/home_dashboard/view/payment_waveview.dart';
+import 'package:we_save_more/modules/dashboard/home_dashboard/view/add_money/payment_waveview.dart';
 import '../../../profile/view/balance_controller.dart';
 
 class AddMoneyController extends GetxController {
@@ -49,9 +49,7 @@ class AddMoneyController extends GetxController {
       callback: (state) {
         state.when(
           success: (data) {
-            print("✅ Payment Modes Success");
             paymentModeData.value = data;
-
             if (data.data?.operators != null && data.data!.operators!.isNotEmpty) {
               paymentModes.value = data.data!.operators!;
               selectedOperator.value = paymentModes.first;
@@ -61,7 +59,6 @@ class AddMoneyController extends GetxController {
             isLoadingPaymentModes.value = false;
           },
           error: (msg) {
-            print("❌ Payment Modes Error: $msg");
             isLoadingPaymentModes.value = false;
             _showToast(msg, isError: true);
           },

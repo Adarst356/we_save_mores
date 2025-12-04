@@ -4,9 +4,7 @@ import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import '../../../../../utils/custom_appbar.dart';
-import '../../../profile/view/balance_controller.dart';
 import 'add_money_controller.dart';
-
 class AddMoneyScreen extends StatelessWidget {
   AddMoneyScreen({super.key});
 
@@ -179,7 +177,7 @@ class AddMoneyScreen extends StatelessWidget {
                                             mode.oid
                                         ? appColors.primaryColor
                                         : Colors.grey[300]!,
-                                         width:
+                                    width:
                                         controller
                                                 .selectedOperator
                                                 .value

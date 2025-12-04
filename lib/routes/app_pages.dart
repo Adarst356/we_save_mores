@@ -10,6 +10,9 @@ import 'package:we_save_more/modules/auth/signup/view/signup_controller.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_screen.dart';
 import 'package:we_save_more/modules/dashboard/drawer/view/side_drawer_screen.dart';
 import 'package:we_save_more/modules/dashboard/home_dashboard/view/add_money/add_money_screen.dart';
+import 'package:we_save_more/modules/dashboard/home_dashboard/view/commision/user_day_book_controller.dart';
+import 'package:we_save_more/modules/dashboard/home_dashboard/view/commision/user_day_book_screen.dart';
+import 'package:we_save_more/modules/dashboard/home_dashboard/view/home/banner_controller.dart';
 import 'package:we_save_more/modules/dashboard/main_nav/main_nav.dart';
 import 'package:we_save_more/modules/dashboard/notification/notification_screen.dart';
 import 'package:we_save_more/modules/dashboard/profile/view/balance_controller.dart';
@@ -97,6 +100,7 @@ class AppPages {
         Get.lazyPut<ReferralController>(() => ReferralController());
         Get.lazyPut<ProfileController>(() => ProfileController());
         Get.lazyPut<MainNavigationController>(() => MainNavigationController());
+        Get.lazyPut<BannerController>(() => BannerController());
       }),
     ),
     GetPage(
@@ -167,8 +171,14 @@ class AppPages {
       page: () => AddMoneyScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<AddMoneyController>(() => AddMoneyController());
-        Get.lazyPut<BalanceController>(() => BalanceController()); // 👈 यह जोड़ो
-
+        Get.lazyPut<BalanceController>(() => BalanceController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.userDayBook,
+      page: () => UserDayBookScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<UserDayBookController>(() => UserDayBookController());
       }),
     ),
   ];

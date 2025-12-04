@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:marquee/marquee.dart';
-import 'package:we_save_more/utils/spacing.dart';
-import 'package:we_save_more/widget/app_text.dart';
+
 import '../../../../../theme/app_colors.dart';
+import '../../../../../utils/spacing.dart';
+import '../../../../../widget/app_text.dart';
 import 'news_controller.dart';
 
 class LatestNewsWidget extends StatelessWidget {
@@ -13,92 +15,91 @@ class LatestNewsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      /// Show loading state
-      if (controller.isLoading.value) {
-        return Container(
-          height: 50,
-          decoration: BoxDecoration(
-            color: appColors.latestNewsBg,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 5,
-                offset: Offset(0, 3),
+      return controller.newsState.value.when(
+        loading: () => _buildContainer(
+          child: const Center(
+            child: SizedBox(
+              height: 22,
+              width: 22,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
-            ],
-          ),
-          child: Row(
-            children: [
-              _buildNewsLabel(),
-              Spacing.w12,
-              const Expanded(
-                child: Center(
-                  child: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }
-
-      /// Show news with marquee effect
-      return Container(
-        height: 50,
-        decoration: BoxDecoration(
-          color: appColors.latestNewsBg,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 5,
-              offset: Offset(0, 3),
             ),
-          ],
+          ),
         ),
-        child: Row(
-          children: [
-            _buildNewsLabel(),
-            Spacing.w12,
-            Expanded(
-              child: controller.latestNews.value.isEmpty
-                  ? Center(
-                child: AppText(
-                  "No news available",
-                  fontSize: 12,
-                  color: appColors.latestNewsText,
-                ),
-              )
-                  : Marquee(
-               text:  controller.latestNews.value ?? "Default News",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: appColors.latestNewsText,
-                ),
-                blankSpace: 50,
-                velocity: 40,
-                pauseAfterRound: const Duration(seconds: 1),
-                startPadding: 10,
-                accelerationDuration: const Duration(seconds: 1),
-                accelerationCurve: Curves.linear,
-                decelerationDuration: const Duration(milliseconds: 500),
-                decelerationCurve: Curves.easeOut,
-              ),
+        error: (msg) => _buildContainer(
+          child: Center(
+            child: AppText(
+              "Failed to load news",
+              fontSize: 12,
+              color: Colors.white,
             ),
-          ],
+          ),
+        ),
+
+        success: (data) => _buildContainer(
+          child: controller.latestNews.value.isEmpty
+              ? Center(
+            child: AppText(
+              "No news available",
+              fontSize: 12,
+              color: appColors.latestNewsText,
+            ),
+          )
+              : Marquee(
+            text: controller.latestNews.value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
+              color: appColors.latestNewsText,
+            ),
+            blankSpace: 50,
+            velocity: 40,
+            pauseAfterRound: const Duration(seconds: 1),
+            startPadding: 10,
+          ),
+        ),
+
+        none: () => _buildContainer(
+          child: Center(
+            child: AppText(
+              "No news found",
+              fontSize: 12,
+              color: Colors.white,
+            ),
+          ),
         ),
       );
     });
   }
 
+  /// Shared Container for News
+  Widget _buildContainer({required Widget child}) {
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+        color: appColors.latestNewsBg,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          _buildNewsLabel(),
+          Spacing.w12,
+          Expanded(child: child),
+        ],
+      ),
+    );
+  }
+
+  /// 📌 Static Left-Side Label
   Widget _buildNewsLabel() {
     return Container(
       width: 70,

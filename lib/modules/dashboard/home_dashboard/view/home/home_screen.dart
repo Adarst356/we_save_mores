@@ -16,7 +16,6 @@ import '../news/news_widget.dart';
 import 'banner_controller.dart';
 import 'home_controller.dart';
 
-
 class HomeScreen extends StatelessWidget {
   final box = GetStorage();
 
@@ -25,8 +24,7 @@ class HomeScreen extends StatelessWidget {
   final profileController = Get.put(ProfileController());
   final balanceController = Get.put(BalanceController());
   final homeController = Get.put(HomeController());
-  final BannerController controller = Get.put(BannerController());
-
+  // final BannerController controller = Get.put(BannerController());
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +59,13 @@ class HomeScreen extends StatelessWidget {
                 /// WHATSAPP ICON
                 GestureDetector(
                   onTap: () {
-                    final mobile = profileController.profileData.value?.mobileNo ?? "";
+                    final mobile =
+                        profileController.profileData.value?.mobileNo ?? "";
                     final whatsapp = "https://wa.me/91$mobile";
-                    launchUrl(Uri.parse(whatsapp), mode: LaunchMode.externalApplication);
+                    launchUrl(
+                      Uri.parse(whatsapp),
+                      mode: LaunchMode.externalApplication,
+                    );
                   },
                   child: SvgPicture.asset(
                     "assets/svg/whatsapp-svgrepo-com.svg",
@@ -83,7 +85,11 @@ class HomeScreen extends StatelessWidget {
                       snackPosition: SnackPosition.TOP,
                     );
                   },
-                  child: const Icon(Icons.refresh, color: Colors.white, size: 26),
+                  child: const Icon(
+                    Icons.refresh,
+                    color: Colors.white,
+                    size: 26,
+                  ),
                 ),
                 Spacing.w10,
 
@@ -92,7 +98,11 @@ class HomeScreen extends StatelessWidget {
                   onTap: () {
                     Get.toNamed(AppRoutes.notification);
                   },
-                  child: const Icon(Icons.notifications, color: Colors.white, size: 28),
+                  child: const Icon(
+                    Icons.notifications,
+                    color: Colors.white,
+                    size: 28,
+                  ),
                 ),
               ],
             ),
@@ -126,7 +136,7 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 child: Row(
-                  children:  [
+                  children: [
                     const SizedBox(width: 15),
                     SvgPicture.asset(
                       "assets/svg/wallet-svgrepo-com.svg",
@@ -145,24 +155,28 @@ class HomeScreen extends StatelessWidget {
                         ),
                         Align(
                           alignment: Alignment.center,
-                          child: Obx(() => AppText(
-                            '₹ ${balanceController.balance.value.toStringAsFixed(2)}',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.black,
-                          )),
-                        )
+                          child: Obx(
+                            () => AppText(
+                              '₹ ${balanceController.balance.value.toStringAsFixed(2)}',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ],
                 ),
               ),
             ),
+
             /// ======= LATEST NEWS - NOW USING API =======
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: LatestNewsWidget(),
             ),
+
             /// ======= MAIN CONTENT =======
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -209,7 +223,10 @@ class HomeScreen extends StatelessWidget {
 
                   /// ======= OUR SERVICES CARD =======
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 8,
+                    ),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -248,10 +265,10 @@ class HomeScreen extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           physics: const NeverScrollableScrollPhysics(),
                           gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 90,
-                            childAspectRatio: 0.80,
-                          ),
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 90,
+                                childAspectRatio: 0.80,
+                              ),
                           children: [
                             serviceItem("Prepaid", "assets/svg/prepaid.svg"),
                             serviceItem("DTH", "assets/svg/antenna.svg"),
@@ -299,7 +316,10 @@ class HomeScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 8,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
@@ -314,13 +334,23 @@ class HomeScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              otherServiceItem(
-                                "Refer\nEarn",
-                                "assets/lottie/referral.json",
+                              GestureDetector(
+                                onTap: () {
+                                  Get.toNamed(AppRoutes.referral);
+                                },
+                                child: otherServiceItem(
+                                  "Refer\nEarn",
+                                  "assets/lottie/referral.json",
+                                ),
                               ),
-                              otherServiceItem(
-                                "Total\nCommission",
-                                "assets/lottie/commision.json",
+                              GestureDetector(
+                                onTap: () {
+                                  Get.toNamed(AppRoutes.userDayBook);
+                                },
+                                child: otherServiceItem(
+                                  "Total\nCommission",
+                                  "assets/lottie/commision.json",
+                                ),
                               ),
                               otherServiceItem(
                                 "Spin\nEarn",
@@ -336,24 +366,36 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Obx(() => BannerController.to.bannerState.value.when(
+                    success: (data) {
+                      return Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: Image.network(
+                            (data.bannerUrl?.first.resourceUrl).toString(),
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
+                          // Image.asset(
+                          //   "assets/images/wallet_transfer.jpg",
+                          //   width: double.infinity,
+                          //   fit: BoxFit.cover,
+                          // ),
+                        ),
+                      );
+                    },
+                    error: (msg) => Text(msg),
+                    loading: () => CircularProgressIndicator(),
+                    none: () => SizedBox(),
+                  ),),
 
                   /// ======= BOTTOM BANNER =======
-                  Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: Image.asset(
-                        "assets/images/wallet_transfer.jpg",
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
 
-            Spacing.h100,
+            Spacing.h120,
           ],
         ),
       ),

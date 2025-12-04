@@ -98,6 +98,9 @@ class GetConnectApiClient extends GetConnect with Printer {
   Future<Response> getBannerDetail(Object body) async {
     return await post("GetBanner", body);
   }
+  Future<Response> getUserDayBook(Object body) async {
+    return await post("UserDaybook", body);
+  }
 
 
 

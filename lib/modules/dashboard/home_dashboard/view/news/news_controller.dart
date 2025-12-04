@@ -6,14 +6,13 @@ import '../../data/news_response.dart';
 class NewsController extends GetxController {
   final NewsRepo repo = NewsRepo();
 
-  /// Loading state
-  final RxBool isLoading = true.obs;
+  static NewsController get to => Get.find();
 
-  /// News data
+  /// UiState for News
   final newsState = Rx<UiState<NewsResponse>>(UiState.none());
-  final Rx<NewsResponse?> newsData = Rx<NewsResponse?>(null);
+
+  /// Cleaned Latest News Text
   final RxString latestNews = "".obs;
-  final RxList<NewsContent> newsList = <NewsContent>[].obs;
 
   @override
   void onInit() {
@@ -21,12 +20,10 @@ class NewsController extends GetxController {
     getNewsDetails();
   }
 
-  /// Remove HTML tags from text
+  /// Remove HTML tags
   String _removeHtmlTags(String htmlString) {
-    /// Remove all HTML tags
     String result = htmlString.replaceAll(RegExp(r'<[^>]*>'), '');
 
-    /// Decode HTML entities
     result = result
         .replaceAll('&nbsp;', ' ')
         .replaceAll('&amp;', '&')
@@ -37,57 +34,57 @@ class NewsController extends GetxController {
         .replaceAll('&rsquo;', "'")
         .replaceAll('&lsquo;', "'");
 
-    /// Remove extra whitespace and trim
-    result = result.replaceAll(RegExp(r'\s+'), ' ').trim();
-    return result;
+    return result.replaceAll(RegExp(r'\s+'), ' ').trim();
   }
 
-  /// Fetch news details from API
+  /// API Call for News
   void getNewsDetails() {
-    isLoading.value = true;
-    Map<String, dynamic> body = {};
     repo.getNewsDetailsData(
-      body: body,
+      body: {},
       callback: (state) {
         state.when(
-          success: (data) {
-            newsData.value = data;
-            newsState.value = UiState.success(data);
-
-            ///Set the latest news text and remove HTML tags
-            if (data.newsContent != null && data.newsContent!.newsDetail != null) {
-              String cleanedNews = _removeHtmlTags(data.newsContent!.newsDetail!);
-              latestNews.value = cleanedNews.isNotEmpty
-                  ? cleanedNews
-                  : "Welcome to WeSaveMore! Stay updated with latest offers.";
-
-            } else {
-              latestNews.value = "Welcome to WeSaveMore! Stay updated with latest offers.";
-            }
-
-            isLoading.value = false;
+          loading: () {
+            newsState.value = UiState.loading();
+            print("News Loading...");
           },
+
+          success: (data) {
+            newsState.value = UiState.success(data);
+            print("NEWS API SUCCESS");
+            print("Status Code: ${data.statuscode}");
+            print("Message: ${data.msg}");
+
+            /// Extract Latest News
+            String rawNews = data.newsContent?.newsDetail ?? "";
+            String cleanedNews = _removeHtmlTags(rawNews);
+            latestNews.value = cleanedNews.isNotEmpty
+                ? cleanedNews
+                : "Welcome to WeSaveMore! Stay updated with latest offers.";
+          },
+
           error: (msg) {
             newsState.value = UiState.error(msg);
-            /// Set default message on error
-            latestNews.value = "Welcome to WeSaveMore! Stay updated with latest offers.";
+            print("NEWS ERROR: $msg");
 
-            isLoading.value = false;
+            latestNews.value =
+                "Welcome to WeSaveMore! Stay updated with latest offers.";
           },
-          loading: () {
-            isLoading.value = true;
-          },
+
           none: () {
-            isLoading.value = false;
+            newsState.value = UiState.none();
+            print("News None State");
+
+            latestNews.value =
+                "Welcome to WeSaveMore! Stay updated with latest offers.";
           },
         );
       },
     );
   }
 
-  /// Refresh news
+  /// Refresh News
   void refreshNews() {
-    print("🔄 Refreshing news...");
+    print("Refreshing News...");
     getNewsDetails();
   }
 }

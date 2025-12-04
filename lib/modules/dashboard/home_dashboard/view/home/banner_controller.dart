@@ -5,6 +5,8 @@ import '../../data/banner_response.dart';
 
 class BannerController extends GetxController {
   final BannerRepo repo = BannerRepo();
+  static BannerController get to => Get.find();
+
 
   final bannerState = Rx<UiState<GetBannerResponse>>(UiState.none());
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:we_save_more/utils/spacing.dart';
+import 'package:we_save_more/widget/app_text.dart';
 
 class OtpDialog extends StatelessWidget {
   final TextEditingController otpController;
@@ -25,10 +27,7 @@ class OtpDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
 
-      // 🎨 Adaptive background color based on theme
-      backgroundColor: isDark
-          ? const Color(0xFF1E1E1E)
-          : Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
 
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 380),
@@ -38,7 +37,7 @@ class OtpDialog extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                /// 🔒 Top Icon
+                /// Top Icon
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -50,33 +49,25 @@ class OtpDialog extends StatelessWidget {
                   child: const Icon(Icons.lock, color: Colors.amber, size: 36),
                 ),
 
-                const SizedBox(height: 10),
+            Spacing.h10,
 
-                /// 🟦 Title
-                Text(
+                /// Title
+                AppText(
                   "Enter OTP to verify",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: isDark ? Colors.amberAccent : Colors.blue,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  fontSize: 18,
+                  color: isDark ? Colors.amberAccent : Colors.blue,
+                  fontWeight: FontWeight.w600,
                 ),
-
-                const SizedBox(height: 8),
-
-                /// 💬 Message
-                Text(
+                Spacing.h8,
+                /// Message
+                AppText(
                   "Otp has been sent on your Mobile Number",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: isDark ? Colors.white70 : Colors.black87,
-                  ),
+                  align: TextAlign.center,
+                  fontSize: 15,
+                  color: isDark ? Colors.white70 : Colors.black87,
                 ),
 
-                const SizedBox(height: 20),
-
-                /// 🔢 OTP Field
+                ///  OTP Field
                 TextField(
                   controller: otpController,
                   decoration: InputDecoration(
@@ -87,34 +78,31 @@ class OtpDialog extends StatelessWidget {
                     ),
                   ),
                   keyboardType: TextInputType.number,
-                  style: TextStyle(
-                    color: isDark ? Colors.white : Colors.black,
-                  ),
+                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
                 ),
+                Spacing.h10,
 
-                const SizedBox(height: 10),
-
-                /// 🔑 New Password Field
+                ///  New Password Field
                 TextField(
                   controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: "New Password",
                     border: const UnderlineInputBorder(),
-                    suffixIcon: const Icon(Icons.visibility,
-                        color: Colors.amber),
+                    suffixIcon: const Icon(
+                      Icons.visibility,
+                      color: Colors.amber,
+                    ),
                     labelStyle: TextStyle(
                       color: isDark ? Colors.white70 : Colors.black87,
                     ),
                   ),
-                  style: TextStyle(
-                    color: isDark ? Colors.white : Colors.black,
-                  ),
+                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
                 ),
 
-                const SizedBox(height: 25),
+                Spacing.h24,
 
-                /// 🔘 Buttons (One Line)
+                /// Buttons (One Line)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -129,10 +117,10 @@ class OtpDialog extends StatelessWidget {
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text("RESEND"),
+                        child: const AppText("RESEND"),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    Spacing.h10,
                     Flexible(
                       fit: FlexFit.tight,
                       child: ElevatedButton(
@@ -144,10 +132,10 @@ class OtpDialog extends StatelessWidget {
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text("SUBMIT"),
+                        child: AppText("SUBMIT"),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    Spacing.w10,
                     Flexible(
                       fit: FlexFit.tight,
                       child: ElevatedButton(
@@ -159,7 +147,7 @@ class OtpDialog extends StatelessWidget {
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text("CANCEL"),
+                        child: AppText("CANCEL"),
                       ),
                     ),
                   ],

@@ -16,4 +16,6 @@ class AppRoutes {
   static const changePin = "/ChangePinScreen";
   static const updateProfile = "/UpdateProfileScreen";
   static const addMoney = "/AddMoneyScreen";
+  static const userDayBook = "/UserDayBookScreen";
+
 }
