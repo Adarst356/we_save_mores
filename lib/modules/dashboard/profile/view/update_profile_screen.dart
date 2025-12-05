@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../../../utils/custom_appbar.dart';
-import '../../../../widget/customs_dialog.dart';
+import '../../../../widget/app_dialog.dart';
 import 'update_profile_controller.dart';
 
 class UpdateProfileScreen extends GetView<UpdateProfileController> {

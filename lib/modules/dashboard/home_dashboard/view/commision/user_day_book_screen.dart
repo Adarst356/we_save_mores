@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:we_save_more/modules/dashboard/home_dashboard/view/commision/user_day_book_controller.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
+import 'package:we_save_more/widget/app_dialog.dart';
 import '../../../../../utils/custom_appbar.dart';
 
 class UserDayBookScreen extends StatelessWidget {
@@ -31,8 +32,7 @@ class UserDayBookScreen extends StatelessWidget {
 
       body: Column(
         children: [
-
-          // ------------ TOP SUMMARY BOX -------------------
+          /// ------------ TOP SUMMARY BOX -------------------
           Container(
             color: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -87,7 +87,7 @@ class UserDayBookScreen extends StatelessWidget {
             ),
           ),
 
-          // ------------ LIST / LOADING UI -------------------
+          ///------------ LIST / LOADING UI -------------------
           Expanded(
             child: Obx(() {
               return controller.userDayBookState.value.when(
@@ -104,18 +104,24 @@ class UserDayBookScreen extends StatelessWidget {
 
                 none: () => const SizedBox(),
 
-                // ------------ SUCCESS -------------------
+                /// ------------ SUCCESS -------------------
                 success: (data) {
                   if (data.userDaybookReport == null ||
                       data.userDaybookReport!.isEmpty) {
 
-                    // ==== SHOW DIALOG ====
-                    Future.delayed(Duration.zero, () {
-                      Get.defaultDialog(
-                        title: "Data Not Found",
-                        middleText: "No day book records available!",
-                        textConfirm: "OK",
-                        onConfirm: () => Get.back(),
+                    /// ==== SHOW DIALOG ====
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      AppDialog.show(
+                        title: 'Data Not Found',
+                        message: 'No day book records available!',
+                        imagePath: "assets/icons/close_button.png",
+                        iconColor: Colors.blue,
+                        iconBackgroundColor: Colors.blue.withOpacity(0.1),
+                        primaryButtonText: 'OK',
+                        primaryButtonColor: Colors.blue,
+                        onPrimaryPressed: () {
+                          Get.back();
+                        },
                       );
                     });
 

@@ -210,9 +210,12 @@ class HomeScreen extends StatelessWidget {
                           ),
                           serviceCircularItem("Send Money", Icons.send),
                           serviceCircularItem("Report", Icons.receipt_long),
-                          serviceCircularItem(
-                            "Wallet History",
-                            Icons.account_balance_wallet,
+                          GestureDetector(
+                            onTap: (){Get.toNamed(AppRoutes.walletHistory);},
+                            child: serviceCircularItem(
+                              "Wallet History",
+                              Icons.account_balance_wallet,
+                            ),
                           ),
                         ],
                       ),

@@ -90,7 +90,7 @@ class GetConnectApiClient extends GetConnect with Printer {
     return await post("GetPaymentMode", body);
   }
   Future<Response> getPGDetails(Object body) async {
-    return await post("GetPGDetail", body);
+    return await post("GetPGDetail", body); //ye nhi hua avi
   }
   Future<Response> getNewsDetail(Object body) async {
     return await post("GetNews", body);
@@ -101,7 +101,9 @@ class GetConnectApiClient extends GetConnect with Printer {
   Future<Response> getUserDayBook(Object body) async {
     return await post("UserDaybook", body);
   }
-
+  Future<Response> getLedgerReport(Object body) async {
+    return await post("LedgerReport", body);
+  }
 
 
 }

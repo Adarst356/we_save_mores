@@ -32,17 +32,12 @@ class UserDayBookController extends GetxController {
         "fromDate": fromDate ?? defaultDate,
         "toDate": toDate ?? defaultDate,
         "IsB2C": false,
-        // "appid": "6072874e1f4b7000991915fa914318ed",
         "imei": "",
         "loginTypeID": 1,
         "opType": 0,
         "regKey": "",
         "serialNo": "",
-        // "session": box.read("session") ?? "",
-        // "sessionID": box.read("sessionID") ?? "",
-        // "userID": box.read("userID")?.toString() ?? "",
         "uid": 0,
-        // "version": "5.0",
       },
       callback: (state) {
         userDayBookState.value = state;

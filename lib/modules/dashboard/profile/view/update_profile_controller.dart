@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:we_save_more/modules/dashboard/profile/view/profile_controller.dart';
 
 import '../../../../api/ui_state.dart';
-import '../../../../widget/customs_dialog.dart';
+import '../../../../widget/app_dialog.dart';
 import '../data/update_profile_repo.dart';
 import '../data/update_profile_response.dart';
 
@@ -52,26 +52,26 @@ class UpdateProfileController extends GetxController {
   bool validateFields() {
     // Name validation
     if (nameController.text.trim().isEmpty) {
-      CustomValidationDialog.show(
+      AppDialog.show(
         title: 'Invalid Name',
         message: 'Please enter your name',
         icon: Icons.person_outline,
         iconColor: Colors.orange,
         iconBackgroundColor: Colors.orange.withOpacity(0.1),
-        buttonText: 'OK',
-        buttonColor: const Color(0xFFFFA726),
+        primaryButtonText: 'OK',
+        primaryButtonColor: const Color(0xFFFFA726),
       );
       return false;
     }
     if (nameController.text.trim().length < 3) {
-      CustomValidationDialog.show(
+      AppDialog.show(
         title: 'Invalid Name',
         message: 'Name must be at least 3 characters',
         icon: Icons.person_outline,
         iconColor: Colors.orange,
         iconBackgroundColor: Colors.orange.withOpacity(0.1),
-        buttonText: 'OK',
-        buttonColor: const Color(0xFFFFA726),
+        primaryButtonText: 'OK',
+        primaryButtonColor: const Color(0xFFFFA726),
       );
       return false;
     }
@@ -79,28 +79,28 @@ class UpdateProfileController extends GetxController {
     // Alternate Mobile
     if (alternateMobileController.text.trim().isNotEmpty &&
         alternateMobileController.text.trim().length != 10) {
-      CustomValidationDialog.show(
+      AppDialog.show(
         title: 'Invalid Alternate Mobile',
         message: 'Alternate mobile must be exactly 10 digits',
         icon: Icons.phone_android,
         iconColor: Colors.orange,
         iconBackgroundColor: Colors.orange.withOpacity(0.1),
-        buttonText: 'OK',
-        buttonColor: const Color(0xFFFFA726),
+        primaryButtonText: 'OK',
+        primaryButtonColor: const Color(0xFFFFA726),
       );
       return false;
     }
 
     // DOB
     if (dobController.text.trim().isEmpty) {
-      CustomValidationDialog.show(
+      AppDialog.show(
         title: 'Invalid Date of Birth',
         message: 'Please select your date of birth',
         icon: Icons.calendar_today,
         iconColor: Colors.orange,
         iconBackgroundColor: Colors.orange.withOpacity(0.1),
-        buttonText: 'OK',
-        buttonColor: const Color(0xFFFFA726),
+        primaryButtonText: 'OK',
+        primaryButtonColor: const Color(0xFFFFA726),
       );
       return false;
     }
@@ -108,14 +108,14 @@ class UpdateProfileController extends GetxController {
     // Pincode
     if (pincodeController.text.trim().isEmpty ||
         pincodeController.text.trim().length != 6) {
-      CustomValidationDialog.show(
+      AppDialog.show(
         title: 'Invalid Pincode',
         message: 'Pincode must be exactly 6 digits',
         icon: Icons.location_on_outlined,
         iconColor: Colors.orange,
         iconBackgroundColor: Colors.orange.withOpacity(0.1),
-        buttonText: 'OK',
-        buttonColor: const Color(0xFFFFA726),
+        primaryButtonText: 'OK',
+        primaryButtonColor: const Color(0xFFFFA726),
       );
       return false;
     }
@@ -123,14 +123,14 @@ class UpdateProfileController extends GetxController {
     // Address
     if (addressController.text.trim().isEmpty ||
         addressController.text.trim().length < 10) {
-      CustomValidationDialog.show(
+      AppDialog.show(
         title: 'Invalid Address',
         message: 'Please enter a complete address (min 10 characters)',
         icon: Icons.home_outlined,
         iconColor: Colors.orange,
         iconBackgroundColor: Colors.orange.withOpacity(0.1),
-        buttonText: 'OK',
-        buttonColor: const Color(0xFFFFA726),
+        primaryButtonText: 'OK',
+        primaryButtonColor: const Color(0xFFFFA726),
       );
       return false;
     }
@@ -138,42 +138,42 @@ class UpdateProfileController extends GetxController {
     // Aadhar
     if (aadharController.text.trim().isEmpty ||
         aadharController.text.trim().length != 12) {
-      CustomValidationDialog.show(
+      AppDialog.show(
         title: 'Invalid AADHAR',
         message: 'AADHAR must be exactly 12 digits',
         icon: Icons.credit_card,
         iconColor: Colors.orange,
         iconBackgroundColor: Colors.orange.withOpacity(0.1),
-        buttonText: 'OK',
-        buttonColor: const Color(0xFFFFA726),
+        primaryButtonText: 'OK',
+        primaryButtonColor: const Color(0xFFFFA726),
       );
       return false;
     }
 
     // PAN
     if (panController.text.trim().isEmpty || panController.text.trim().length != 10) {
-      CustomValidationDialog.show(
+      AppDialog.show(
         title: 'Invalid PAN',
         message: 'PAN must be exactly 10 characters',
         icon: Icons.badge_outlined,
         iconColor: Colors.orange,
         iconBackgroundColor: Colors.orange.withOpacity(0.1),
-        buttonText: 'OK',
-        buttonColor: const Color(0xFFFFA726),
+        primaryButtonText: 'OK',
+        primaryButtonColor: const Color(0xFFFFA726),
       );
       return false;
     }
 
     final panPattern = RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$');
     if (!panPattern.hasMatch(panController.text.trim().toUpperCase())) {
-      CustomValidationDialog.show(
+      AppDialog.show(
         title: 'Invalid PAN Format',
         message: 'PAN format should be 5 letters + 4 digits + 1 letter\nExample: ABCDE1234F',
         icon: Icons.badge_outlined,
         iconColor: Colors.orange,
         iconBackgroundColor: Colors.orange.withOpacity(0.1),
-        buttonText: 'OK',
-        buttonColor: const Color(0xFFFFA726),
+        primaryButtonText: 'OK',
+        primaryButtonColor: const Color(0xFFFFA726),
       );
       return false;
     }
