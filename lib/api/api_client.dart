@@ -102,8 +102,10 @@ class GetConnectApiClient extends GetConnect with Printer {
     return await post("UserDaybook", body);
   }
   Future<Response> getLedgerReport(Object body) async {
-    return await post("LedgerReport", body);
+    return await post("LedgerReport", body); //avi nhi laga hai
   }
 
-
+  Future<Response> getRedeemCouponList(Object body) async {
+    return await post("RedeemCouponList", body); //avi nhi laga hai
+  }
 }

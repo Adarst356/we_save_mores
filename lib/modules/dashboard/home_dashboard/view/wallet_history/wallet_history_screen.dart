@@ -1,15 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:we_save_more/utils/spacing.dart';
-import 'package:we_save_more/widget/app_text.dart';
+
 import '../../../../../utils/custom_appbar.dart';
-import 'wallet_history_controller.dart';
+import 'package:we_save_more/widget/app_text.dart';
+import 'package:we_save_more/utils/spacing.dart';
 
 class WalletHistoryScreen extends StatelessWidget {
   WalletHistoryScreen({super.key});
 
-  final controller = Get.put(WalletHistoryController());
-  final searchController = TextEditingController();
+  final searchTextController = TextEditingController();
+  final searchQuery = "".obs;
+
+  // Dummy data for UI demonstration
+  final List<Map<String, String>> walletHistoryList = [
+    {
+      "transactionId": "TXN12345",
+      "amount": "500",
+      "transactionType": "Credit",
+      "transactionDate": "2025-12-09"
+    },
+    {
+      "transactionId": "TXN12346",
+      "amount": "200",
+      "transactionType": "Debit",
+      "transactionDate": "2025-12-08"
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -18,20 +34,23 @@ class WalletHistoryScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFE0E0E0),
       appBar: CustomAppbar(
-        title: "User Day Book",
+        title: "Wallet History",
         showLeft: true,
         leftIcon: GestureDetector(
           onTap: () => Get.back(),
           child: Icon(Icons.arrow_back, color: theme.colorScheme.onPrimary),
         ),
         rightIcon: GestureDetector(
-          onTap: () {},
+          onTap: () {
+            /// Filter BottomSheet - optional later
+          },
           child: Icon(Icons.filter_list, color: theme.colorScheme.onPrimary),
         ),
       ),
 
       body: Column(
         children: [
+          /// Search Bar
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
             child: Container(
@@ -48,93 +67,75 @@ class WalletHistoryScreen extends StatelessWidget {
                   Spacing.h8,
                   Expanded(
                     child: TextField(
-                      controller: controller.searchTextController.value,
+                      controller: searchTextController,
                       textInputAction: TextInputAction.done,
-                      textCapitalization: TextCapitalization.none,
-                      onChanged: (value) {
-                        controller.searchQuery.value = value.trim();
-                      },
-                      onSubmitted: (value) {
-                        controller.searchQuery.value = value.trim();
-                        controller.searchTextController.value.text = value
-                            .trim();
-                      },
+                      onChanged: (value) => searchQuery.value = value.trim(),
                       decoration: const InputDecoration(
                         hintText: 'Search',
                         border: InputBorder.none,
                         isDense: true,
-                        contentPadding: EdgeInsets.zero,
                       ),
                     ),
                   ),
-                  // Clear button - only show when there's text
+                  /// Clear Search
                   Obx(() {
-                    if (controller.searchQuery.value.isNotEmpty) {
+                    if (searchQuery.value.isNotEmpty) {
                       return GestureDetector(
                         onTap: () {
-                          controller.searchTextController.value.clear();
-                          controller.searchQuery.value = '';
+                          searchTextController.clear();
+                          searchQuery.value = "";
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Icon(
-                            Icons.clear,
-                            size: 20,
-                            color: Colors.grey,
-                          ),
+                        child: const Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: Icon(Icons.clear, size: 20, color: Colors.grey),
                         ),
                       );
                     }
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   }),
                 ],
               ),
             ),
           ),
 
+          /// Data List
           Expanded(
             child: Obx(() {
-              return controller.walletState.value.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
+              final filteredList = walletHistoryList.where((item) {
+                final search = searchQuery.value.toLowerCase();
+                if (search.isEmpty) return true;
 
-                error: (msg) => Center(
-                  child: AppText(msg, color: Colors.red, fontSize: 16),
-                ),
+                return (item["transactionId"] ?? "")
+                    .toLowerCase()
+                    .contains(search) ||
+                    (item["transactionType"] ?? "").toLowerCase().contains(search);
+              }).toList();
 
-                none: () => const SizedBox(),
+              if (filteredList.isEmpty) return _emptyUI();
 
-                success: (data) {
-                  final list = data.userDaybookReport ?? [];
-
-                  if (list.isEmpty) return _emptyUI();
-
-                  return ListView.builder(
-                    padding: const EdgeInsets.all(12),
-                    itemCount: list.length,
-                    itemBuilder: (context, index) {
-                      final item = list[index];
-
-                      return Card(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AppText(
-                                "Txn: ${item['transactionID'] ?? '--'}",
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              Spacing.h8,
-                              AppText("Amount: ₹ ${item['amount'] ?? '0'}"),
-                              AppText("Type: ${item['type'] ?? '--'}"),
-                              AppText("Date: ${item['createdDate'] ?? '--'}"),
-                            ],
+              return ListView.builder(
+                padding: const EdgeInsets.all(12),
+                itemCount: filteredList.length,
+                itemBuilder: (_, i) {
+                  final item = filteredList[i];
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppText(
+                            "Txn: ${item["transactionId"] ?? '--'}",
+                            fontWeight: FontWeight.bold,
                           ),
-                        ),
-                      );
-                    },
+                          Spacing.h8,
+                          AppText("Amount: ₹ ${item["amount"] ?? '0'}"),
+                          AppText("Type: ${item["transactionType"] ?? '--'}"),
+                          AppText("Date: ${item["transactionDate"] ?? '--'}"),
+                        ],
+                      ),
+                    ),
                   );
                 },
               );

@@ -114,7 +114,7 @@ class UserDayBookScreen extends StatelessWidget {
                       AppDialog.show(
                         title: 'Data Not Found',
                         message: 'No day book records available!',
-                        imagePath: "assets/icons/close_button.png",
+                        imagePath: "assets/icons/close.png",
                         iconColor: Colors.blue,
                         iconBackgroundColor: Colors.blue.withOpacity(0.1),
                         primaryButtonText: 'OK',
