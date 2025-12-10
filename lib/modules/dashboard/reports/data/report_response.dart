@@ -1,4 +1,4 @@
-class TransactionResponse {
+  class TransactionResponse {
   dynamic refferalContent;
   dynamic refferalImage;
   List<RechargeReport>? rechargeReport;

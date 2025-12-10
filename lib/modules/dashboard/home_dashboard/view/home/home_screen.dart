@@ -24,6 +24,7 @@ class HomeScreen extends StatelessWidget {
   final profileController = Get.put(ProfileController());
   final balanceController = Get.put(BalanceController());
   final homeController = Get.put(HomeController());
+
   // final BannerController controller = Get.put(BannerController());
 
   @override
@@ -209,9 +210,14 @@ class HomeScreen extends StatelessWidget {
                             child: serviceCircularItem("Add Money", Icons.add),
                           ),
                           serviceCircularItem("Send Money", Icons.send),
-                          serviceCircularItem("Report", Icons.receipt_long),
+                          serviceCircularItem(
+                              "Transaction Report",
+                              Icons.receipt_long,
+                          ),
                           GestureDetector(
-                            onTap: (){Get.toNamed(AppRoutes.walletHistory);},
+                            onTap: () {
+                              Get.toNamed(AppRoutes.walletHistory);
+                            },
                             child: serviceCircularItem(
                               "Wallet History",
                               Icons.account_balance_wallet,
@@ -263,51 +269,34 @@ class HomeScreen extends StatelessWidget {
                         Spacing.h10,
 
                         /// GRID
-                        GridView(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                                maxCrossAxisExtent: 90,
-                                childAspectRatio: 0.80,
-                              ),
-                          children: [
-                            serviceItem("Prepaid", "assets/svg/prepaid.svg"),
-                            serviceItem("DTH", "assets/svg/antenna.svg"),
-                            serviceItem("Landline", "assets/svg/telephone.svg"),
-                            serviceItem(
-                              "Electricity",
-                              "assets/svg/bulb-svgrepo-com.svg",
-                            ),
-                            serviceItem("Piped Gas", "assets/svg/pipe_gas.png"),
-                            serviceItem(
-                              "Broadband",
-                              "assets/svg/broadband.svg",
-                            ),
-                            serviceItem(
-                              "Water",
-                              "assets/svg/water-drop-svgrepo-com.svg",
-                            ),
-                            serviceItem(
-                              "Loan Repayment",
-                              "assets/svg/loan_repym.svg",
-                            ),
-                            serviceItem(
-                              "LPG Cylinder",
-                              "assets/svg/gas-cylinder.png",
-                            ),
-                            serviceItem(
-                              "Insurance",
-                              "assets/svg/family-insurance.png",
-                            ),
-                            serviceItem("FASTag", "assets/svg/parking.svg"),
-                            serviceItem(
-                              "Play Voucher",
-                              "assets/svg/google-play-svgrepo-com.svg",
-                            ),
-                          ],
+                        Obx(
+                              () => homeController.GetOpTypeState.value.when(
+                            success: (getOpTypes) {
+                              final assignedList = getOpTypes.data?.assignedOpTypes ?? [];
+                              final activeServices = assignedList.where((e) => e.isActive == true).toList();
+                              return
+                                GridView.builder(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 90,
+                                    childAspectRatio: 0.80,
+                                  ),
+                                  itemCount: activeServices.length,
+                                  itemBuilder: (context, index) {
+                                    return serviceItem(
+                                      activeServices[index].name ?? "Service"
+                                    );
+                                  },
+                                );
+                            },
+                            error: (msg) => Text(msg),
+                            loading: () => CircularProgressIndicator(),
+                            none: () => SizedBox(),
+                          ),
                         ),
+
                       ],
                     ),
                   ),
@@ -359,9 +348,14 @@ class HomeScreen extends StatelessWidget {
                                 "Spin\nEarn",
                                 "assets/lottie/spin_earn.json",
                               ),
-                              otherServiceItem(
-                                "Scratch\nCard",
-                                "assets/images/scratch.gif",
+                              GestureDetector(
+                                onTap: (){
+                                  Get.toNamed(AppRoutes.redeemCard);
+                                },
+                                child: otherServiceItem(
+                                  "Scratch\nCard",
+                                  "assets/images/scratch.gif",
+                                ),
                               ),
                             ],
                           ),
@@ -369,29 +363,31 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Obx(() => BannerController.to.bannerState.value.when(
-                    success: (data) {
-                      return Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: Image.network(
-                            (data.bannerUrl?.first.resourceUrl).toString(),
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          )
-                          // Image.asset(
-                          //   "assets/images/wallet_transfer.jpg",
-                          //   width: double.infinity,
-                          //   fit: BoxFit.cover,
-                          // ),
-                        ),
-                      );
-                    },
-                    error: (msg) => Text(msg),
-                    loading: () => CircularProgressIndicator(),
-                    none: () => SizedBox(),
-                  ),),
+                  Obx(
+                    () => BannerController.to.bannerState.value.when(
+                      success: (data) {
+                        return Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: Image.network(
+                              (data.bannerUrl?.first.resourceUrl).toString(),
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                            // Image.asset(
+                            //   "assets/images/wallet_transfer.jpg",
+                            //   width: double.infinity,
+                            //   fit: BoxFit.cover,
+                            // ),
+                          ),
+                        );
+                      },
+                      error: (msg) => Text(msg),
+                      loading: () => CircularProgressIndicator(),
+                      none: () => SizedBox(),
+                    ),
+                  ),
 
                   /// ======= BOTTOM BANNER =======
                 ],
@@ -442,7 +438,8 @@ Widget serviceCircularItem(String title, IconData icon) {
   );
 }
 
-Widget serviceItem(String title, String path) {
+Widget serviceItem(String title) {
+  String path ="";
   final isSvg = path.toLowerCase().endsWith(".svg");
 
   return Column(

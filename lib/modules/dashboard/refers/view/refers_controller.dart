@@ -46,10 +46,10 @@ class ReferralController extends GetxController {
         "IsB2C": false,
         "loginTypeID": 0,
         "opType": 0,
-        "session": "5c24357951f20ccc52ab9b68ada8807a",
+        // "session": "5c24357951f20ccc52ab9b68ada8807a",
         "uid": 0,
-        "userID": "47520",
-        "version": "5.0"
+        // "userID": "47520",
+        // "version": "5.0"
       },
       callback: (state) {
         referralState.value = state;

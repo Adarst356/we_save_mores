@@ -87,7 +87,7 @@ class GetConnectApiClient extends GetConnect with Printer {
     return await post("GetBalance", body);
   }
   Future<Response> getPaymentMethod(Object body) async {
-    return await post("GetPaymentMode", body);
+    return await post("GetPaymentMode", body); // check karna hai
   }
   Future<Response> getPGDetails(Object body) async {
     return await post("GetPGDetail", body); //ye nhi hua avi
@@ -107,5 +107,11 @@ class GetConnectApiClient extends GetConnect with Printer {
 
   Future<Response> getRedeemCouponList(Object body) async {
     return await post("RedeemCouponList", body); //avi nhi laga hai
+  }
+  Future<Response> getAppNotification(Object body) async {
+    return await post("GetAppNotification", body); //avi nhi laga hai
+  }
+  Future<Response> getOpType(Object body) async {
+    return await post("GetOpTypes", body);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:we_save_more/routes/app_routes.dart';
 import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
@@ -350,22 +351,27 @@ class ReportScreen extends GetView<ReportController> {
                                   Spacing.w12,
 
                                   /// Share
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(color: Colors.yellow, width: 2),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.share, size: 18, color: Colors.purple),
-                                        Spacing.w6,
-                                        AppText(
-                                          "Share",
-                                          fontWeight: FontWeight.w700,
-                                          color: appColors.primaryColor,
-                                        ),
-                                      ],
+                                  GestureDetector(
+                                    onTap: () {
+                                     Get.toNamed(AppRoutes.shareReport);
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(color: Colors.yellow, width: 2),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.share, size: 18, color: Colors.purple),
+                                          Spacing.w6,
+                                          AppText(
+                                            "Share",
+                                            fontWeight: FontWeight.w700,
+                                            color: appColors.primaryColor,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -17,37 +17,35 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: const Color(0xFF3E1F66),
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      toolbarHeight: 75,
-      titleSpacing: 0,
-      title: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          children: [
-            /// LEFT ICON (showLeft true ho tab hi dikhaye)
-            if (showLeft && leftIcon != null) leftIcon!,
-
-            if (showLeft && leftIcon != null) const SizedBox(width: 12),
-
-            /// TITLE
-            AppText(
-              title,
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-
-            const Spacer(),
-
-            /// RIGHT ICON
-            if (rightIcon != null) rightIcon!,
-          ],
+    return Material(
+      elevation: 8,                         // Strong shadow
+      shadowColor: Colors.black45,
+      child: AppBar(
+        backgroundColor: const Color(0xFF3E1F66),
+        elevation: 0,                       // AppBar ka elevation remove
+        automaticallyImplyLeading: false,
+        toolbarHeight: 75,
+        titleSpacing: 0,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              if (showLeft && leftIcon != null) leftIcon!,
+              if (showLeft && leftIcon != null) const SizedBox(width: 12),
+              AppText(
+                title,
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+              const Spacer(),
+              if (rightIcon != null) rightIcon!,
+            ],
+          ),
         ),
       ),
     );
+
   }
 
   @override

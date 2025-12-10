@@ -18,4 +18,9 @@ class AppRoutes {
   static const addMoney = "/AddMoneyScreen";
   static const userDayBook = "/UserDayBookScreen";
   static const walletHistory = "/WalletHistoryScreen";
+  static const redeemCard = "/RedeemCardScreen";
+  static const shareReport = "/ShareReportScreen";
+
+
+
 }

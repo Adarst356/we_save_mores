@@ -207,7 +207,7 @@ class ProfileScreen extends StatelessWidget {
                                       Obx(() {
 
                                         return AppText(
-                                          '₹ ${balanceController.balance.value.toStringAsFixed(1)}',
+                                          '₹ ${balanceController.balance.value.toStringAsFixed(2)}',
                                           fontSize: 24,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,

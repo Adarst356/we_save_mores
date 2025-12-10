@@ -19,8 +19,8 @@ class LoginController extends GetxController {
   final repo = LoginRepo();
 
   /// Controllers
-  final mobileController = TextEditingController();
-  final passwordController = TextEditingController();
+  final mobileController = TextEditingController(text: "9798374412");
+  final passwordController = TextEditingController(text: "   Vikash@9798");
 
   /// UI state
   final loginState = Rx<UiState<LoginResponse>>(UiState.none());
@@ -30,7 +30,7 @@ class LoginController extends GetxController {
   var mobileError = RxnString();
   var passwordError = RxnString();
 
-  // ================= VALIDATION =================
+  /// ================= VALIDATION =================
 
   /// Mobile Validation
   void validateMobile(String value) {

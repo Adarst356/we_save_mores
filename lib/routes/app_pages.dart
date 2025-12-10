@@ -13,6 +13,7 @@ import 'package:we_save_more/modules/dashboard/home_dashboard/view/add_money/add
 import 'package:we_save_more/modules/dashboard/home_dashboard/view/commision/user_day_book_controller.dart';
 import 'package:we_save_more/modules/dashboard/home_dashboard/view/commision/user_day_book_screen.dart';
 import 'package:we_save_more/modules/dashboard/home_dashboard/view/home/banner_controller.dart';
+import 'package:we_save_more/modules/dashboard/home_dashboard/view/reward/redeem_card_screen.dart';
 import 'package:we_save_more/modules/dashboard/home_dashboard/view/wallet_history/wallet_history_screen.dart';
 import 'package:we_save_more/modules/dashboard/main_nav/main_nav.dart';
 import 'package:we_save_more/modules/dashboard/notification/notification_screen.dart';
@@ -22,11 +23,13 @@ import 'package:we_save_more/modules/dashboard/profile/view/profile_screen.dart'
 import 'package:we_save_more/modules/dashboard/profile/view/update_profile_controller.dart';
 import 'package:we_save_more/modules/dashboard/refers/view/refers_controller.dart';
 import 'package:we_save_more/modules/dashboard/reports/view/report_screen.dart';
+import 'package:we_save_more/modules/dashboard/reports/view/share_success_report.dart';
 import '../modules/auth/change_pin/chnage_pin_controller.dart';
 import '../modules/dashboard/drawer/view/side_drawer_controller.dart';
 import '../modules/dashboard/home_dashboard/view/add_money/add_money_controller.dart';
 import '../modules/dashboard/home_dashboard/view/home/home_controller.dart';
 import '../modules/dashboard/home_dashboard/view/home/home_screen.dart';
+import '../modules/dashboard/home_dashboard/view/reward/redeem_card_controller.dart';
 import '../modules/dashboard/home_dashboard/view/wallet_history/wallet_history_controller.dart';
 import '../modules/dashboard/main_nav/main_nav_controller.dart';
 import '../modules/dashboard/notification/notification_controller.dart';
@@ -189,6 +192,18 @@ class AppPages {
       binding: BindingsBuilder(() {
         Get.lazyPut<WalletHistoryController>(() => WalletHistoryController());
       }),
+    ),
+    GetPage(
+      name: AppRoutes.redeemCard,
+      page: () => RedeemCardScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<RedeemCardController>(() => RedeemCardController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.shareReport,
+      page: () => RechargeSuccessScreen(),
+
     ),
   ];
 }

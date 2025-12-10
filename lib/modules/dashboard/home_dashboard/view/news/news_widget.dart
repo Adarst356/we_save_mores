@@ -33,7 +33,7 @@ class LatestNewsWidget extends StatelessWidget {
             child: AppText(
               "Failed to load news",
               fontSize: 12,
-              color: Colors.white,
+              color: Colors.black45,
             ),
           ),
         ),
