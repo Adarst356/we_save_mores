@@ -179,11 +179,11 @@ class SupportScreen extends GetView<SupportController> {
 
                /// CALL 1
                if ((data?.customerCareMobileNos ?? "").trim().isNotEmpty)
-                 _contactRow(data?.customerCareMobileNos??"", "assets/svg/phone.svg", 1),
+                 _contactRow(data?.customerCareMobileNos??"", "assets/svg/postpaid.svg", 1),
 
                /// CALL 2
                if ((data?.customerPhoneNos ?? "").trim().isNotEmpty)
-                 _contactRow(data?.customerPhoneNos??"", "assets/svg/telephone.svg", 2),
+                 _contactRow(data?.customerPhoneNos??"", "assets/svg/landline.svg", 2),
 
                _sectionTitle("Whatsapp", "assets/svg/whatsapp_icon.svg"),
                // WHATSAPP

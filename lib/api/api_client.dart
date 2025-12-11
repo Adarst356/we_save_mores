@@ -114,4 +114,8 @@ class GetConnectApiClient extends GetConnect with Printer {
   Future<Response> getOpType(Object body) async {
     return await post("GetOpTypes", body);
   }
+  Future<Response> getNumberList(Object body) async {
+    return await post("GetNumberList", body);
+  }
+
 }

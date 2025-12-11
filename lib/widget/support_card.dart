@@ -62,7 +62,7 @@ class SupportInfoCard extends StatelessWidget {
 
           /// CALL 1
           _infoRow(
-            leftIcon: "assets/svg/phone.svg",
+            leftIcon: "assets/svg/postpaid.svg",
             label: "Call Us",
             value: callNumber1,
             rightIcon: "assets/svg/mobile.svg",
@@ -72,10 +72,10 @@ class SupportInfoCard extends StatelessWidget {
 
           /// CALL 2
           _infoRow(
-            leftIcon: "assets/svg/phone.svg",
+            leftIcon: "assets/svg/postpaid.svg",
             label: "",
             value: callNumber2,
-            rightIcon: "assets/svg/telephone.svg",
+            rightIcon: "assets/svg/landline.svg",
             showLabel: false,
           ),
 

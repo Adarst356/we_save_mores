@@ -1,9 +1,8 @@
 import 'package:get/get.dart';
 import 'package:app_badge_plus/app_badge_plus.dart';
-
 import '../../../api/ui_state.dart';
-import '../home_dashboard/data/notification_repo.dart';
-import '../home_dashboard/data/notification_response.dart';
+import '../home/data/notification_repo.dart';
+import '../home/data/notification_response.dart';
 
 class NotificationController extends GetxController {
   final NotificationRepo repo = NotificationRepo();

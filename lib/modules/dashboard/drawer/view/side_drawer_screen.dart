@@ -6,8 +6,7 @@ import 'package:we_save_more/widget/app_text.dart';
 import '../../../../routes/app_routes.dart';
 import '../../main_nav/main_nav_controller.dart';
 import '../../profile/view/profile_controller.dart';
-import '../../refers/view/refers_controller.dart';
-import '../../refers/view/refers_screen.dart';
+
 
 class SideDrawer extends StatelessWidget {
   SideDrawer({super.key});

@@ -7,7 +7,7 @@ class OurServicesSection extends StatelessWidget {
     {"icon": "assets/icons/dth.png", "title": "DTH"},
     {"icon": "assets/icons/landline.png", "title": "Landline"},
     {"icon": "assets/icons/electricity.png", "title": "Electricity"},
-    {"icon": "assets/icons/piped_gas.png", "title": "Piped Gas"},
+    {"icon": "assets/icons/piped gas.svg", "title": "Piped Gas"},
     {"icon": "assets/icons/broadband.png", "title": "Broadband"},
     {"icon": "assets/icons/water.png", "title": "Water"},
     {"icon": "assets/icons/loan.png", "title": "Loan Repayment"},

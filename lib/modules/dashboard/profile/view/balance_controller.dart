@@ -3,26 +3,23 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import '../../../../api/ui_state.dart';
-import '../data/balance_repo.dart' show BalanceRepo;
+import '../data/balance_repo.dart';
 import '../data/balance_response.dart';
 
 class BalanceController extends GetxController {
-  /// Repository instance
-  final BalanceRepo repo = BalanceRepo();
-  RxDouble balance = 0.0.obs;
+  static BalanceController get to => Get.find();
 
-  /// Reactive variables
+  final BalanceRepo repo = BalanceRepo();
+
+  RxDouble balance = 0.0.obs;
   RxBool isLoading = false.obs;
-  Rx<BalanceResponse?> balanceData = Rx<BalanceResponse?>(null);
+
   final balanceState = Rx<UiState<BalanceResponse>>(UiState.none());
 
-  /// Fetch balance from API
   void getBalance() {
     isLoading.value = true;
 
-    Map<String, dynamic> body = {
-
-    };
+    Map<String, dynamic> body = {};
 
     repo.getBalanceData(
       body: body,
@@ -31,19 +28,10 @@ class BalanceController extends GetxController {
 
         state.when(
           success: (data) {
-            // Success
-            print("✅ Balance Success");
-            print("📊 Status Code: ${data.statuscode}");
-            print("📋 Message: ${data.msg}");
-            print("💰 Balance: ${data.data?.balance}");
-
-            balanceData.value = data;
             balance.value = data.data?.balance?.toDouble() ?? 0.0;
             isLoading.value = false;
           },
           error: (msg) {
-
-            print("❌ Balance API Error: $msg");
             isLoading.value = false;
 
             Fluttertoast.showToast(
@@ -56,12 +44,10 @@ class BalanceController extends GetxController {
             );
           },
           loading: () {
-            // Loading state
             print("⏳ Loading Balance...");
             isLoading.value = true;
           },
           none: () {
-            // None state
             print("🔵 No data available");
             isLoading.value = false;
           },
@@ -69,6 +55,7 @@ class BalanceController extends GetxController {
       },
     );
   }
+
   @override
   void onInit() {
     getBalance();

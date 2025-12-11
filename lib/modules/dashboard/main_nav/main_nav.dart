@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:we_save_more/modules/dashboard/home_dashboard/view/home/home_screen.dart';
 import 'package:we_save_more/modules/dashboard/profile/view/profile_screen.dart';
-import 'package:we_save_more/modules/dashboard/refers/view/refers_screen.dart';
-import 'package:we_save_more/modules/dashboard/reports/view/report_screen.dart';
+import 'package:we_save_more/modules/dashboard/reports/view/rechargeReport/report_screen.dart';
 import 'package:we_save_more/modules/dashboard/support/view/support_screen.dart';
 import '../../../routes/app_routes.dart';
-import '../support/view/support_controller.dart';
+import '../home/view/home/home_screen.dart';
+import '../inviteReferral/view/refers_screen.dart';
 import 'main_nav_controller.dart';
 
 class MainNav extends StatelessWidget {
