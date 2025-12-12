@@ -47,8 +47,8 @@ class RechargeSuccessScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             /// Logo (placeholder)
-            Image.network(
-              "https://via.placeholder.com/120",
+            Image.asset(
+              "assets/images/app_full_logo_white.png",
               height: 120,
             ),
 
@@ -67,10 +67,7 @@ class RechargeSuccessScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.network(
-                  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Jio_Logo.svg/1200px-Jio_Logo.svg.png",
-                  height: 40,
-                ),
+            Image.asset("assets/icons/share.png",height: 20,),
                 const SizedBox(width: 10),
                 const Text(
                   "Reliance Jio",
@@ -96,8 +93,7 @@ class RechargeSuccessScreen extends StatelessWidget {
                   buildRow("Amount", "₹ 299.00"),
                   buildRow("Transaction Id", "S251206105631837BFC02"),
                   buildRow("Reference Id", "R.1302293436"),
-                  buildRow("Transaction Date Time",
-                      "04 Dec 2025 10:56 AM"),
+                  buildRow("Transaction Date Time", "04 Dec 2025 10:56 AM"),
                 ],
               ),
             ),

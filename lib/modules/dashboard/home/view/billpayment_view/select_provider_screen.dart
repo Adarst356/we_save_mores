@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/select_provider_controller.dart';
 import 'package:we_save_more/theme/app_colors.dart';
+import 'package:we_save_more/utils/constant.dart';
+
+import '../../../../../routes/app_routes.dart';
 
 class SelectProviderScreen extends StatelessWidget {
-  const SelectProviderScreen({super.key});
+  SelectProviderScreen({super.key});
+
+  final controller = Get.put(ServiceProviderController());
+  final RxString searchText = "".obs;
 
   @override
   Widget build(BuildContext context) {
@@ -10,11 +18,11 @@ class SelectProviderScreen extends StatelessWidget {
       backgroundColor: Colors.grey.shade200,
 
       appBar: AppBar(
-        backgroundColor:appColors.primaryColor,
+        backgroundColor: appColors.primaryColor,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Get.back(),
         ),
         title: const Text(
           "Select Provider",
@@ -24,112 +32,177 @@ class SelectProviderScreen extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        centerTitle: false,
       ),
 
-      body: ListView(
+      body: Column(
         children: [
+          searchBarUI(),
 
-          // 🔍 SEARCH BAR
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-            child: Container(
-              height: 44,
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey.shade300),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(width: 10),
-                  const Icon(Icons.search, size: 22, color: Colors.grey),
-                  const SizedBox(width: 8),
+          Expanded(
+            child: Obx(() {
+              return controller.numberListState.value.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                none: () => const SizedBox(),
+                error: (msg) => Center(child: Text(msg)),
+                success: (data) {
+                  final filteredList = controller.finalProviderList.where((op) {
+                    if (searchText.value.isEmpty) return true;
+                    if (op.isHeader == true) return true;
+                    return (op.name ?? "").toLowerCase().contains(
+                      searchText.value.toLowerCase(),
+                    );
+                  }).toList();
 
-                  const Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        border: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                    ),
-                  ),
+                  return ListView.builder(
+                    itemCount: filteredList.length,
+                    itemBuilder: (context, index) {
+                      final service = filteredList[index];
 
-                  // Clear icon (UI only, no logic)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Icon(Icons.clear, size: 20, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
+                      if (service.isHeader == true) {
+                        return headerTile(service.header ?? "");
+                      } else {
+                        return providerTile(
+                          service.image ?? "",
+                          service.name ?? "",
+                          service.serviceID ?? 0,
+                        );
+                      }
+                    },
+                  );
+                },
+              );
+            }),
           ),
-
-          // Category Title
-          Container(
-            width: double.infinity,
-            color: appColors.primaryColor,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: const Text(
-              "Electricity Provider",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-
-          // Provider List
-          providerTile("assets/logo/adani.png", "Adani Electricity Mumbai Ltd"),
-          providerTile("assets/logo/avvnl.png", "Ajmer Vidyut Vitran Nigam Ltd. (AVVNL)"),
-          providerTile("assets/logo/apepdcl.png", "APEPDCL - Eastern Power Distribution CO AP Ltd"),
-          providerTile("assets/logo/apspdcl.png", "APSPDCL - Southern Power Distribution CO AP Ltd"),
-          providerTile("assets/logo/apdcl.png", "Assam Power Distribution Company Ltd (NON-RAPDR)"),
-          providerTile("assets/logo/apdcl2.png", "Assam Power Distribution Company Ltd (RAPDR)"),
-          providerTile("assets/logo/bescom.png", "Bangalore Electricity Supply Company Ltd. (BESCOM)"),
-          providerTile("assets/logo/bharatpur.png", "Bharatpur Electricity Services Ltd."),
         ],
       ),
     );
   }
 
-  // Provider Tile Widget
-  Widget providerTile(String image, String title) {
-    return Column(
-      children: [
-        Container(
+  // -----------------------------------------------------
+  // 🔍 SEARCH BAR
+  // -----------------------------------------------------
+  Widget searchBarUI() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+      child: Container(
+        height: 44,
+        decoration: BoxDecoration(
           color: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 25,
-                backgroundColor: Colors.grey.shade200,
-                backgroundImage: AssetImage(image),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: appColors.primaryColor,
-                  ),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Row(
+          children: [
+            const SizedBox(width: 10),
+            const Icon(Icons.search, size: 22, color: Colors.grey),
+            const SizedBox(width: 8),
+
+            Expanded(
+              child: TextField(
+                onChanged: (value) => searchText.value = value,
+                decoration: const InputDecoration(
+                  hintText: 'Search provider',
+                  border: InputBorder.none,
+                  isDense: true,
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
 
-        Container(
-          height: 1.6,
-          color: Colors.amber,
+            Obx(
+              () => searchText.value.isNotEmpty
+                  ? GestureDetector(
+                      onTap: () => searchText.value = "",
+                      child: const Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(Icons.clear, size: 20, color: Colors.grey),
+                      ),
+                    )
+                  : const SizedBox(),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
+
+  // -----------------------------------------------------
+  // 🟦 HEADER TILE (Local State / Other State)
+  // -----------------------------------------------------
+  Widget headerTile(String title) {
+    return Container(
+      width: double.infinity,
+      color: appColors.primaryColor,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  // -----------------------------------------------------
+  // 🟡 PROVIDER TILE
+  // -----------------------------------------------------
+  Widget providerTile(String image, String title, int serviceId) {
+    return GestureDetector(
+      onTap: () {
+        Get.back(result: {
+          "providerId": serviceId,
+          "providerName": title,
+          "providerImage": image,
+        });
+      },
+      child: Column(
+        children: [
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 25,
+                  backgroundColor: Colors.grey.shade200,
+                  child: ClipOval(
+                    child: Image.network(
+                      "$baseIconUrl$image",
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          "assets/images/app_full_logo.png",
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: appColors.primaryColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(height: 1.6, color: Colors.amber),
+        ],
+      ),
+    );
+  }
+
+
 }

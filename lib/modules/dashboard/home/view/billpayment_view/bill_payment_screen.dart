@@ -5,19 +5,24 @@ import 'package:we_save_more/routes/app_routes.dart';
 import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
-
+import '../../../../../utils/constant.dart';
 import '../../../../../utils/custom_appbar.dart';
+import 'bill_payment_controller.dart';
 
 class BillPaymentScreen extends StatelessWidget {
-  const BillPaymentScreen({super.key});
+  BillPaymentScreen({super.key});
 
+  bool get isDth => controller.serviceName == "DTH";
+  bool get isPrepaid => controller.serviceName == "Prepaid";
+
+  final controller = Get.put(BillPaymentController()); // add this
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: CustomAppbar(
-        title: "Prepaid",
+        title: controller.serviceName,
         showLeft: true,
         leftIcon: GestureDetector(
           onTap: () => Get.back(),
@@ -47,18 +52,20 @@ class BillPaymentScreen extends StatelessWidget {
               children: [
                 TextFormField(
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.phone_android,
+                    prefixIcon: Icon(
+                      isDth ? Icons.settings_input_antenna : Icons.phone_android,
                       color: Colors.grey,
                     ),
-                    hintText: "Enter Prepaid Number",
+                    hintText: isDth ? "Enter DTH Number" : "Enter Prepaid Number",
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
+                  keyboardType: TextInputType.number,
                 ),
+
 
                 Spacing.h16,
                 Container(
@@ -72,26 +79,91 @@ class BillPaymentScreen extends StatelessWidget {
                     border: Border.all(color: Colors.grey.shade300),
                   ),
                   child: GestureDetector(
-                    onTap: () {
-                      Get.toNamed(AppRoutes.serviceProvider);
-                    },
+                    onTap: () async {
+                      final result = await Get.toNamed(
+                        AppRoutes.serviceProvider,
+                        arguments: {
+                          "serviceId": controller.serviceId,
+                          "serviceName": controller.serviceName,
+                        },
+                      );
 
-                    child: Row(
-                      children: const [
-                        Icon(Icons.wifi_tethering, color: Colors.blue),
-                        SizedBox(width: 10),
-                        Expanded(
+                      if (result != null) {
+                        controller.providerId = result["providerId"];
+                        controller.providerName = result["providerName"];
+                        controller.providerImage = result["providerImage"];
+                        controller.update();
+                      }
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 60),
                           child: AppText(
-                            "Select Operator",
-                            fontSize: 16,
-                            color: Colors.black87,
+                            controller.serviceName ?? "Prepaid",
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
-                        Icon(Icons.keyboard_arrow_down, size: 26),
+
+
+                        /// ====== Row: Icon + Text + Arrow =======
+                        GetBuilder<BillPaymentController>(
+                          builder: (_) {
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                /// ICON (exact same style as screenshot)
+                                CircleAvatar(
+                                  radius: 22,
+                                  backgroundColor: Colors.blue.shade50,
+                                  child:
+                                      (controller.providerImage == null ||
+                                          controller.providerImage!.isEmpty)
+                                      ? Icon(
+                                          Icons.wifi_tethering,
+                                          color: Colors.blue,
+                                          size: 26,
+                                        )
+                                      : ClipOval(
+                                          child: Image.network(
+                                            "$baseIconUrl${controller.providerImage}",
+                                            width: 44,
+                                            height: 44,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                ),
+
+                                SizedBox(width: 16),
+
+                                /// TEXT (Select Operator)
+                                Expanded(
+                                  child: AppText(
+                                    controller.providerName?.isNotEmpty == true
+                                        ? controller.providerName!
+                                        : "Select Operator",
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+
+                                /// DROPDOWN ARROW (purple like screenshot)
+                                Icon(
+                                  Icons.keyboard_arrow_down,
+                                  size: 26,
+                                  color: Colors.deepPurple,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
-
                 ),
 
                 Spacing.h16,
@@ -157,7 +229,7 @@ class BillPaymentScreen extends StatelessWidget {
                       ),
                     ),
 
-                   Spacing.w12,
+                    Spacing.w12,
 
                     Expanded(
                       child: OutlinedButton(

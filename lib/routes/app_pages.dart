@@ -217,9 +217,9 @@ class AppPages {
     GetPage(
       name: AppRoutes.serviceProvider,
       page: () => SelectProviderScreen(),
-      // binding: BindingsBuilder(() {
-      //   Get.lazyPut<ServiceProviderController>(() => ServiceProviderController());
-      // }),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ServiceProviderController>(() => ServiceProviderController());
+      }),
     ),
   ];
 }

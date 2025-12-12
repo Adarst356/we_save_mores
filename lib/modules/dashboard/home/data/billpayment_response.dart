@@ -8,26 +8,20 @@ class GetNumberList {
   bool? isAppValid;
   int? checkID;
   bool? isPasswordExpired;
-
   dynamic mobileNo;
   dynamic emailID;
   dynamic outletName;
-
   bool? isLookUpFromAPI;
   bool? isDTHInfoCall;
   bool? isShowPDFPlan;
-
   dynamic sid;
   dynamic pCode;
-
   bool? isOTPRequired;
   bool? isBioMetricRequired;
   bool? isDeviceRequired;
   int? bioAuthType;
   bool? isRedirectToExternal;
-
   dynamic externalURL;
-
   bool? isResendAvailable;
   bool? isDTHInfo;
   bool? isRoffer;
@@ -41,7 +35,6 @@ class GetNumberList {
   bool? isAutoVerifyVPA;
   bool? isCoin;
   bool? isB2cMembershipRePurchase;
-
   dynamic newsContent;
 
   GetNumberList({
@@ -94,26 +87,20 @@ class GetNumberList {
     isAppValid = json['isAppValid'];
     checkID = json['checkID'];
     isPasswordExpired = json['isPasswordExpired'];
-
     mobileNo = json['mobileNo'];
     emailID = json['emailID'];
     outletName = json['outletName'];
-
     isLookUpFromAPI = json['isLookUpFromAPI'];
     isDTHInfoCall = json['isDTHInfoCall'];
     isShowPDFPlan = json['isShowPDFPlan'];
-
     sid = json['sid'];
     pCode = json['pCode'];
-
     isOTPRequired = json['isOTPRequired'];
     isBioMetricRequired = json['isBioMetricRequired'];
     isDeviceRequired = json['isDeviceRequired'];
     bioAuthType = json['bioAuthType'];
     isRedirectToExternal = json['isRedirectToExternal'];
-
     externalURL = json['externalURL'];
-
     isResendAvailable = json['isResendAvailable'];
     isDTHInfo = json['isDTHInfo'];
     isRoffer = json['isRoffer'];
@@ -127,61 +114,50 @@ class GetNumberList {
     isAutoVerifyVPA = json['isAutoVerifyVPA'];
     isCoin = json['isCoin'];
     isB2cMembershipRePurchase = json['isB2cMembershipRePurchase'];
-
     newsContent = json['newsContent'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['isHeavyRefresh'] = this.isHeavyRefresh;
-    data['isTakeCustomerNo'] = this.isTakeCustomerNo;
-
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['isHeavyRefresh'] = isHeavyRefresh;
+    data['isTakeCustomerNo'] = isTakeCustomerNo;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
-
-    data['statuscode'] = this.statuscode;
-    data['msg'] = this.msg;
-    data['isVersionValid'] = this.isVersionValid;
-    data['isAppValid'] = this.isAppValid;
-    data['checkID'] = this.checkID;
-    data['isPasswordExpired'] = this.isPasswordExpired;
-
-    data['mobileNo'] = this.mobileNo;
-    data['emailID'] = this.emailID;
-    data['outletName'] = this.outletName;
-
-    data['isLookUpFromAPI'] = this.isLookUpFromAPI;
-    data['isDTHInfoCall'] = this.isDTHInfoCall;
-    data['isShowPDFPlan'] = this.isShowPDFPlan;
-
-    data['sid'] = this.sid;
-    data['pCode'] = this.pCode;
-
-    data['isOTPRequired'] = this.isOTPRequired;
-    data['isBioMetricRequired'] = this.isBioMetricRequired;
-    data['isDeviceRequired'] = this.isDeviceRequired;
-    data['bioAuthType'] = this.bioAuthType;
-    data['isRedirectToExternal'] = this.isRedirectToExternal;
-
-    data['externalURL'] = this.externalURL;
-
-    data['isResendAvailable'] = this.isResendAvailable;
-    data['isDTHInfo'] = this.isDTHInfo;
-    data['isRoffer'] = this.isRoffer;
-    data['isGreen'] = this.isGreen;
-    data['rid'] = this.rid;
-    data['isHideService'] = this.isHideService;
-    data['isBulkQRGeneration'] = this.isBulkQRGeneration;
-    data['isSattlemntAccountVerify'] = this.isSattlemntAccountVerify;
-    data['isEKYCForced'] = this.isEKYCForced;
-    data['isDrawOpImage'] = this.isDrawOpImage;
-    data['isAutoVerifyVPA'] = this.isAutoVerifyVPA;
-    data['isCoin'] = this.isCoin;
-    data['isB2cMembershipRePurchase'] = this.isB2cMembershipRePurchase;
-
-    data['newsContent'] = this.newsContent;
-
+    data['statuscode'] = statuscode;
+    data['msg'] = msg;
+    data['isVersionValid'] = isVersionValid;
+    data['isAppValid'] = isAppValid;
+    data['checkID'] = checkID;
+    data['isPasswordExpired'] = isPasswordExpired;
+    data['mobileNo'] = mobileNo;
+    data['emailID'] = emailID;
+    data['outletName'] = outletName;
+    data['isLookUpFromAPI'] = isLookUpFromAPI;
+    data['isDTHInfoCall'] = isDTHInfoCall;
+    data['isShowPDFPlan'] = isShowPDFPlan;
+    data['sid'] = sid;
+    data['pCode'] = pCode;
+    data['isOTPRequired'] = isOTPRequired;
+    data['isBioMetricRequired'] = isBioMetricRequired;
+    data['isDeviceRequired'] = isDeviceRequired;
+    data['bioAuthType'] = bioAuthType;
+    data['isRedirectToExternal'] = isRedirectToExternal;
+    data['externalURL'] = externalURL;
+    data['isResendAvailable'] = isResendAvailable;
+    data['isDTHInfo'] = isDTHInfo;
+    data['isRoffer'] = isRoffer;
+    data['isGreen'] = isGreen;
+    data['rid'] = rid;
+    data['isHideService'] = isHideService;
+    data['isBulkQRGeneration'] = isBulkQRGeneration;
+    data['isSattlemntAccountVerify'] = isSattlemntAccountVerify;
+    data['isEKYCForced'] = isEKYCForced;
+    data['isDrawOpImage'] = isDrawOpImage;
+    data['isAutoVerifyVPA'] = isAutoVerifyVPA;
+    data['isCoin'] = isCoin;
+    data['isB2cMembershipRePurchase'] = isB2cMembershipRePurchase;
+    data['newsContent'] = newsContent;
     return data;
   }
 }
@@ -195,19 +171,19 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     if (json['numSeries'] != null) {
-      numSeries = [];
+      numSeries = <NumSeries>[];
       json['numSeries'].forEach((v) {
         numSeries!.add(NumSeries.fromJson(v));
       });
     }
     if (json['operators'] != null) {
-      operators = [];
+      operators = <Operators>[];
       json['operators'].forEach((v) {
         operators!.add(Operators.fromJson(v));
       });
     }
     if (json['cirlces'] != null) {
-      cirlces = [];
+      cirlces = <Cirlces>[];
       json['cirlces'].forEach((v) {
         cirlces!.add(Cirlces.fromJson(v));
       });
@@ -215,10 +191,16 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (numSeries != null) data['numSeries'] = numSeries!.map((e) => e.toJson()).toList();
-    if (operators != null) data['operators'] = operators!.map((e) => e.toJson()).toList();
-    if (cirlces != null) data['cirlces'] = cirlces!.map((e) => e.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (numSeries != null) {
+      data['numSeries'] = numSeries!.map((v) => v.toJson()).toList();
+    }
+    if (operators != null) {
+      data['operators'] = operators!.map((v) => v.toJson()).toList();
+    }
+    if (cirlces != null) {
+      data['cirlces'] = cirlces!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -228,7 +210,6 @@ class NumSeries {
   int? series;
   int? circleCode;
   int? circleID;
-
   dynamic circle;
   dynamic number;
 
@@ -251,7 +232,7 @@ class NumSeries {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['oid'] = oid;
     data['series'] = series;
     data['circleCode'] = circleCode;
@@ -263,12 +244,14 @@ class NumSeries {
 }
 
 class Operators {
+  String? header;
+  bool? isHeader;
+
   int? type;
   String? name;
   int? oid;
   String? opid;
   String? billerID;
-
   dynamic operator;
   String? tollFree;
   int? opType;
@@ -279,9 +262,7 @@ class Operators {
   bool? isBilling;
   bool? inSlab;
   bool? isTakeCustomerNum;
-
   dynamic spKey;
-
   int? min;
   int? max;
   int? length;
@@ -305,9 +286,7 @@ class Operators {
   String? accountNoKey;
   String? regExAccount;
   String? customerNoKey;
-
   dynamic planDocName;
-
   bool? isAmountValidation;
   int? allowedChannel;
   int? planOID;
@@ -315,30 +294,21 @@ class Operators {
   int? dthCustInfoOID;
   int? dthhrefoid;
   int? rechOID;
-
   dynamic allowChannel;
-
   bool? isSpecialOp;
   bool? isUtilityOpreator;
   String? opTypeName;
   int? inMultipleOf;
   double? charge;
   int? serviceID;
-
   dynamic serviceName;
-
   int? packageId;
   bool? isActive;
   bool? isServiceActive;
   bool? isVisible;
-
   dynamic sCode;
   int? walletTypeID;
   bool? selfAssigned;
-
-  // -------- EXTRA FIELDS (UI Headers) --------
-  String? header;
-  bool? isHeader;
 
   Operators({
     this.type,
@@ -408,7 +378,6 @@ class Operators {
   });
 
   Operators.fromJson(Map<String, dynamic> json) {
-
     type = json['type'];
     name = json['name'];
     oid = json['oid'];
@@ -461,7 +430,7 @@ class Operators {
     isUtilityOpreator = json['isUtilityOpreator'];
     opTypeName = json['opTypeName'];
     inMultipleOf = json['inMultipleOf'];
-    charge = (json['charge'] is int) ? (json['charge'] as int).toDouble() : json['charge'];
+    charge = json['charge'];
     serviceID = json['serviceID'];
     serviceName = json['serviceName'];
     packageId = json['packageId'];
@@ -476,7 +445,7 @@ class Operators {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['type'] = type;
     data['name'] = name;
     data['oid'] = oid;
@@ -539,8 +508,6 @@ class Operators {
     data['sCode'] = sCode;
     data['walletTypeID'] = walletTypeID;
     data['selfAssigned'] = selfAssigned;
-    data['header'] = header;
-    data['isHeader'] = isHeader;
     return data;
   }
 }
@@ -559,7 +526,7 @@ class Cirlces {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['circle'] = circle;
     data['code'] = code;

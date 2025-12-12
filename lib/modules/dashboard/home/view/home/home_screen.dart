@@ -25,8 +25,6 @@ class HomeScreen extends StatelessWidget {
   final balanceController = Get.put(BalanceController());
   final homeController = Get.put(HomeController());
 
-  // final BannerController controller = Get.put(BannerController());
-
   @override
   Widget build(BuildContext context) {
     final role = box.read('role') ?? 'Customer';
@@ -45,20 +43,18 @@ class HomeScreen extends StatelessWidget {
             mobileNumber: profileController.profileData.value?.mobileNo ?? "",
             profileImage: profileController.profileData.value?.profilePic,
             leftWidget: Builder(
-              builder: (context) =>
-                  GestureDetector(
-                    onTap: () => Scaffold.of(context).openDrawer(),
-                    child: SvgPicture.asset(
-                      "assets/svg/menu-fries-svgrepo-com.svg",
-                      width: 28,
-                      height: 28,
-                      color: Colors.white,
-                    ),
-                  ),
+              builder: (context) => GestureDetector(
+                onTap: () => Scaffold.of(context).openDrawer(),
+                child: SvgPicture.asset(
+                  "assets/svg/menu-fries-svgrepo-com.svg",
+                  width: 28,
+                  height: 28,
+                  color: Colors.white,
+                ),
+              ),
             ),
             rightWidget: Row(
               children: [
-
                 /// WHATSAPP ICON
                 GestureDetector(
                   onTap: () {
@@ -120,7 +116,6 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-
             /// ======= WALLET BOX =======
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -160,14 +155,12 @@ class HomeScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.center,
                           child: Obx(
-                                () =>
-                                AppText(
-                                  '₹ ${balanceController.balance.value
-                                      .toStringAsFixed(2)}',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.black,
-                                ),
+                                () => AppText(
+                              '₹ ${balanceController.balance.value.toStringAsFixed(2)}',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ],
@@ -188,7 +181,6 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Column(
                 children: [
-
                   /// ======= QUICK ACTIONS (Add Money etc) =======
                   Container(
                     width: double.infinity,
@@ -257,7 +249,6 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         /// Title Row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -277,45 +268,45 @@ class HomeScreen extends StatelessWidget {
 
                         /// GRID
                         Obx(
-                              () =>
-                              homeController.GetOpTypeState.value.when(
-                                success: (getOpTypes) {
-                                  final assignedList =
-                                      getOpTypes.data?.assignedOpTypes ?? [];
-                                  final activeServices = assignedList
-                                      .where((service) =>
-                                  service.isActive == true &&
-                                      service.isServiceActive == true
-                                  ).toList();
-                                  return GridView.builder(
-                                    shrinkWrap: true,
-                                    padding: EdgeInsets.zero,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    gridDelegate:
-                                    const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 90,
-                                      childAspectRatio: 0.80,
+                              () => homeController.GetOpTypeState.value.when(
+                            success: (getOpTypes) {
+                              final assignedList =
+                                  getOpTypes.data?.assignedOpTypes ?? [];
+                              final activeServices = assignedList
+                                  .where((service) =>
+                              service.isActive == true &&
+                                  service.isServiceActive == true)
+                                  .toList();
+                              return GridView.builder(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 90,
+                                  childAspectRatio: 0.80,
+                                ),
+                                itemCount: activeServices.length,
+                                itemBuilder: (context, index) {
+                                  final service = activeServices[index];
+                                  return serviceItem(
+                                    service.name ?? "Service",
+                                    iconPath: getServiceIconSvg(
+                                      service.name ?? "",
                                     ),
-                                    itemCount: activeServices.length,
-                                    itemBuilder: (context, index) {
-                                      final service = activeServices[index];
-                                      return serviceItem(
-                                        service.name ?? "Service",
-                                        iconPath: getServiceIconSvg(
-                                            service.name ?? "",
-
-                                        ),
-                                        onTap: () => Get.toNamed(AppRoutes.billPayment,arguments: service.serviceId),
-
-                                      );
-                                    },
+                                    onTap: () => handleServiceTap(
+                                      service.serviceId as int?,
+                                      service.name ?? "",
+                                    ),
                                   );
                                 },
-                                error: (msg) => Text(msg),
-                                loading: () =>
-                                    Center(child: CircularProgressIndicator()),
-                                none: () => SizedBox(),
-                              ),
+                              );
+                            },
+                            error: (msg) => Text(msg),
+                            loading: () =>
+                                Center(child: CircularProgressIndicator()),
+                            none: () => SizedBox(),
+                          ),
                         ),
                       ],
                     ),
@@ -386,33 +377,25 @@ class HomeScreen extends StatelessWidget {
 
                   /// ======= BOTTOM BANNER =======
                   Obx(
-                        () =>
-                        BannerController.to.bannerState.value.when(
-                          success: (data) {
-                            return Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: Image.network(
-                                  (data.bannerUrl?.first.resourceUrl)
-                                      .toString(),
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
-                                // Image.asset(
-                                //   "assets/images/wallet_transfer.jpg",
-                                //   width: double.infinity,
-                                //   fit: BoxFit.cover,
-                                // ),
-                              ),
-                            );
-                          },
-                          error: (msg) => Text(msg),
-                          loading: () => CircularProgressIndicator(),
-                          none: () => SizedBox(),
-                        ),
+                        () => BannerController.to.bannerState.value.when(
+                      success: (data) {
+                        return Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: Image.network(
+                              (data.bannerUrl?.first.resourceUrl).toString(),
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      },
+                      error: (msg) => Text(msg),
+                      loading: () => CircularProgressIndicator(),
+                      none: () => SizedBox(),
+                    ),
                   ),
-
                 ],
               ),
             ),
@@ -424,45 +407,38 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  /*String getServiceIconSvg(String name, String? sCode) {
-    final key = name.toLowerCase().trim();
-    final Map<String, String> icons = {
-      "mobile recharge": "assets/svg/call.svg",
-      "prepaid": "assets/svg/prepaid.svg",
-      "postpaid": "assets/svg/postpaid.svg",
-      "dth": "assets/svg/dth.svg",
-      "landline": "assets/svg/landline.svg",
-      "gas": "assets/svg/lpg gas cylinder.png",
-      "water": "assets/svg/water.svg",
-      "electricity": "assets/svg/electricity.svg",
-      "piped gas": "assets/svg/piped gas.svg",
-      "broadband": "assets/svg/broadband.svg",
-      "loan repayment": "assets/svg/loan repayment.svg",
-      "lpg gas cylinder": "assets/svg/lpg gas cylinder.png",
-      "insurance premium": "assets/svg/insurance premium.png",
-      "google play voucher": "assets/svg/google play voucher.svg",
-      "fastag": "assets/svg/fastag.svg",
-    };
+  /// ======= HANDLE SERVICE TAP - ROUTE TO CORRECT SCREEN =======
+  void handleServiceTap(int? serviceId, String serviceName) {
+    if (serviceId == null) return;
 
-    /// Check service name first
-    if (icons.containsKey(key)) {
-      return icons[key]!;
+    final normalizedName = serviceName.toLowerCase().trim();
+
+    /// Check if service is DTH or Prepaid - go directly to BillPaymentScreen
+    if (normalizedName.contains('dth') || normalizedName.contains('prepaid')) {
+      Get.toNamed(
+        AppRoutes.billPayment,
+        arguments: {
+          "serviceId": serviceId,
+          "serviceName": serviceName,
+        },
+      );
+    } else {
+      /// For all other services - go to SelectProviderScreen first
+      Get.toNamed(
+        AppRoutes.serviceProvider,
+        arguments: {
+          "serviceId": serviceId,
+          "serviceName": serviceName,
+        },
+      );
     }
-
-    /// Check service code
-    if (sCode != null && icons.containsKey(sCode.toLowerCase())) {
-      return icons[sCode.toLowerCase()]!;
-    }
-
-    // Default icon (fallback)
-    return "assets/svg/default_service.svg";
-  }*/
+  }
 
   String getServiceIconSvg(String serviceName) {
     String name = serviceName.toLowerCase().trim();
-
     return "assets/svg/$name.svg";
   }
+
   /// WIDGET HELPERS
   Widget serviceCircularItem(String title, IconData icon) {
     return Column(
@@ -498,10 +474,11 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget serviceItem(String title, {
-    required String iconPath,
-    Function()? onTap,
-  }) {
+  Widget serviceItem(
+      String title, {
+        required String iconPath,
+        Function()? onTap,
+      }) {
     final isSvg = iconPath.toLowerCase().endsWith(".svg");
 
     return GestureDetector(
