@@ -28,6 +28,8 @@ import '../modules/dashboard/home/view/add_money/add_money_controller.dart';
 import '../modules/dashboard/home/view/add_money/add_money_screen.dart';
 import '../modules/dashboard/home/view/billpayment_view/bill_payment_controller.dart';
 import '../modules/dashboard/home/view/billpayment_view/bill_payment_screen.dart';
+import '../modules/dashboard/home/view/billpayment_view/select_provider_controller.dart';
+import '../modules/dashboard/home/view/billpayment_view/select_provider_screen.dart';
 import '../modules/dashboard/home/view/home/banner_controller.dart';
 import '../modules/dashboard/home/view/home/home_controller.dart';
 import '../modules/dashboard/home/view/home/home_screen.dart';
@@ -211,6 +213,13 @@ class AppPages {
       binding: BindingsBuilder(() {
         Get.lazyPut<BillPaymentController>(() => BillPaymentController());
       }),
+    ),
+    GetPage(
+      name: AppRoutes.serviceProvider,
+      page: () => SelectProviderScreen(),
+      // binding: BindingsBuilder(() {
+      //   Get.lazyPut<ServiceProviderController>(() => ServiceProviderController());
+      // }),
     ),
   ];
 }

@@ -21,6 +21,7 @@ class AppRoutes {
   static const redeemCard = "/RedeemCardScreen";
   static const shareReport = "/ShareReportScreen";
   static const billPayment = "/BillPaymentScreen";
+  static const serviceProvider = "/ServiceProvider";
 
 
 

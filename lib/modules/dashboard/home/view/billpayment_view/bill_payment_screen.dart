@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:we_save_more/routes/app_routes.dart';
 import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
@@ -22,7 +23,6 @@ class BillPaymentScreen extends StatelessWidget {
           onTap: () => Get.back(),
           child: Icon(Icons.arrow_back, color: theme.colorScheme.onPrimary),
         ),
-
       ),
 
       body: ListView(
@@ -60,7 +60,7 @@ class BillPaymentScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 18),
+                Spacing.h16,
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -71,22 +71,30 @@ class BillPaymentScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.grey.shade300),
                   ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.wifi_tethering, color: Colors.blue),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          "Select Operator",
-                          style: TextStyle(fontSize: 16, color: Colors.black87),
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.toNamed(AppRoutes.serviceProvider);
+                    },
+
+                    child: Row(
+                      children: const [
+                        Icon(Icons.wifi_tethering, color: Colors.blue),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: AppText(
+                            "Select Operator",
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
                         ),
-                      ),
-                      Icon(Icons.keyboard_arrow_down, size: 26),
-                    ],
+                        Icon(Icons.keyboard_arrow_down, size: 26),
+                      ],
+                    ),
                   ),
+
                 ),
 
-                const SizedBox(height: 18),
+                Spacing.h16,
 
                 TextFormField(
                   decoration: InputDecoration(
@@ -149,7 +157,7 @@ class BillPaymentScreen extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(width: 12),
+                   Spacing.w12,
 
                     Expanded(
                       child: OutlinedButton(
@@ -174,9 +182,7 @@ class BillPaymentScreen extends StatelessWidget {
               ],
             ),
           ),
-
           Spacing.h20,
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
@@ -193,9 +199,7 @@ class BillPaymentScreen extends StatelessWidget {
               ),
             ],
           ),
-
           Spacing.h10,
-
           ...List.generate(3, (index) => transactionTile()),
         ],
       ),
