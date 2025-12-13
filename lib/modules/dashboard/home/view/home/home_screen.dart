@@ -407,30 +407,51 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  /// ======= HANDLE SERVICE TAP - ROUTE TO CORRECT SCREEN =======
-  void handleServiceTap(int? serviceId, String serviceName) {
+  /// ======= HANDLE SERVICE TAP - UPDATED LOGIC =======
+  void handleServiceTap(int? serviceId, String serviceName) async {
     if (serviceId == null) return;
 
     final normalizedName = serviceName.toLowerCase().trim();
 
-    /// Check if service is DTH or Prepaid - go directly to BillPaymentScreen
-    if (normalizedName.contains('dth') || normalizedName.contains('prepaid')) {
+    // Check if service is DTH or Prepaid
+    bool isPrepaid = normalizedName.contains('prepaid');
+    bool isDTH = normalizedName.contains('dth');
+
+    if (isPrepaid || isDTH) {
+      // Go directly to BillPaymentScreen
       Get.toNamed(
         AppRoutes.billPayment,
         arguments: {
           "serviceId": serviceId,
           "serviceName": serviceName,
+          "providerId": null,
+          "providerName": null,
+          "providerImage": null,
         },
       );
     } else {
-      /// For all other services - go to SelectProviderScreen first
-      Get.toNamed(
+      // For other services: First show Select Provider screen
+      final result = await Get.toNamed(
         AppRoutes.serviceProvider,
         arguments: {
           "serviceId": serviceId,
           "serviceName": serviceName,
         },
       );
+
+      // After selecting provider, navigate to Bill Payment
+      if (result != null) {
+        Get.toNamed(
+          AppRoutes.billPayment,
+          arguments: {
+            "serviceId": serviceId,
+            "serviceName": serviceName,
+            "providerId": result["providerId"],
+            "providerName": result["providerName"],
+            "providerImage": result["providerImage"],
+          },
+        );
+      }
     }
   }
 

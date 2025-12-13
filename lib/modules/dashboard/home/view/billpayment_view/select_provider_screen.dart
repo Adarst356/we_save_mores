@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/bill_payment_screen.dart';
 import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/select_provider_controller.dart';
 import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/utils/constant.dart';
-
-import '../../../../../routes/app_routes.dart';
 
 class SelectProviderScreen extends StatelessWidget {
   SelectProviderScreen({super.key});
@@ -109,14 +108,14 @@ class SelectProviderScreen extends StatelessWidget {
             ),
 
             Obx(
-              () => searchText.value.isNotEmpty
+                  () => searchText.value.isNotEmpty
                   ? GestureDetector(
-                      onTap: () => searchText.value = "",
-                      child: const Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: Icon(Icons.clear, size: 20, color: Colors.grey),
-                      ),
-                    )
+                onTap: () => searchText.value = "",
+                child: const Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Icon(Icons.clear, size: 20, color: Colors.grey),
+                ),
+              )
                   : const SizedBox(),
             ),
           ],
@@ -145,16 +144,35 @@ class SelectProviderScreen extends StatelessWidget {
   }
 
   // -----------------------------------------------------
-  // 🟡 PROVIDER TILE
+  // 🟡 PROVIDER TILE - UPDATED LOGIC
   // -----------------------------------------------------
   Widget providerTile(String image, String title, int serviceId) {
     return GestureDetector(
       onTap: () {
-        Get.back(result: {
-          "providerId": serviceId,
-          "providerName": title,
-          "providerImage": image,
-        });
+        // Check if this was opened from navigation or from bill payment screen
+        bool isPrepaid = controller.serviceName.toLowerCase().contains('prepaid');
+        bool isDTH = controller.serviceName.toLowerCase().contains('dth');
+
+        if (isPrepaid || isDTH) {
+          // Return data to BillPaymentScreen (for operator selection)
+          Get.back(result: {
+            "providerId": serviceId,
+            "providerName": title,
+            "providerImage": image,
+          });
+        } else {
+          // For other services: Navigate to BillPaymentScreen with provider data
+          Get.off(
+                () => BillPaymentScreen(),
+            arguments: {
+              "serviceId": controller.serviceId,
+              "serviceName": controller.serviceName,
+              "providerId": serviceId,
+              "providerName": title,
+              "providerImage": image,
+            },
+          );
+        }
       },
       child: Column(
         children: [
@@ -203,6 +221,4 @@ class SelectProviderScreen extends StatelessWidget {
       ),
     );
   }
-
-
 }
