@@ -13,7 +13,7 @@ class MainNav extends StatelessWidget {
 
 
   final List<Widget> _pages = [
-    HomeScreen(),
+     HomeScreen(),
      SupportScreen(),
      RefersScreen(),
      ReportScreen(),

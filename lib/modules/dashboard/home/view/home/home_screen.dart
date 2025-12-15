@@ -9,6 +9,7 @@ import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import '../../../../../theme/app_colors.dart';
 import '../../../drawer/view/side_drawer_screen.dart';
+import '../../../notification/notification_controller.dart';
 import '../../../profile/view/balance_controller.dart';
 import '../../../profile/view/profile_controller.dart';
 import '../../home_appbar/home_appbar.dart';
@@ -24,6 +25,7 @@ class HomeScreen extends StatelessWidget {
   final profileController = Get.put(ProfileController());
   final balanceController = Get.put(BalanceController());
   final homeController = Get.put(HomeController());
+  final notificationController = Get.put(NotificationController());
 
   @override
   Widget build(BuildContext context) {
@@ -93,15 +95,54 @@ class HomeScreen extends StatelessWidget {
                 Spacing.w10,
 
                 /// NOTIFICATION ICON
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed(AppRoutes.notification);
-                  },
-                  child: const Icon(
-                    Icons.notifications,
-                    color: Colors.white,
-                    size: 28,
-                  ),
+                // Replace your notification icon with this:
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed(AppRoutes.notification);
+                      },
+                      child: const Icon(
+                        Icons.notifications,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+
+                    // Badge indicator
+                    Obx(() {
+                      final count = notificationController.notificationCount.value;
+                      if (count == 0) return const SizedBox();
+
+                      return Positioned(
+                        right: -2,
+                        top: -2,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 1.5),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 18,
+                            minHeight: 18,
+                          ),
+                          child: Center(
+                            child: Text(
+                              count > 99 ? '99+' : count.toString(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ],
                 ),
               ],
             ),
@@ -432,7 +473,7 @@ class HomeScreen extends StatelessWidget {
     } else {
       // For other services: First show Select Provider screen
       final result = await Get.toNamed(
-        AppRoutes.serviceProvider,
+        AppRoutes.serviceOperator,
         arguments: {
           "serviceId": serviceId,
           "serviceName": serviceName,

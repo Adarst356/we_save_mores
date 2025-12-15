@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/select_zone_screen.dart';
 import 'package:we_save_more/routes/app_routes.dart';
 import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import '../../../../../utils/constant.dart';
 import '../../../../../utils/custom_appbar.dart';
+import '../../data/billpayment_response.dart';
 import 'bill_payment_controller.dart';
 
 class BillPaymentScreen extends StatelessWidget {
@@ -69,10 +71,14 @@ class BillPaymentScreen extends StatelessWidget {
               TextFormField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(
-                    controller.isDTH ? Icons.settings_input_antenna : Icons.phone_android,
+                    controller.isDTH
+                        ? Icons.settings_input_antenna
+                        : Icons.phone_android,
                     color: Colors.grey,
                   ),
-                  hintText: controller.isDTH ? "Enter DTH Number" : "Enter Prepaid Number",
+                  hintText: controller.isDTH
+                      ? "Enter DTH Number"
+                      : "Enter Prepaid Number",
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -86,7 +92,10 @@ class BillPaymentScreen extends StatelessWidget {
 
               // Select Operator (clickable)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 14,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
@@ -95,7 +104,7 @@ class BillPaymentScreen extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () async {
                     final result = await Get.toNamed(
-                      AppRoutes.serviceProvider,
+                      AppRoutes.serviceOperator,
                       arguments: {
                         "serviceId": controller.serviceId,
                         "serviceName": controller.serviceName,
@@ -127,16 +136,22 @@ class BillPaymentScreen extends StatelessWidget {
                           CircleAvatar(
                             radius: 22,
                             backgroundColor: Colors.blue.shade50,
-                            child: (controller.providerImage == null || controller.providerImage!.isEmpty)
-                                ? Icon(Icons.wifi_tethering, color: Colors.blue, size: 26)
+                            child:
+                                (controller.providerImage == null ||
+                                    controller.providerImage!.isEmpty)
+                                ? Icon(
+                                    Icons.wifi_tethering,
+                                    color: Colors.blue,
+                                    size: 26,
+                                  )
                                 : ClipOval(
-                              child: Image.network(
-                                "$baseIconUrl${controller.providerImage}",
-                                width: 44,
-                                height: 44,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                                    child: Image.network(
+                                      "$baseIconUrl${controller.providerImage}",
+                                      width: 44,
+                                      height: 44,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                           ),
                           SizedBox(width: 16),
                           Expanded(
@@ -149,7 +164,11 @@ class BillPaymentScreen extends StatelessWidget {
                               color: Colors.grey,
                             ),
                           ),
-                          Icon(Icons.keyboard_arrow_down, size: 26, color: Colors.deepPurple),
+                          Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 26,
+                            color: Colors.deepPurple,
+                          ),
                         ],
                       ),
                     ],
@@ -162,7 +181,10 @@ class BillPaymentScreen extends StatelessWidget {
               // Amount Input
               TextFormField(
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.currency_rupee, color: Colors.grey),
+                  prefixIcon: const Icon(
+                    Icons.currency_rupee,
+                    color: Colors.grey,
+                  ),
                   hintText: "Enter Amount",
                   filled: true,
                   fillColor: Colors.white,
@@ -199,11 +221,20 @@ class BillPaymentScreen extends StatelessWidget {
               Spacing.h16,
 
               // View Plan & Best Offer buttons
+              // View Plan & Best Offer buttons
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () async {   // ✅ async required
+                        final result = await Get.to(() => SelectZoneScreen());
+
+                        if (result != null && result is Cirlces) {
+                          print("Selected Circle: ${result.circle}");
+
+                          // yahan tum controller / text / state update kar sakte ho
+                        }
+                      },
                       style: OutlinedButton.styleFrom(
                         backgroundColor: appColors.primaryColor,
                         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -219,10 +250,14 @@ class BillPaymentScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+
                   Spacing.w12,
+
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Get.toNamed(AppRoutes.bestOffer);
+                      },
                       style: OutlinedButton.styleFrom(
                         backgroundColor: appColors.primaryColor,
                         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -250,8 +285,17 @@ class BillPaymentScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: const [
-            AppText("Recent Transactions", fontSize: 16, fontWeight: FontWeight.bold),
-            AppText("View All", fontSize: 15, color: Colors.blue, decoration: TextDecoration.underline),
+            AppText(
+              "Recent Transactions",
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            AppText(
+              "View All",
+              fontSize: 15,
+              color: Colors.blue,
+              decoration: TextDecoration.underline,
+            ),
           ],
         ),
 
@@ -298,16 +342,18 @@ class BillPaymentScreen extends StatelessWidget {
                     CircleAvatar(
                       radius: 20,
                       backgroundColor: Colors.grey.shade200,
-                      child: (controller.providerImage == null || controller.providerImage!.isEmpty)
+                      child:
+                          (controller.providerImage == null ||
+                              controller.providerImage!.isEmpty)
                           ? Icon(Icons.wifi, color: Colors.blue, size: 24)
                           : ClipOval(
-                        child: Image.network(
-                          "$baseIconUrl${controller.providerImage}",
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                              child: Image.network(
+                                "$baseIconUrl${controller.providerImage}",
+                                width: 40,
+                                height: 40,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                     ),
                     SizedBox(width: 12),
                     Expanded(
@@ -345,7 +391,10 @@ class BillPaymentScreen extends StatelessWidget {
               if (controller.serviceName != "Broadband") ...[
                 TextFormField(
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.currency_rupee, color: Colors.grey),
+                    prefixIcon: const Icon(
+                      Icons.currency_rupee,
+                      color: Colors.grey,
+                    ),
                     hintText: "Enter Amount",
                     filled: true,
                     fillColor: Colors.white,
@@ -371,7 +420,9 @@ class BillPaymentScreen extends StatelessWidget {
                   ),
                   onPressed: () {},
                   child: AppText(
-                    controller.serviceName == "Broadband" ? "Fetch Bill" : "Bill Payment",
+                    controller.serviceName == "Broadband"
+                        ? "Fetch Bill"
+                        : "Bill Payment",
                     fontSize: 18,
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -388,8 +439,17 @@ class BillPaymentScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: const [
-            AppText("Recent Transactions", fontSize: 16, fontWeight: FontWeight.bold),
-            AppText("View All", fontSize: 15, color: Colors.blue, decoration: TextDecoration.underline),
+            AppText(
+              "Recent Transactions",
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            AppText(
+              "View All",
+              fontSize: 15,
+              color: Colors.blue,
+              decoration: TextDecoration.underline,
+            ),
           ],
         ),
 

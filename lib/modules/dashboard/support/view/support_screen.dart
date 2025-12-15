@@ -9,8 +9,10 @@ import 'package:we_save_more/widget/app_text.dart';
 import '../../../../theme/app_colors.dart';
 import '../data/support_response.dart';
 
-class SupportScreen extends GetView<SupportController> {
-     const SupportScreen({super.key});
+class SupportScreen extends StatelessWidget {
+      SupportScreen({super.key});
+
+  final SupportController controller = Get.put(SupportController());
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class SupportScreen extends GetView<SupportController> {
     return Scaffold(
       appBar: CustomAppbar(
         title: "Informations",
-        showLeft: false  ,
+        showLeft: true,
         leftIcon: GestureDetector(
           onTap: (){Get.back();},
             child: Icon(Icons.arrow_back, color: theme.colorScheme.onPrimary)),

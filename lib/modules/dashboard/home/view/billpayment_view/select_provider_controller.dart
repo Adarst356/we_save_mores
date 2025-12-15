@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../../../../api/ui_state.dart';
 import '../../data/billpayment_repo.dart';
@@ -6,7 +7,7 @@ import '../../data/billpayment_response.dart';
 
 class ServiceProviderController extends GetxController{
   final BillPaymentRepo repo = BillPaymentRepo();
-
+  final GetStorage box = GetStorage();
   late int serviceId;
   late String serviceName;
 
@@ -37,6 +38,10 @@ class ServiceProviderController extends GetxController{
 
           success: (data) {
             numberListState.value = UiState.success(data);
+            box.write(
+              "number_list_response",
+              data.toJson(),
+            );
             processOperators(data);
           },
 

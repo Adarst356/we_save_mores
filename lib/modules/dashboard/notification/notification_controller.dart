@@ -7,13 +7,9 @@ import '../home/data/notification_response.dart';
 class NotificationController extends GetxController {
   final NotificationRepo repo = NotificationRepo();
 
-  /// Count of unread notifications
   RxInt notificationCount = 0.obs;
-
-  /// List of notifications
   RxList<Notifications> notifications = <Notifications>[].obs;
 
-  /// UI State holder
   Rx<UiState<NotificationResponse>> notificationState =
       UiState<NotificationResponse>.none().obs;
 
@@ -23,7 +19,6 @@ class NotificationController extends GetxController {
     getNotification();
   }
 
-  /// API Call
   Future<void> getNotification() async {
     notificationState.value = UiState.loading();
 
@@ -44,42 +39,46 @@ class NotificationController extends GetxController {
           loading: () {
             notificationState.value = UiState.loading();
           },
-
           success: (data) {
             notificationState.value = UiState.success(data);
 
-            /// Update notifications list
-            notifications.value = data.notifications ?? [];
+            // Parse notifications properly
+            if (data.notifications != null) {
+              notifications.value = (data.notifications as List)
+                  .map((json) => Notifications.fromJson(json))
+                  .toList();
+            } else {
+              notifications.value = [];
+            }
 
-            /// Count unseen notifications
+            // Count unseen
             int unseen = notifications.where((n) => n.isSeen == false).length;
-
             updateBadge(unseen);
           },
-
           error: (message) {
             notificationState.value = UiState.error(message);
             updateBadge(0);
           },
-
           none: () {},
         );
       },
     );
   }
 
-  /// Update app + system badge
   Future<void> updateBadge(int count) async {
     notificationCount.value = count;
 
     try {
-      await AppBadgePlus.updateBadge(count);
+      if (count > 0) {
+        await AppBadgePlus.updateBadge(count);
+      } else {
+        await AppBadgePlus.updateBadge(0);
+      }
     } catch (e) {
       print("Badge Update Error: $e");
     }
   }
 
-  /// Mark a single notification as read
   Future<void> markAsRead(int? id) async {
     if (id == null) return;
 
@@ -94,7 +93,6 @@ class NotificationController extends GetxController {
     }
   }
 
-  /// Mark all notifications read
   Future<void> markAllAsRead() async {
     for (var n in notifications) {
       n.isSeen = true;
@@ -103,7 +101,6 @@ class NotificationController extends GetxController {
     updateBadge(0);
   }
 
-  /// Pull to refresh
   Future<void> refreshNotifications() async {
     await getNotification();
   }

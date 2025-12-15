@@ -2,8 +2,8 @@ class AppRoutes {
   static const splash = '/splash';
   static const onboarding = '/onboarding';
   static const login = '/login';
-  static const signUp = '/SignUp';
-  static const forgotPass = "/ForgotPassword";
+  static const signUp = '/signup';
+  static const forgotPass = '/forgot-password';
   static const homeScreen = "/HomeScreen";
   static const notification = "/Notification";
   static const bottomNav = "/BottomNav";
@@ -21,7 +21,10 @@ class AppRoutes {
   static const redeemCard = "/RedeemCardScreen";
   static const shareReport = "/ShareReportScreen";
   static const billPayment = "/BillPaymentScreen";
-  static const serviceProvider = "/ServiceProvider";
+  static const serviceOperator = "/ServiceOperator";
+  static const viewPlan = "/ViewPlanScreen";
+  static const selectZone = "/SelectZoneScreen";
+
 
 
 

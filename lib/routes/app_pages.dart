@@ -9,6 +9,9 @@ import 'package:we_save_more/modules/auth/login/view/login_screen.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_controller.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_screen.dart';
 import 'package:we_save_more/modules/dashboard/drawer/view/side_drawer_screen.dart';
+import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/select_zone_controller.dart';
+import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/select_zone_screen.dart';
+import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/view_plan_screen.dart';
 
 import 'package:we_save_more/modules/dashboard/reports/view/userDayBookReport/user_day_book_controller.dart';
 import 'package:we_save_more/modules/dashboard/reports/view/userDayBookReport/user_day_book_screen.dart';
@@ -106,7 +109,6 @@ class AppPages {
       name: AppRoutes.bottomNav,
       page: () => MainNav(),
       binding: BindingsBuilder(() {
-        Get.lazyPut<SupportController>(() => SupportController());
         Get.lazyPut<ReportController>(() => ReportController());
         Get.lazyPut<ReferralController>(() => ReferralController());
         Get.lazyPut<ProfileController>(() => ProfileController());
@@ -124,9 +126,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.supportPage,
       page: () => SupportScreen(),
-      binding: BindingsBuilder(() {
-        Get.lazyPut<SupportController>(() => SupportController());
-      }),
+
     ),
     GetPage(
       name: AppRoutes.report,
@@ -149,13 +149,7 @@ class AppPages {
         Get.lazyPut<ProfileController>(() => ProfileController());
       }),
     ),
-    GetPage(
-      name: AppRoutes.notification,
-      page: () => NotificationScreen(),
-      binding: BindingsBuilder(() {
-        Get.lazyPut<NotificationController>(() => NotificationController());
-      }),
-    ),
+
     GetPage(
       name: AppRoutes.changePassword,
       page: () => ChangePassScreen(),
@@ -215,10 +209,24 @@ class AppPages {
       }),
     ),
     GetPage(
-      name: AppRoutes.serviceProvider,
+      name: AppRoutes.serviceOperator,
       page: () => SelectProviderScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ServiceProviderController>(() => ServiceProviderController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.viewPlan,
+      page: () => ViewPlanScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ServiceProviderController>(() => ServiceProviderController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.selectZone,
+      page: () => SelectZoneScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<SelectZoneController>(() => SelectZoneController());
       }),
     ),
   ];
