@@ -44,7 +44,6 @@ class SelectZoneScreen extends StatelessWidget {
                 ),
                 itemBuilder: (context, index) {
                   final circle = controller.circleList[index];
-
                   return ListTile(
                     title: Text(
                       circle.circle ?? "",
@@ -58,8 +57,9 @@ class SelectZoneScreen extends StatelessWidget {
                       size: 16,
                     ),
                     onTap: () {
-                      Get.to(() => const ViewPlanScreen(), arguments: {
-                        "zone": circle,
+                      Get.to(() =>  ViewPlanScreen(), arguments: {
+                        "circleID": circle.id,
+                        "oid": controller.numberSeriesList[index].oid,
                       });
                     },
                   );

@@ -109,9 +109,6 @@ class AppPages {
       name: AppRoutes.bottomNav,
       page: () => MainNav(),
       binding: BindingsBuilder(() {
-        Get.lazyPut<ReportController>(() => ReportController());
-        Get.lazyPut<ReferralController>(() => ReferralController());
-        Get.lazyPut<ProfileController>(() => ProfileController());
         Get.lazyPut<MainNavigationController>(() => MainNavigationController());
         Get.lazyPut<BannerController>(() => BannerController());
       }),
@@ -126,7 +123,9 @@ class AppPages {
     GetPage(
       name: AppRoutes.supportPage,
       page: () => SupportScreen(),
-
+      binding: BindingsBuilder(() {
+        Get.lazyPut<SupportController>(() => SupportController());
+      }),
     ),
     GetPage(
       name: AppRoutes.report,

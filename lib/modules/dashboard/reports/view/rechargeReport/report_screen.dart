@@ -77,7 +77,7 @@ class ReportScreen extends GetView<ReportController> {
                       ),
                     ),
                   ),
-                  // Clear button - only show when there's text
+                  /// Clear button - only show when there's text
                   Obx(() {
                     if (controller.searchQuery.value.isNotEmpty) {
                       return GestureDetector(
@@ -369,7 +369,17 @@ class ReportScreen extends GetView<ReportController> {
                                   /// Share
                                   GestureDetector(
                                     onTap: () {
-                                     Get.toNamed(AppRoutes.shareReport);
+                                     Get.toNamed(AppRoutes.shareReport, arguments: {
+                                       "date": item.modifyDate,
+                                       "status": item.type,
+                                       "operator": item.operator,
+                                       "mobile": item.customerNo ?? item.account,
+                                       "amount": item.amount,
+                                       "transactionId": item.transactionID,   // <-- lowercase 'd'
+                                       "providerRefId": item.liveID,
+                                        "operatorImage" : "$baseIconUrl${item.oid}.png",
+
+                                     }, );
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),

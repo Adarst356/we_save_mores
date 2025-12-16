@@ -79,7 +79,7 @@ class GetSimpleRechPlan {
         this.newsContent});
 
   GetSimpleRechPlan.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
     rofferData = json['rofferData'];
     dthciData = json['dthciData'];
     dthhrData = json['dthhrData'];
@@ -120,7 +120,7 @@ class GetSimpleRechPlan {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = {};
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -174,15 +174,15 @@ class Data {
     if (json['types'] != null) {
       types = <Types>[];
       json['types'].forEach((v) {
-        types!.add(new Types.fromJson(v));
+        types!.add(Types.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.types != null) {
-      data['types'] = this.types!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = {};
+    if (types != null) {
+      data['types'] = types!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -199,16 +199,16 @@ class Types {
     if (json['pDetails'] != null) {
       pDetails = <PDetails>[];
       json['pDetails'].forEach((v) {
-        pDetails!.add(new PDetails.fromJson(v));
+        pDetails!.add(PDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['pType'] = this.pType;
-    if (this.pDetails != null) {
-      data['pDetails'] = this.pDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = {};
+    data['pType'] = pType;
+    if (pDetails != null) {
+      data['pDetails'] = pDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -228,10 +228,10 @@ class PDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rs'] = this.rs;
-    data['desc'] = this.desc;
-    data['validity'] = this.validity;
+    final Map<String, dynamic> data = {};
+    data['rs'] = rs;
+    data['desc'] = desc;
+    data['validity'] = validity;
     return data;
   }
 }

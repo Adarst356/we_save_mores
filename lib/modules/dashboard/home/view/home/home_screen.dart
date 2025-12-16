@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:we_save_more/modules/dashboard/main_nav/main_nav_controller.dart';
 import 'package:we_save_more/routes/app_routes.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
@@ -249,9 +250,12 @@ class HomeScreen extends StatelessWidget {
                             child: serviceCircularItem("Add Money", Icons.add),
                           ),
                           serviceCircularItem("Send Money", Icons.send),
-                          serviceCircularItem(
-                            "Transaction Report",
-                            Icons.receipt_long,
+                          GestureDetector(
+                            onTap: (){Get.find<MainNavigationController>().selectedIndex.value = 3;},
+                            child: serviceCircularItem(
+                              "Transaction Report",
+                              Icons.receipt_long,
+                            ),
                           ),
                           GestureDetector(
                             onTap: () {

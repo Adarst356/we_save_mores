@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class RechargeSuccessScreen extends StatelessWidget {
-  const RechargeSuccessScreen({super.key});
+   RechargeSuccessScreen({super.key});
+
+  final args = Get.arguments as Map<String, dynamic>;
+
 
   @override
   Widget build(BuildContext context) {
@@ -21,26 +26,44 @@ class RechargeSuccessScreen extends StatelessWidget {
               ),
             ),
 
-            /// Success Icon
-            const Icon(Icons.check_circle,
-                color: Colors.green, size: 70),
-
             const SizedBox(height: 10),
 
-            /// SUCCESS text
-            const Text(
-              "SUCCESS",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-              ),
+            Column(
+              children: [
+                Icon(
+                  args["status"] == "SUCCESS"
+                      ? Icons.check_circle
+                      : args["status"] == "FAILED"
+                      ? Icons.error
+                      : Icons.access_time_filled,
+                  color: args["status"] == "SUCCESS"
+                      ? Colors.green
+                      : args["status"] == "FAILED"
+                      ? Colors.red
+                      : Colors.orange,
+                  size: 70,
+                ),
+                SizedBox(width: 6),
+                Text(
+                  args["status"] ?? "—",
+                  style: TextStyle(
+                    color: args["status"] == "SUCCESS"
+                        ? Colors.green
+                        : args["status"] == "FAILED"
+                        ? Colors.red
+                        : Colors.orange,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24,
+                  ),
+                ),
+              ],
             ),
+
 
             const SizedBox(height: 5),
 
-            const Text(
-              "Ref:: S251206105631837BFC02",
+             Text(
+            "Ref:${  args["transactionId"] ?? "Ref: S251206105631837BFC02"}",
               style: TextStyle(fontSize: 14),
             ),
 
@@ -67,10 +90,10 @@ class RechargeSuccessScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-            Image.asset("assets/icons/share.png",height: 20,),
+            Image.network(args["operatorImage"] ??"assets/icons/share.png",height: 40,),
                 const SizedBox(width: 10),
-                const Text(
-                  "Reliance Jio",
+                 Text(
+                  args["operator"] ??"Reliance Jio",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -89,11 +112,11 @@ class RechargeSuccessScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  buildRow("Mobile Number", "7739340164"),
-                  buildRow("Amount", "₹ 299.00"),
-                  buildRow("Transaction Id", "S251206105631837BFC02"),
-                  buildRow("Reference Id", "R.1302293436"),
-                  buildRow("Transaction Date Time", "04 Dec 2025 10:56 AM"),
+                  buildRow("Mobile Number", args["mobile"] ?? ""),
+                  buildRow("Amount", "₹ ${args["amount"] ?? ""}"),
+                  buildRow("Transaction ID", args["transactionId"] ?? ""),
+                  buildRow("Provider Ref ID", args["providerRefId"] ?? ""),
+                  buildRow("Transaction Date Time", args["date"] ?? ""),
                 ],
               ),
             ),

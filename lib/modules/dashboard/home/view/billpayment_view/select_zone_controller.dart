@@ -4,15 +4,18 @@ import 'package:get_storage/get_storage.dart';
 
 import '../../../../../api/ui_state.dart';
 import '../../data/billpayment_response.dart';
+import '../../data/getop_type_response.dart';
 
 class SelectZoneController extends GetxController {
   final GetStorage box = GetStorage();
 
   /// original full list
   List<Cirlces> allCircles = [];
+  List<NumSeries> numberSeries = [];
 
   /// filtered list for UI
   RxList<Cirlces> circleList = <Cirlces>[].obs;
+  RxList<NumSeries> numberSeriesList = <NumSeries>[].obs;
 
   /// search text
   RxString searchText = ''.obs;
@@ -33,8 +36,9 @@ class SelectZoneController extends GetxController {
     if (json != null) {
       final response = GetNumberList.fromJson(json);
       allCircles = response.data?.cirlces ?? [];
-
+      numberSeries = response.data?.numSeries??[];
       /// initially full list
+      numberSeriesList.assignAll(numberSeries);
       circleList.assignAll(allCircles);
     }
   }
@@ -46,8 +50,7 @@ class SelectZoneController extends GetxController {
       circleList.assignAll(allCircles);
     } else {
       circleList.assignAll(
-        allCircles.where((c) =>
-            (c.circle ?? '').toLowerCase().contains(query)),
+        allCircles.where((c) => (c.circle ?? '').toLowerCase().contains(query)),
       );
     }
   }
@@ -57,4 +60,3 @@ class SelectZoneController extends GetxController {
     circleList.assignAll(allCircles);
   }
 }
-

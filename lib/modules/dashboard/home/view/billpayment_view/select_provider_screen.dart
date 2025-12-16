@@ -170,6 +170,7 @@ class SelectProviderScreen extends StatelessWidget {
               "providerId": serviceId,
               "providerName": title,
               "providerImage": image,
+
             },
           );
         }

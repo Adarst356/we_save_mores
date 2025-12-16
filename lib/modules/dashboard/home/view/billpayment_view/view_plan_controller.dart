@@ -8,95 +8,93 @@ class ViewPlanController extends GetxController {
 
   final allTypes = <Types>[].obs;
   final filteredPlans = <PDetails>[].obs;
-  final selectedTab = 'Unlimited'.obs;
-  final searchQuery = ''.obs;
+  final selectedTab = 'UNLIMITED'.obs;
   final viewPlanState = Rx<UiState<GetSimpleRechPlan>>(UiState.none());
 
+  final searchQuery = ''.obs;
+  late final String circleID;
+  late final String oid;
   @override
   void onInit() {
     super.onInit();
+// Read arguments from Get.to()
+    final args = Get.arguments;
+    circleID = args?['circleID']?.toString() ?? '';
+    oid = args?['oid']?.toString() ?? '';
+
+    ever(searchQuery, (_) => _applyFilters());
+
     fetchViewPlan();
   }
 
+  // ---------------- Filter plans by tab ----------------
+  void filterPlansByTab(String tab) {
+    selectedTab.value = tab;
+    _applyFilters();
+  }
+
+  // ---------------- Apply tab + search filters ----------------
+  void _applyFilters() {
+    final type = allTypes.firstWhereOrNull(
+          (e) => e.pType?.toUpperCase() == selectedTab.value.toUpperCase(),
+    );
+
+    if (type != null && type.pDetails != null) {
+      final plans = type.pDetails!;
+      final query = searchQuery.value.toLowerCase();
+
+      if (query.isNotEmpty) {
+        filteredPlans.value = plans.where((plan) {
+          // final desc = plan.desc?.toLowerCase() ?? '';
+          final amount = plan.rs?.toString() ?? '';
+          final validity = plan.validity?.toLowerCase() ?? '';
+
+          return amount.contains(query) ||
+              amount.contains(query) ||
+              validity.contains(query);
+        }).toList();
+      } else {
+        filteredPlans.value = plans;
+      }
+    } else {
+      filteredPlans.clear();
+    }
+  }
+
+
+
+  // ---------------- Fetch API ----------------
   void fetchViewPlan() {
-    viewPlanState.value = UiState.loading();
-
     repo.getSimplePlanData(
-      body: {},
+      body: {
+    "circleID": circleID,
+    "oid": oid,
+    },
       callback: (state) {
-        viewPlanState.value = state;
-
         state.when(
-          success: (data) {
-            if (data.data?.types != null) {
-              allTypes.assignAll(data.data!.types!);
-
-              // Log available plan types
-              print("📋 Available plan types from API:");
-              for (var type in allTypes) {
-                print("   - '${type.pType}' (${type.pDetails?.length ?? 0} plans)");
+            success: (data) {
+              print('API Response data: ${data.data}');
+              viewPlanState.value = UiState.success(data);
+              if (data.data?.types != null) {
+                allTypes.value = data.data!.types!;
+                _applyFilters();
               }
-
-              filterPlansByTab(selectedTab.value);
-            }
-          },
-          loading: () {},
+            },
           error: (msg) {
-            print("❌ Error: $msg");
+            viewPlanState.value = UiState.error(msg);
           },
-          none: () {},
+          loading: () {
+            viewPlanState.value = UiState.loading();
+          },
+          none: () {
+            viewPlanState.value = UiState.none();
+          },
         );
       },
     );
   }
 
-  void filterPlansByTab(String tab) {
-    selectedTab.value = tab;
-    searchQuery.value = ''; // Reset search when changing tabs
-
-    // Find exact match with the pType from API
-    final type = allTypes.firstWhereOrNull(
-          (e) => e.pType == tab,
-    );
-
-    if (type != null && type.pDetails != null) {
-      filteredPlans.assignAll(type.pDetails!);
-      print("✅ Found ${filteredPlans.length} plans for '$tab'");
-    } else {
-      filteredPlans.clear();
-      print("⚠️ No plans found for tab: '$tab'");
-      print("   Available types: ${allTypes.map((e) => e.pType).join(', ')}");
-    }
-  }
-
-  void searchPlans(String query) {
-    searchQuery.value = query;
-
-    if (query.isEmpty) {
-      // If search is empty, show all plans for selected tab
-      filterPlansByTab(selectedTab.value);
-      return;
-    }
-
-    // Find the current tab's type
-    final type = allTypes.firstWhereOrNull((e) => e.pType == selectedTab.value);
-
-    if (type != null && type.pDetails != null) {
-      // Filter plans based on search query
-      final searchLower = query.toLowerCase();
-      filteredPlans.assignAll(
-        type.pDetails!.where((plan) {
-          final rs = plan.rs?.toLowerCase() ?? '';
-          final desc = plan.desc?.toLowerCase() ?? '';
-          final validity = plan.validity?.toLowerCase() ?? '';
-
-          return rs.contains(searchLower) ||
-              desc.contains(searchLower) ||
-              validity.contains(searchLower);
-        }).toList(),
-      );
-
-      print("🔍 Search '$query': Found ${filteredPlans.length} plans");
-    }
+  void clearSearch() {
+    searchQuery.value = '';
   }
 }
