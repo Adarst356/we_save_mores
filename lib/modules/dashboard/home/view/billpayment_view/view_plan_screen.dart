@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/view_plan_controller.dart';
 import 'package:we_save_more/theme/app_colors.dart';
+import 'package:we_save_more/widget/app_text.dart';
+import '../../../../../routes/app_routes.dart';
 import '../../../../../utils/custom_appbar.dart';
 import '../../data/simple_plan_response.dart';
+import 'bill_payment_controller.dart';
 
 class ViewPlanScreen extends StatelessWidget {
   ViewPlanScreen({super.key});
@@ -31,7 +34,7 @@ class ViewPlanScreen extends StatelessWidget {
             height: 48,
             child: Obx(() {
               if (controller.allTypes.isEmpty) {
-                // Loading indicator for tabs
+                /// Loading indicator for tabs
                 return const Center(
                   child: SizedBox(
                     height: 20,
@@ -189,67 +192,91 @@ class ViewPlanScreen extends StatelessWidget {
 
   // ---------------- Plan Card Widget ----------------
   Widget _buildPlanCard(PDetails plan) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFF6B3FA0), width: 2),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          /// LEFT
-          Container(
-            width: 90,
-            padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(
-              color: Color(0xFFF5F0FA),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(6),
-                bottomLeft: Radius.circular(6),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "₹ ${plan.rs ?? '0'}",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  "Validity",
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  plan.validity ?? "",
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
+    return GestureDetector(
+      onTap: () {
+        /// ✅ BillPaymentController se data set karo
+        final billController = Get.find<BillPaymentController>();
 
-          /// RIGHT
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Text(
-                plan.desc ?? "No description available",
-                style: const TextStyle(fontSize: 11, height: 1.4),
+        billController.amountController.text =
+            plan.rs?.toString() ?? '';
+
+        billController.selectedPlanDesc.value =
+            plan.desc ?? '';
+
+        /// ✅ ViewPlanScreen close
+        Get.until((route) => route.settings.name == AppRoutes.billPayment);
+
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xFF6B3FA0), width: 2),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          children: [
+            /// LEFT
+            Container(
+              width: 95,
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(
+                  color: const Color(0xFF6B3FA0),
+                  width: 1.2,
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "₹ ${plan.rs ?? '199.00'}",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF6B3FA0),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  const Divider(thickness: 1, height: 1),
+                  const SizedBox(height: 6),
+                  Text(
+                    "Validity",
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    plan.validity ?? "28 days",
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+
+            /// RIGHT
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: AppText(
+                  plan.desc ?? "No description available",
+                  fontSize: 12,
+                  height: 1.4,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
+
 }

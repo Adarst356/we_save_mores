@@ -25,9 +25,28 @@ class ServiceProviderController extends GetxController{
     serviceName = args["serviceName"].toString();
 
     print("Received serviceId: $serviceId");
-    getNumberList();
+
+    loadCachedOrApi(); // ✅ NEW METHOD
     super.onInit();
   }
+  void loadCachedOrApi() {
+    final cachedData = box.read("number_list_response");
+
+    if (cachedData != null) {
+      print("✅ Loaded data from cache");
+
+      final data = GetNumberList.fromJson(
+        Map<String, dynamic>.from(cachedData),
+      );
+
+      numberListState.value = UiState.success(data);
+      processOperators(data);
+    } else {
+      print("🌐 No cache found, calling API");
+      getNumberList();
+    }
+  }
+
 
   getNumberList() {
     repo.getNumberListData(

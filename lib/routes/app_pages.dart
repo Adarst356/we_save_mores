@@ -9,6 +9,7 @@ import 'package:we_save_more/modules/auth/login/view/login_screen.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_controller.dart';
 import 'package:we_save_more/modules/auth/signup/view/signup_screen.dart';
 import 'package:we_save_more/modules/dashboard/drawer/view/side_drawer_screen.dart';
+import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/GetRn_offer_screen.dart';
 import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/select_zone_controller.dart';
 import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/select_zone_screen.dart';
 import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/view_plan_screen.dart';
@@ -31,6 +32,7 @@ import '../modules/dashboard/home/view/add_money/add_money_controller.dart';
 import '../modules/dashboard/home/view/add_money/add_money_screen.dart';
 import '../modules/dashboard/home/view/billpayment_view/bill_payment_controller.dart';
 import '../modules/dashboard/home/view/billpayment_view/bill_payment_screen.dart';
+import '../modules/dashboard/home/view/billpayment_view/GetRn_offer_controller.dart';
 import '../modules/dashboard/home/view/billpayment_view/select_provider_controller.dart';
 import '../modules/dashboard/home/view/billpayment_view/select_provider_screen.dart';
 import '../modules/dashboard/home/view/home/banner_controller.dart';
@@ -226,6 +228,13 @@ class AppPages {
       page: () => SelectZoneScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<SelectZoneController>(() => SelectZoneController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.rOffers,
+      page: () => ROfferScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ROfferController>(() => ROfferController());
       }),
     ),
   ];

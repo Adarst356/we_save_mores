@@ -9,8 +9,7 @@ import '../../../../../utils/custom_appbar.dart';
 class SelectZoneScreen extends StatelessWidget {
   SelectZoneScreen({super.key});
 
-  final SelectZoneController controller =
-  Get.put(SelectZoneController());
+  final SelectZoneController controller = Get.put(SelectZoneController());
 
   @override
   Widget build(BuildContext context) {

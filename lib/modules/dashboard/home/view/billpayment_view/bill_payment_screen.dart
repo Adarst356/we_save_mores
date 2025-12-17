@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/GetRn_offer_screen.dart';
 import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/select_zone_screen.dart';
 import 'package:we_save_more/routes/app_routes.dart';
 import 'package:we_save_more/theme/app_colors.dart';
@@ -67,25 +69,78 @@ class BillPaymentScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Number Input
-              TextFormField(
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    controller.isDTH
-                        ? Icons.settings_input_antenna
-                        : Icons.phone_android,
-                    color: Colors.grey,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFormField(
+                    controller: controller.mobileNoController,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        controller.isDTH
+                            ? Icons.settings_input_antenna
+                            : Icons.phone_android,
+                        color: Colors.grey,
+                      ),
+                      hintText: controller.isDTH
+                          ? "Enter DTH Number"
+                          : "Enter Mobile Number",
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ],
+                    onChanged: (value) {
+                      controller.update();
+                    },
                   ),
-                  hintText: controller.isDTH
-                      ? "Enter DTH Number"
-                      : "Enter Prepaid Number",
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                keyboardType: TextInputType.number,
+                  const SizedBox(height: 8),
+                  Obx(() {
+                    final count = controller.mobileDigitCount.value;
+                    final isValid = count == 10;
+                    final isEmpty = count == 0;
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          isEmpty ? "" : "$count/10",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: isValid ? Colors.green : Colors.orange,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        if (!isEmpty)
+                          Row(
+                            children: [
+                              Icon(
+                                isValid ? Icons.check_circle : Icons.info_outline,
+                                size: 14,
+                                color: isValid ? Colors.green : Colors.orange,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                isValid
+                                    ? "Valid"
+                                    : "Mobile Number Should Be 10 Digit",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: isValid ? Colors.green : Colors.orange,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                      ],
+                    );
+                  }),
+                ],
               ),
 
               Spacing.h16,
@@ -115,6 +170,7 @@ class BillPaymentScreen extends StatelessWidget {
                       controller.providerId = result["providerId"];
                       controller.providerName = result["providerName"];
                       controller.providerImage = result["providerImage"];
+                      controller.oid = result["oid"];
                       controller.update();
                     }
                   },
@@ -137,21 +193,21 @@ class BillPaymentScreen extends StatelessWidget {
                             radius: 22,
                             backgroundColor: Colors.blue.shade50,
                             child:
-                                (controller.providerImage == null ||
-                                    controller.providerImage!.isEmpty)
+                            (controller.providerImage == null ||
+                                controller.providerImage!.isEmpty)
                                 ? Icon(
-                                    Icons.wifi_tethering,
-                                    color: Colors.blue,
-                                    size: 26,
-                                  )
+                              Icons.wifi_tethering,
+                              color: Colors.blue,
+                              size: 26,
+                            )
                                 : ClipOval(
-                                    child: Image.network(
-                                      "$baseIconUrl${controller.providerImage}",
-                                      width: 44,
-                                      height: 44,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                              child: Image.network(
+                                "$baseIconUrl${controller.providerImage}",
+                                width: 44,
+                                height: 44,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                           SizedBox(width: 16),
                           Expanded(
@@ -180,11 +236,9 @@ class BillPaymentScreen extends StatelessWidget {
 
               // Amount Input
               TextFormField(
+                controller: controller.amountController, // ✅ IMPORTANT
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(
-                    Icons.currency_rupee,
-                    color: Colors.grey,
-                  ),
+                  prefixIcon: const Icon(Icons.currency_rupee, color: Colors.grey),
                   hintText: "Enter Amount",
                   filled: true,
                   fillColor: Colors.white,
@@ -194,6 +248,39 @@ class BillPaymentScreen extends StatelessWidget {
                 ),
                 keyboardType: TextInputType.number,
               ),
+              Obx(() {
+                if (controller.selectedPlanDesc.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+
+                return Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple.shade50,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.deepPurple.shade200),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Selected Plan",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        controller.selectedPlanDesc.value,
+                        style: const TextStyle(fontSize: 13, height: 1.4),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+
 
               Spacing.h20,
 
@@ -226,14 +313,8 @@ class BillPaymentScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () async {   // ✅ async required
-                        final result = await Get.to(() => SelectZoneScreen());
-
-                        if (result != null && result is Cirlces) {
-                          print("Selected Circle: ${result.circle}");
-
-                          // yahan tum controller / text / state update kar sakte ho
-                        }
+                      onPressed: () async {
+                        await Get.to(() => SelectZoneScreen());
                       },
                       style: OutlinedButton.styleFrom(
                         backgroundColor: appColors.primaryColor,
@@ -256,7 +337,10 @@ class BillPaymentScreen extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {
-                        // Get.toNamed(AppRoutes.bestOffer);
+                        Get.toNamed(AppRoutes.rOffers, arguments: {
+                          "accountNo": controller.mobileNoController.text.trim(),
+                          "oid":controller.oid
+                        });
                       },
                       style: OutlinedButton.styleFrom(
                         backgroundColor: appColors.primaryColor,
@@ -273,6 +357,7 @@ class BillPaymentScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+
                 ],
               ),
             ],
@@ -343,17 +428,17 @@ class BillPaymentScreen extends StatelessWidget {
                       radius: 20,
                       backgroundColor: Colors.grey.shade200,
                       child:
-                          (controller.providerImage == null ||
-                              controller.providerImage!.isEmpty)
+                      (controller.providerImage == null ||
+                          controller.providerImage!.isEmpty)
                           ? Icon(Icons.wifi, color: Colors.blue, size: 24)
                           : ClipOval(
-                              child: Image.network(
-                                "$baseIconUrl${controller.providerImage}",
-                                width: 40,
-                                height: 40,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                        child: Image.network(
+                          "$baseIconUrl${controller.providerImage}",
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                     SizedBox(width: 12),
                     Expanded(

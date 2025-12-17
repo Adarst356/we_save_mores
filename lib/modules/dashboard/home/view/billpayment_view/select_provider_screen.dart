@@ -64,6 +64,8 @@ class SelectProviderScreen extends StatelessWidget {
                           service.image ?? "",
                           service.name ?? "",
                           service.serviceID ?? 0,
+                          service.oid ?? 0,
+
                         );
                       }
                     },
@@ -146,7 +148,7 @@ class SelectProviderScreen extends StatelessWidget {
   // -----------------------------------------------------
   // 🟡 PROVIDER TILE - UPDATED LOGIC
   // -----------------------------------------------------
-  Widget providerTile(String image, String title, int serviceId) {
+  Widget providerTile(String image, String title, int serviceId,int oid) {
     return GestureDetector(
       onTap: () {
         // Check if this was opened from navigation or from bill payment screen
@@ -159,6 +161,7 @@ class SelectProviderScreen extends StatelessWidget {
             "providerId": serviceId,
             "providerName": title,
             "providerImage": image,
+            "oid":oid,
           });
         } else {
           // For other services: Navigate to BillPaymentScreen with provider data
@@ -191,7 +194,15 @@ class SelectProviderScreen extends StatelessWidget {
                       width: 50,
                       height: 50,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        );
+                      },
+                      errorBuilder: (_, __, ___) {
                         return Image.asset(
                           "assets/images/app_full_logo.png",
                           width: 50,
@@ -199,7 +210,8 @@ class SelectProviderScreen extends StatelessWidget {
                           fit: BoxFit.cover,
                         );
                       },
-                    ),
+                    )
+
                   ),
                 ),
 

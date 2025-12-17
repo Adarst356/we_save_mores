@@ -120,7 +120,7 @@ class OtpDialog extends StatelessWidget {
                         child: const AppText("RESEND"),
                       ),
                     ),
-                    Spacing.h10,
+                    Spacing.w10,
                     Flexible(
                       fit: FlexFit.tight,
                       child: ElevatedButton(
@@ -132,7 +132,7 @@ class OtpDialog extends StatelessWidget {
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: AppText("SUBMIT"),
+                        child: AppText("SUBMIT",color: Colors.white,),
                       ),
                     ),
                     Spacing.w10,

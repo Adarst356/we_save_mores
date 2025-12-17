@@ -24,6 +24,7 @@ class AppRoutes {
   static const serviceOperator = "/ServiceOperator";
   static const viewPlan = "/ViewPlanScreen";
   static const selectZone = "/SelectZoneScreen";
+  static const rOffers = "/ROffers";
 
 
 

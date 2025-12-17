@@ -1,14 +1,23 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:we_save_more/modules/dashboard/reports/data/report_repo.dart';
 import 'package:we_save_more/modules/dashboard/reports/data/report_response.dart';
 import '../../../../../api/ui_state.dart';
+import '../../../../../utils/app_toast.dart';
 
 class ReportController extends GetxController {
   final ReportRepo repo = ReportRepo();
 
-  RxBool isLoading = true.obs; // Start with true to show loader initially
+  RxBool isLoading = true.obs;
   Rx<TextEditingController> searchTextController = TextEditingController().obs;
 
   ///  SEARCH QUERY
@@ -235,6 +244,81 @@ class ReportController extends GetxController {
     reportData.value = filteredResponse;
 
     print("Final filtered records: ${filteredList.length}");
+  }
+ /* Future<void> shareOnWhatsApp(String message) async {
+    final Uri whatsappUri = Uri.parse(
+      "whatsapp://send?text=${Uri.encodeComponent(message)}",
+    );
+
+    try {
+      await launchUrl(
+        whatsappUri,
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      Get.snackbar(
+        "WhatsApp not found",
+        "Please install WhatsApp to share",
+      );
+    }
+  }*/
+  Future<void> shareOnWhatsApp(GlobalKey key) async {
+    try {
+      // Capture the screen as image
+      RenderRepaintBoundary boundary =
+      key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData? byteData =
+      await image.toByteData(format: ui.ImageByteFormat.png);
+
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      // Save to temporary directory
+      final directory = await getTemporaryDirectory();
+      final imagePath = File('${directory.path}/recharge_receipt.png');
+      await imagePath.writeAsBytes(pngBytes);
+
+      // Create WhatsApp-specific share
+      final Uri whatsappUri = Uri.parse(
+        "whatsapp://send?text=${Uri.encodeComponent('Recharge Successful ✅')}",
+      );
+
+      // Check if WhatsApp is installed
+      bool canLaunch = await canLaunchUrl(whatsappUri);
+
+      if (canLaunch) {
+        // Share image with WhatsApp
+        await Share.shareXFiles(
+          [XFile(imagePath.path)],
+          text: "Recharge Successful ✅",
+          sharePositionOrigin: Rect.fromLTWH(0, 0, 10, 10),
+        );
+      } else {
+        // Fallback: regular share if WhatsApp not installed
+        await Share.shareXFiles(
+          [XFile(imagePath.path)],
+          text: "Recharge Successful ✅",
+        );
+
+   /*     Fluttertoast.showToast(
+          msg: "WhatsApp not found. Opened system share menu.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.orange,
+          textColor: Colors.white,
+        );*/
+      }
+    } catch (e) {
+      print("Error sharing on WhatsApp: $e");
+      Fluttertoast.showToast(
+        msg: "Unable to share. Please try again.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
   }
 
   @override

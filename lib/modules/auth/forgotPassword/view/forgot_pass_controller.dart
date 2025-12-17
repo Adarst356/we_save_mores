@@ -83,11 +83,11 @@ class ForgotPassController extends GetxController {
         "NewPassword": "",
         "OTP": "",
       },
-      "appid": "6072874e1f4b7000991915fa914318ed",
-      "domain": "admin.wesavemore.in",
+      "appid": "",
+      "domain": "",
       "imei": "2e7d56a2cc6d7460",
       "loginTypeID": 1,
-      "version": "5.0",
+      "version": "",
     };
 
     repo.getForgetPassword(

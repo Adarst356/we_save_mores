@@ -123,7 +123,7 @@ class GetConnectApiClient extends GetConnect with Printer {
   Future<Response> getRechSimplePlan(Object body) async {
     return await post("RechSimplePlan", body);    //ebra dekhna hai ye bki lag gya hai
   }
-  Future<Response> getPlanROffer(Object body) async {
-    return await post("GetPlanRoffer", body);
+  Future<Response> getRNROffer(Object body) async {
+    return await post("GetRNPRoffer", body);
   }
 }
