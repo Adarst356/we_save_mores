@@ -31,7 +31,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             children: [
               if (showLeft && leftIcon != null) leftIcon!,
-              if (showLeft && leftIcon != null) const SizedBox(width: 12),
+              if (showLeft && leftIcon != null) const SizedBox(width: 14),
               AppText(
                 title,
                 color: Colors.white,

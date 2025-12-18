@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:we_save_more/modules/dashboard/home/view/billpayment_view/view_plan_controller.dart';
 import 'package:we_save_more/theme/app_colors.dart';
 import 'package:we_save_more/widget/app_text.dart';
@@ -35,13 +36,29 @@ class ViewPlanScreen extends StatelessWidget {
             child: Obx(() {
               if (controller.allTypes.isEmpty) {
                 /// Loading indicator for tabs
-                return const Center(
-                  child: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(5, (index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey.shade200,
+                          highlightColor: Colors.grey.shade100,
+                          child: Container(
+                            height: 28,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                 );
+
               }
 
               return SingleChildScrollView(

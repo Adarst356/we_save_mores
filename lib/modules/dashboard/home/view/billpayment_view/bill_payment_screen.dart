@@ -26,20 +26,16 @@ class BillPaymentScreen extends StatelessWidget {
       appBar: CustomAppbar(
         title: controller.serviceName,
         showLeft: true,
-        leftIcon: GestureDetector(
+        leftIcon: InkWell(
           onTap: () => Get.back(),
           child: Icon(Icons.arrow_back, color: theme.colorScheme.onPrimary),
         ),
       ),
       body: GetBuilder<BillPaymentController>(
         builder: (_) {
-          // For Prepaid/DTH: Show full form (with Select Operator option)
           if (controller.isPrepaid || controller.isDTH) {
             return _buildFullForm(context);
           }
-
-          // For other services (Broadband, Landline, etc.):
-          // Show simple form (provider already selected)
           return _buildSimpleForm(context);
         },
       ),
@@ -69,6 +65,7 @@ class BillPaymentScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Mobile/DTH Number Field with Validation
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -88,6 +85,24 @@ class BillPaymentScreen extends StatelessWidget {
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: controller.mobileError.value.isEmpty
+                              ? Colors.blue
+                              : Colors.red,
+                          width: 2,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.red),
                       ),
                     ),
                     keyboardType: TextInputType.number,
@@ -95,32 +110,88 @@ class BillPaymentScreen extends StatelessWidget {
                       FilteringTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(10),
                     ],
-                    onChanged: (value) {
+                    onChanged: (value) async {
                       controller.update();
+
+                      if (value.length == 10 && controller.isMobileValid) {
+                        final result = await Get.toNamed(
+                          AppRoutes.serviceOperator,
+                          arguments: {
+                            "serviceId": controller.serviceId,
+                            "serviceName": controller.serviceName,
+                            "mobileNumber": value,
+                          },
+                        );
+
+                        if (result != null) {
+                          controller.providerId = result["providerId"];
+                          controller.providerName = result["providerName"];
+                          controller.providerImage = result["providerImage"];
+                          controller.oid = result["oid"];
+                          controller.operatorError.value = '';
+                          controller.update();
+                        }
+                      }
                     },
                   ),
+
+                  // Error Message
+                  Obx(() {
+                    if (controller.mobileError.value.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 6, left: 4),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            size: 14,
+                            color: Colors.red,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            controller.mobileError.value,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+
+                  // Digit Count Validation
                   const SizedBox(height: 8),
                   Obx(() {
                     final count = controller.mobileDigitCount.value;
-                    final isValid = count == 10;
                     final isEmpty = count == 0;
 
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          isEmpty ? "" : "$count/10",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: isValid ? Colors.green : Colors.orange,
-                            fontWeight: FontWeight.w500,
+                    if (isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+
+                    if (controller.isDTH) {
+                      final isValid = count == 10;
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "$count/10",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isValid ? Colors.green : Colors.orange,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        if (!isEmpty)
                           Row(
                             children: [
                               Icon(
-                                isValid ? Icons.check_circle : Icons.info_outline,
+                                isValid
+                                    ? Icons.check_circle
+                                    : Icons.info_outline,
                                 size: 14,
                                 color: isValid ? Colors.green : Colors.orange,
                               ),
@@ -128,7 +199,7 @@ class BillPaymentScreen extends StatelessWidget {
                               Text(
                                 isValid
                                     ? "Valid"
-                                    : "Mobile Number Should Be 10 Digit",
+                                    : "DTH Number Should Be 10 Digit",
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: isValid ? Colors.green : Colors.orange,
@@ -137,6 +208,79 @@ class BillPaymentScreen extends StatelessWidget {
                               ),
                             ],
                           ),
+                        ],
+                      );
+                    }
+
+                    final isStartDigitValid =
+                        controller.isStartDigitValid.value;
+                    final isValid = controller.isMobileValid;
+
+                    if (!isStartDigitValid) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "$count/10",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Row(
+                            children: const [
+                              Icon(
+                                Icons.error_outline,
+                                size: 14,
+                                color: Colors.red,
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                "Mobile Number must start with 6, 7, 8, 9",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "$count/10",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: isValid ? Colors.green : Colors.orange,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              isValid ? Icons.check_circle : Icons.info_outline,
+                              size: 14,
+                              color: isValid ? Colors.green : Colors.orange,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              isValid
+                                  ? "Valid"
+                                  : "Mobile Number Should Be 10 Digit",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isValid ? Colors.green : Colors.orange,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     );
                   }),
@@ -145,109 +289,196 @@ class BillPaymentScreen extends StatelessWidget {
 
               Spacing.h16,
 
-              // Select Operator (clickable)
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 14,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: GestureDetector(
-                  onTap: () async {
-                    final result = await Get.toNamed(
-                      AppRoutes.serviceOperator,
-                      arguments: {
-                        "serviceId": controller.serviceId,
-                        "serviceName": controller.serviceName,
-                      },
-                    );
-
-                    if (result != null) {
-                      controller.providerId = result["providerId"];
-                      controller.providerName = result["providerName"];
-                      controller.providerImage = result["providerImage"];
-                      controller.oid = result["oid"];
-                      controller.update();
-                    }
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 60),
-                        child: AppText(
-                          controller.serviceName,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+              // Select Operator with Error
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 14,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: controller.operatorError.value.isEmpty
+                            ? Colors.grey.shade300
+                            : Colors.red,
+                        width: controller.operatorError.value.isEmpty ? 1 : 2,
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                    ),
+                    child: GestureDetector(
+                      onTap: () async {
+                        final result = await Get.toNamed(
+                          AppRoutes.serviceOperator,
+                          arguments: {
+                            "serviceId": controller.serviceId,
+                            "serviceName": controller.serviceName,
+                          },
+                        );
+
+                        if (result != null) {
+                          controller.providerId = result["providerId"];
+                          controller.providerName = result["providerName"];
+                          controller.providerImage = result["providerImage"];
+                          controller.oid = result["oid"];
+                          controller.operatorError.value = '';
+                          controller.update();
+                        }
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CircleAvatar(
-                            radius: 22,
-                            backgroundColor: Colors.blue.shade50,
-                            child:
-                            (controller.providerImage == null ||
-                                controller.providerImage!.isEmpty)
-                                ? Icon(
-                              Icons.wifi_tethering,
-                              color: Colors.blue,
-                              size: 26,
-                            )
-                                : ClipOval(
-                              child: Image.network(
-                                "$baseIconUrl${controller.providerImage}",
-                                width: 44,
-                                height: 44,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 16),
-                          Expanded(
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 60),
                             child: AppText(
-                              controller.providerName?.isNotEmpty == true
-                                  ? controller.providerName!
-                                  : "Select Operator",
-                              fontSize: 20,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.grey,
+                              controller.serviceName,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
                           ),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            size: 26,
-                            color: Colors.deepPurple,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 22,
+                                backgroundColor: Colors.blue.shade50,
+                                child: (controller.providerImage == null ||
+                                    controller.providerImage!.isEmpty)
+                                    ? Icon(
+                                  Icons.wifi_tethering,
+                                  color: Colors.blue,
+                                  size: 26,
+                                )
+                                    : ClipOval(
+                                  child: Image.network(
+                                    "$baseIconUrl${controller.providerImage}",
+                                    width: 44,
+                                    height: 44,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 16),
+                              Expanded(
+                                child: AppText(
+                                  controller.providerName?.isNotEmpty == true
+                                      ? controller.providerName!
+                                      : "Select Operator",
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down,
+                                size: 26,
+                                color: Colors.deepPurple,
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+
+                  // Operator Error Message
+                  Obx(() {
+                    if (controller.operatorError.value.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 6, left: 4),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            size: 14,
+                            color: Colors.red,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            controller.operatorError.value,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
               ),
 
               Spacing.h16,
 
-              // Amount Input
-              TextFormField(
-                controller: controller.amountController, // ✅ IMPORTANT
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.currency_rupee, color: Colors.grey),
-                  hintText: "Enter Amount",
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+              // Amount Input with Error
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFormField(
+                    controller: controller.amountController,
+                    decoration: InputDecoration(
+                      prefixIcon:
+                      const Icon(Icons.currency_rupee, color: Colors.grey),
+                      hintText: "Enter Amount",
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: controller.amountError.value.isEmpty
+                              ? Colors.blue
+                              : Colors.red,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
                   ),
-                ),
-                keyboardType: TextInputType.number,
+
+                  // Amount Error Message
+                  Obx(() {
+                    if (controller.amountError.value.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 6, left: 4),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            size: 14,
+                            color: Colors.red,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            controller.amountError.value,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
               ),
+
               Obx(() {
                 if (controller.selectedPlanDesc.isEmpty) {
                   return const SizedBox.shrink();
@@ -281,10 +512,9 @@ class BillPaymentScreen extends StatelessWidget {
                 );
               }),
 
-
               Spacing.h20,
 
-              // Recharge Button
+              // Recharge Button WITH VALIDATION
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -295,7 +525,12 @@ class BillPaymentScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    if (controller.validateForm()) {
+                      // Proceed with recharge
+                      // controller.processRecharge();
+                    }
+                  },
                   child: AppText(
                     "Recharge",
                     fontSize: 18,
@@ -308,13 +543,17 @@ class BillPaymentScreen extends StatelessWidget {
               Spacing.h16,
 
               // View Plan & Best Offer buttons
-              // View Plan & Best Offer buttons
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () async {
-                        await Get.to(() => SelectZoneScreen());
+                        // Clear amount error before validation
+                        controller.amountError.value = '';
+
+                        if (controller.validateForm(checkAmount: false)) {
+                          await Get.to(() => SelectZoneScreen());
+                        }
                       },
                       style: OutlinedButton.styleFrom(
                         backgroundColor: appColors.primaryColor,
@@ -331,16 +570,20 @@ class BillPaymentScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   Spacing.w12,
-
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {
-                        Get.toNamed(AppRoutes.rOffers, arguments: {
-                          "accountNo": controller.mobileNoController.text.trim(),
-                          "oid":controller.oid
-                        });
+                        // Clear amount error before validation
+                        controller.amountError.value = '';
+
+                        if (controller.validateForm(checkAmount: false)) {
+                          Get.toNamed(AppRoutes.rOffers, arguments: {
+                            "accountNo":
+                            controller.mobileNoController.text.trim(),
+                            "oid": controller.oid
+                          });
+                        }
                       },
                       style: OutlinedButton.styleFrom(
                         backgroundColor: appColors.primaryColor,
@@ -357,7 +600,6 @@ class BillPaymentScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 ],
               ),
             ],
@@ -366,7 +608,6 @@ class BillPaymentScreen extends StatelessWidget {
 
         Spacing.h20,
 
-        // Recent Transactions
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: const [
@@ -414,7 +655,6 @@ class BillPaymentScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Display selected provider (non-editable)
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -427,8 +667,7 @@ class BillPaymentScreen extends StatelessWidget {
                     CircleAvatar(
                       radius: 20,
                       backgroundColor: Colors.grey.shade200,
-                      child:
-                      (controller.providerImage == null ||
+                      child: (controller.providerImage == null ||
                           controller.providerImage!.isEmpty)
                           ? Icon(Icons.wifi, color: Colors.blue, size: 24)
                           : ClipOval(
@@ -454,7 +693,6 @@ class BillPaymentScreen extends StatelessWidget {
 
               Spacing.h16,
 
-              // UserId / Account Number Input
               TextFormField(
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.person, color: Colors.grey),
@@ -472,7 +710,6 @@ class BillPaymentScreen extends StatelessWidget {
 
               Spacing.h16,
 
-              // Amount Input (only for services that need it)
               if (controller.serviceName != "Broadband") ...[
                 TextFormField(
                   decoration: InputDecoration(
@@ -492,7 +729,6 @@ class BillPaymentScreen extends StatelessWidget {
                 Spacing.h16,
               ],
 
-              // Bill Payment / Fetch Bill Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -520,7 +756,6 @@ class BillPaymentScreen extends StatelessWidget {
 
         Spacing.h20,
 
-        // Recent Transactions
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: const [
@@ -545,9 +780,6 @@ class BillPaymentScreen extends StatelessWidget {
     );
   }
 
-  // ==========================================
-  // TRANSACTION TILE (same for both)
-  // ==========================================
   Widget _transactionTile() {
     return Container(
       margin: const EdgeInsets.only(bottom: 14),

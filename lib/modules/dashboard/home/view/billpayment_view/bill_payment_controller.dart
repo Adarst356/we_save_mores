@@ -1,54 +1,104 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-// Controller me yeh add karo
 class BillPaymentController extends GetxController {
   late int serviceId;
   late String serviceName;
+
   int? providerId;
   String? providerName;
   String? providerImage;
   int? oid;
+
+  // Text controllers
+  final TextEditingController mobileNoController = TextEditingController();
+  final TextEditingController amountController = TextEditingController();
+
+  // Validation observables
+  RxInt mobileDigitCount = 0.obs;
+  RxBool isStartDigitValid = true.obs;
+
+  // Inline error messages
+  RxString mobileError = ''.obs;
+  RxString operatorError = ''.obs;
+  RxString amountError = ''.obs;
+
   RxString selectedPlanDesc = ''.obs;
+
   bool get isPrepaid => serviceName.toLowerCase() == "prepaid";
   bool get isDTH => serviceName.toLowerCase() == "dth";
-  bool get shouldShowProviderFirst => !isPrepaid && !isDTH;
-
-  TextEditingController mobileNoController = TextEditingController(text: "");
-  TextEditingController amountController = TextEditingController();
-  // Add this for digit count
-  RxInt mobileDigitCount = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
-    final args = Get.arguments;
 
-    serviceId = args["serviceId"];
-    serviceName = args["serviceName"];
+    final args = Get.arguments ?? {};
+    serviceId = args["serviceId"] ?? 0;
+    serviceName = args["serviceName"] ?? "";
     providerId = args["providerId"];
     providerName = args["providerName"];
     providerImage = args["providerImage"];
-    /// ✅ Agar ViewPlan se data aaya ho
-    if (args["amount"] != null) {
-      amountController.text = args["amount"].toString();
-      selectedPlanDesc.value = args["description"] ?? '';
-    }
+    oid = args["oid"];
 
-
-    // Listen to text changes
     mobileNoController.addListener(() {
-      mobileDigitCount.value = mobileNoController.text.length;
+      final text = mobileNoController.text;
+      mobileDigitCount.value = text.length;
+
+      if (text.isEmpty) {
+        isStartDigitValid.value = true;
+        return;
+      }
+
+      final firstDigit = text[0];
+      isStartDigitValid.value =
+          firstDigit == '6' || firstDigit == '7' || firstDigit == '8' || firstDigit == '9';
+
+      mobileError.value = '';
     });
 
-    print("Main Service: $serviceName ($serviceId)");
-    print("Provider: $providerName ($providerId)");
+    amountController.addListener(() {
+      amountError.value = '';
+    });
+  }
+
+  bool get isMobileValid =>
+      mobileDigitCount.value == 10 && isStartDigitValid.value;
+
+  /// 🔥 VALIDATION METHOD
+  /// checkAmount: true for Recharge button (checks all fields)
+  /// checkAmount: false for View Plan & Best Offer buttons (skips amount check)
+  bool validateForm({bool checkAmount = true}) {
+    bool isValid = true;
+
+    // Validate Mobile/DTH Number
+    if (!isMobileValid) {
+      mobileError.value = isDTH
+          ? "Enter valid 10 digit DTH number"
+          : "Enter valid 10 digit mobile number";
+      isValid = false;
+    }
+
+    // Validate Operator Selection
+    if (providerId == null) {
+      operatorError.value = "Please select operator";
+      isValid = false;
+    } else {
+      operatorError.value = '';
+    }
+
+    // Validate Amount (only if checkAmount is true)
+    if (checkAmount && amountController.text.trim().isEmpty) {
+      amountError.value = "Please enter amount";
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   @override
   void onClose() {
     mobileNoController.dispose();
+    amountController.dispose();
     super.onClose();
   }
 }

@@ -247,9 +247,9 @@ class HomeScreen extends StatelessWidget {
                             onTap: () {
                               Get.toNamed(AppRoutes.addMoney);
                             },
-                            child: serviceCircularItem("Add Money", Icons.add),
+                            child: serviceCircularItem("Add \nMoney", Icons.add),
                           ),
-                          serviceCircularItem("Send Money", Icons.send),
+                          serviceCircularItem("Send\nMoney", Icons.send),
                           GestureDetector(
                             onTap: (){Get.find<MainNavigationController>().selectedIndex.value = 3;},
                             child: serviceCircularItem(
