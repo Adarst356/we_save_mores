@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:we_save_more/modules/dashboard/support/view/support_controller.dart';
+import 'package:we_save_more/routes/app_routes.dart';
 import 'package:we_save_more/utils/custom_appbar.dart';
 import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
@@ -108,7 +109,11 @@ class SupportScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  customInfoButton(icon: Icons.phone, title: "Mobile TollFree"),
+                  GestureDetector(
+                      onTap: () {
+                        Get.toNamed(AppRoutes.prePaidSupport);
+                      },
+                      child: customInfoButton(icon: Icons.phone, title: "Mobile TollFree")),
                   customInfoButton(
                     icon: Icons.phone,
                     title: "DTH TollFree",

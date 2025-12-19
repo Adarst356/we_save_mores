@@ -397,7 +397,7 @@ class HomeScreen extends StatelessWidget {
                                 },
                                 child: otherServiceItem(
                                   "Total\nCommission",
-                                  "assets/lottie/commision.json",
+                                  "assets/lottie/Growth.json",
                                 ),
                               ),
                               otherServiceItem(

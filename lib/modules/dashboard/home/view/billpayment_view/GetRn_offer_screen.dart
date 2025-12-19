@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:we_save_more/theme/app_colors.dart';
+import '../../../../../routes/app_routes.dart';
 import '../../../../../utils/custom_appbar.dart';
 import 'GetRn_offer_controller.dart';
+import 'bill_payment_controller.dart';
 
 class ROfferScreen extends StatelessWidget {
   ROfferScreen({super.key});
@@ -84,68 +86,83 @@ class ROfferScreen extends StatelessWidget {
   }
 
   Widget _offerItem(Map<String, dynamic> offer) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Colors.grey.shade300,
-          width: 1,
+    return GestureDetector(
+      onTap: () {
+        /// ✅ BillPaymentController find karo
+        final billController = Get.find<BillPaymentController>();
+
+        /// ✅ Amount set
+        billController.amountController.text =
+            offer['amount']?.toString() ?? '';
+
+        /// ✅ Description set (R OFFER wali)
+        billController.selectedPlanDesc.value =
+            offer['description']?.toString() ?? '';
+
+        /// ✅ Screen close karke BillPayment pe jao
+        Get.until((route) => route.settings.name == AppRoutes.billPayment);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Colors.grey.shade300,
+            width: 1,
+          ),
         ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// PRICE BOX
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              border: Border.all(color: appColors.primaryColor, width: 1),
-              borderRadius: BorderRadius.circular(4),
-              color: Colors.white,
-            ),
-            child: Text(
-              "₹ ${offer['amount']?.toString() ?? ''}",
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            /// PRICE BOX
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                border: Border.all(color: appColors.primaryColor, width: 1),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                "₹ ${offer['amount'] ?? ''}",
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          ),
 
-          const SizedBox(width: 12),
+            const SizedBox(width: 12),
 
-          /// DESCRIPTION
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Description :",
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+            /// DESCRIPTION
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Description :",
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  offer['description']?.toString() ?? '',
-                  style: TextStyle(
-                    fontSize: 12,
-                    height: 1.3,
-                    color: Colors.grey.shade700,
+                  const SizedBox(height: 4),
+                  Text(
+                    offer['description'] ?? '',
+                    style: TextStyle(
+                      fontSize: 12,
+                      height: 1.3,
+                      color: Colors.grey.shade700,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+
 
   Widget _buildDisclaimer() {
     return Container(

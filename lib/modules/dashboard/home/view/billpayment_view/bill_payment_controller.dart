@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:we_save_more/modules/dashboard/reports/data/report_response.dart';
+
+import '../../../reports/view/rechargeReport/report_controller.dart';
 
 class BillPaymentController extends GetxController {
   late int serviceId;
@@ -24,6 +27,10 @@ class BillPaymentController extends GetxController {
   RxString amountError = ''.obs;
 
   RxString selectedPlanDesc = ''.obs;
+
+  // For recent transactions (like ReportScreen)
+  RxBool isLoadingRecentTransactions = false.obs;
+  RxList<RechargeReport> recentTransactions = <RechargeReport>[].obs;
 
   bool get isPrepaid => serviceName.toLowerCase() == "prepaid";
   bool get isDTH => serviceName.toLowerCase() == "dth";
@@ -59,6 +66,9 @@ class BillPaymentController extends GetxController {
     amountController.addListener(() {
       amountError.value = '';
     });
+
+    // Fetch recent transactions
+    fetchRecentTransactions();
   }
 
   bool get isMobileValid =>
@@ -93,6 +103,31 @@ class BillPaymentController extends GetxController {
     }
 
     return isValid;
+  }
+
+  /// Fetch recent transactions (same as ReportScreen)
+  Future<void> fetchRecentTransactions() async {
+    try {
+      isLoadingRecentTransactions.value = true;
+
+      /// Use the same API call as ReportScreen but limit to recent and few records
+      final ReportController reportController = Get.find<ReportController>();
+      await reportController.getReport();
+
+      /// Get only the first 3 transactions for the bill payment screen
+      if (reportController.rechargeList.isNotEmpty) {
+        recentTransactions.value = reportController.rechargeList.toList();
+      }
+    } catch (e) {
+      print("Error fetching recent transactions: $e");
+    } finally {
+      isLoadingRecentTransactions.value = false;
+    }
+  }
+
+  /// Refresh recent transactions
+  Future<void> refreshRecentTransactions() async {
+    await fetchRecentTransactions();
   }
 
   @override

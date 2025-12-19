@@ -9,6 +9,8 @@ import 'package:we_save_more/utils/spacing.dart';
 import 'package:we_save_more/widget/app_text.dart';
 import '../../../../../utils/constant.dart';
 import '../../../../../utils/custom_appbar.dart';
+import '../../../reports/data/report_response.dart';
+import '../../../reports/view/rechargeReport/report_controller.dart';
 import '../../data/billpayment_response.dart';
 import 'bill_payment_controller.dart';
 
@@ -16,6 +18,7 @@ class BillPaymentScreen extends StatelessWidget {
   BillPaymentScreen({super.key});
 
   final controller = Get.put(BillPaymentController());
+  final ReportController reportController = Get.find<ReportController>();
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +116,12 @@ class BillPaymentScreen extends StatelessWidget {
                     onChanged: (value) async {
                       controller.update();
 
-                      if (value.length == 10 && controller.isMobileValid) {
+                      /// ✅ Only auto-open operator screen
+                      /// if operator is NOT already selected
+                      if (value.length == 10 &&
+                          controller.isMobileValid &&
+                          controller.providerId == null) {
+
                         final result = await Get.toNamed(
                           AppRoutes.serviceOperator,
                           arguments: {
@@ -133,6 +141,7 @@ class BillPaymentScreen extends StatelessWidget {
                         }
                       }
                     },
+
                   ),
 
                   // Error Message
@@ -141,25 +150,25 @@ class BillPaymentScreen extends StatelessWidget {
                       return const SizedBox.shrink();
                     }
                     return Padding(
-                      padding: const EdgeInsets.only(top: 6, left: 4),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.error_outline,
-                            size: 14,
-                            color: Colors.red,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            controller.mobileError.value,
-                            style: const TextStyle(
+                        padding: const EdgeInsets.only(top: 6, left: 4),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.error_outline,
+                              size: 14,
                               color: Colors.red,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
                             ),
-                          ),
-                        ],
-                      ),
+                            const SizedBox(width: 4),
+                            Text(
+                              controller.mobileError.value,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        )
                     );
                   }),
 
@@ -390,25 +399,25 @@ class BillPaymentScreen extends StatelessWidget {
                       return const SizedBox.shrink();
                     }
                     return Padding(
-                      padding: const EdgeInsets.only(top: 6, left: 4),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.error_outline,
-                            size: 14,
-                            color: Colors.red,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            controller.operatorError.value,
-                            style: const TextStyle(
+                        padding: const EdgeInsets.only(top: 6, left: 4),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.error_outline,
+                              size: 14,
                               color: Colors.red,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
                             ),
-                          ),
-                        ],
-                      ),
+                            const SizedBox(width: 4),
+                            Text(
+                              controller.operatorError.value,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        )
                     );
                   }),
                 ],
@@ -455,25 +464,25 @@ class BillPaymentScreen extends StatelessWidget {
                       return const SizedBox.shrink();
                     }
                     return Padding(
-                      padding: const EdgeInsets.only(top: 6, left: 4),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.error_outline,
-                            size: 14,
-                            color: Colors.red,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            controller.amountError.value,
-                            style: const TextStyle(
+                        padding: const EdgeInsets.only(top: 6, left: 4),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.error_outline,
+                              size: 14,
                               color: Colors.red,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
                             ),
-                          ),
-                        ],
-                      ),
+                            const SizedBox(width: 4),
+                            Text(
+                              controller.amountError.value,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        )
                     );
                   }),
                 ],
@@ -539,18 +548,14 @@ class BillPaymentScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
               Spacing.h16,
-
-              // View Plan & Best Offer buttons
+              /// View Plan & Best Offer buttons
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () async {
-                        // Clear amount error before validation
                         controller.amountError.value = '';
-
                         if (controller.validateForm(checkAmount: false)) {
                           await Get.to(() => SelectZoneScreen());
                         }
@@ -608,28 +613,92 @@ class BillPaymentScreen extends StatelessWidget {
 
         Spacing.h20,
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            AppText(
-              "Recent Transactions",
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-            AppText(
-              "View All",
-              fontSize: 15,
-              color: Colors.blue,
-              decoration: TextDecoration.underline,
-            ),
-          ],
-        ),
-
-        Spacing.h10,
-
-        ...List.generate(3, (index) => _transactionTile()),
+        // Recent Transactions Section (Same as ReportScreen)
+        _buildRecentTransactionsSection(),
       ],
     );
+  }
+
+  // ==========================================
+  // RECENT TRANSACTIONS SECTION (Same as ReportScreen)
+  // ==========================================
+  Widget _buildRecentTransactionsSection() {
+    return Obx(() {
+      // Show loader while loading
+      if (controller.isLoadingRecentTransactions.value) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+
+      /// DATA EMPTY after loading
+      if (controller.recentTransactions.isEmpty) {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            children: [
+              AppText(
+                "No recent transactions",
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+              Spacing.h12,
+              AppText(
+                "Pull down to refresh",
+                fontSize: 12,
+                color: Colors.grey.shade400,
+              ),
+            ],
+          ),
+        );
+      }
+
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AppText(
+                "Recent Transactions",
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              GestureDetector(
+                onTap: () {
+                  // Navigate to full report screen
+                  Get.toNamed(AppRoutes.report);
+                },
+                child: AppText(
+                  "View All",
+                  fontSize: 15,
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ],
+          ),
+
+          Spacing.h10,
+
+          // Show list with pull to refresh
+          RefreshIndicator(
+            onRefresh: controller.refreshRecentTransactions,
+            child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: controller.recentTransactions.length,
+              itemBuilder: (context, index) {
+                final item = controller.recentTransactions[index];
+                return _transactionTile(item);
+              },
+            ),
+          ),
+        ],
+      );
+    });
   }
 
   // ==========================================
@@ -756,97 +825,221 @@ class BillPaymentScreen extends StatelessWidget {
 
         Spacing.h20,
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            AppText(
-              "Recent Transactions",
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-            AppText(
-              "View All",
-              fontSize: 15,
-              color: Colors.blue,
-              decoration: TextDecoration.underline,
-            ),
-          ],
-        ),
-
-        Spacing.h10,
-
-        ...List.generate(3, (index) => _transactionTile()),
+        // Recent Transactions Section (Same as ReportScreen)
+        _buildRecentTransactionsSection(),
       ],
     );
   }
 
-  Widget _transactionTile() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: const [
-                  Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                  SizedBox(width: 5),
-                  AppText("06 Dec 2025 10:56 AM"),
-                ],
-              ),
-              Row(
-                children: const [
-                  Icon(Icons.check_circle, color: Colors.green, size: 20),
-                  SizedBox(width: 4),
-                  AppText("SUCCESS", color: Colors.green),
-                ],
-              ),
-            ],
-          ),
-          Spacing.h10,
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.red.shade100,
-                backgroundImage: const AssetImage("assets/images/app_logo.png"),
-                radius: 20,
-              ),
-              Spacing.w10,
-              Expanded(
-                child: Text(
-                  "Reliance Jio\n7739340164",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+  // ==========================================
+  // TRANSACTION TILE (Same as ReportScreen)
+  // ==========================================
+  Widget _transactionTile(RechargeReport item) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            )
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// ------------------- DATE + STATUS -------------------
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.calendar_month, color: Colors.grey),
+                    SizedBox(width: 8),
+                    AppText(
+                      item.modifyDate ?? "--",
+                      fontSize: 10,
+                      color: Colors.black87,
+                    ),
+                  ],
                 ),
-              ),
-              AppText("₹ 299", color: Colors.blue, fontSize: 16),
-            ],
-          ),
-          Spacing.h10,
-          AppText("Transaction Id  : S251206105631837BFC02"),
-          AppText("Provider Ref Id : RJ1302234936"),
-          Spacing.h10,
-          AppText("Dispute Status", fontWeight: FontWeight.bold),
-          AppText("Rejected", color: Colors.red),
-          Spacing.h10,
-          Align(
-            alignment: Alignment.centerRight,
-            child: OutlinedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.share, size: 18),
-              label: const Text("Share"),
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.deepPurple),
-              ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: item.type == "SUCCESS"
+                        ? Color(0xffE8F7EF)
+                        : item.type == "FAILED"
+                        ? Color(0xffFEEAEA)
+                        : Color(0xffFFF7E6),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        item.type == "SUCCESS"
+                            ? Icons.check_circle
+                            : item.type == "FAILED"
+                            ? Icons.error
+                            : Icons.access_time_filled,
+                        color: item.type == "SUCCESS"
+                            ? Colors.green
+                            : item.type == "FAILED"
+                            ? Colors.red
+                            : Colors.orange,
+                        size: 18,
+                      ),
+                      SizedBox(width: 6),
+                      AppText(
+                        item.type ?? "—",
+                        color: item.type == "SUCCESS"
+                            ? Colors.green
+                            : item.type == "FAILED"
+                            ? Colors.red
+                            : Colors.orange,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+            Spacing.h16,
+
+            /// ------------------- OPERATOR + NUMBER + AMOUNT -------------------
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Colors.grey.shade200,
+                  child: ClipOval(
+                    child: Image.network(
+                      "$baseIconUrl${item.oid}.png",
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          "assets/images/app_logo.png",
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Spacing.w12,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppText(
+                        item.operator ?? "Unknown Operator",
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      Spacing.h4,
+                      AppText(
+                        item.customerNo ?? item.account ?? "--",
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ],
+                  ),
+                ),
+                AppText(
+                  "₹ ${item.amount?.toStringAsFixed(2) ?? "0"}",
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.blue,
+                ),
+              ],
+            ),
+            Spacing.h12,
+
+            /// ------------------- TRANSACTION DETAILS -------------------
+            AppText(
+              "Transaction ID : ${item.transactionID ?? "--"}",
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+            AppText(
+              "Provider Ref Id : ${item.liveID ?? "--"}",
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+            Spacing.h16,
+
+            /// ------------------- DISPUTE + SHARE -------------------
+            if (item.type == "SUCCESS")
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  /// Dispute
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.yellow, width: 2),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.report_problem, size: 18, color: Colors.orange),
+                        Spacing.w6,
+                        AppText(
+                          "Dispute",
+                          fontWeight: FontWeight.w700,
+                          color: appColors.primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Spacing.w12,
+
+                  /// Share
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed(AppRoutes.shareReport, arguments: {
+                        "date": item.modifyDate,
+                        "status": item.type,
+                        "operator": item.operator,
+                        "mobile": item.customerNo ?? item.account,
+                        "amount": item.amount,
+                        "transactionId": item.transactionID,
+                        "providerRefId": item.liveID,
+                        "operatorImage": "$baseIconUrl${item.oid}.png",
+                      });
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.yellow, width: 2),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.share, size: 18, color: Colors.purple),
+                          Spacing.w6,
+                          AppText(
+                            "Share",
+                            fontWeight: FontWeight.w700,
+                            color: appColors.primaryColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }

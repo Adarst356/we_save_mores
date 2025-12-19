@@ -26,6 +26,7 @@ import 'package:we_save_more/modules/dashboard/profile/view/profile_screen.dart'
 import 'package:we_save_more/modules/dashboard/profile/view/update_profile_controller.dart';
 import 'package:we_save_more/modules/dashboard/reports/view/rechargeReport/report_screen.dart';
 import 'package:we_save_more/modules/dashboard/reports/view/shareReport/share_success_report.dart';
+import 'package:we_save_more/modules/dashboard/support/view/prepaid_support.dart';
 import '../modules/auth/change_pin/chnage_pin_controller.dart';
 import '../modules/dashboard/drawer/view/side_drawer_controller.dart';
 import '../modules/dashboard/home/view/add_money/add_money_controller.dart';
@@ -236,6 +237,10 @@ class AppPages {
       binding: BindingsBuilder(() {
         Get.lazyPut<ROfferController>(() => ROfferController());
       }),
+    ),
+    GetPage(
+      name: AppRoutes.prePaidSupport,
+      page: () => PrepaidSupport(),
     ),
   ];
 }
