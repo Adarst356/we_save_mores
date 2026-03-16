@@ -239,8 +239,12 @@ class AppPages {
       }),
     ),
     GetPage(
-      name: AppRoutes.prePaidSupport,
-      page: () => PrepaidSupport(),
+      name: AppRoutes.supportNumbers,
+      page: () => SupportTollFreeNumbers(),
+    ),
+    GetPage(
+      name: AppRoutes.createTicket,
+      page: () => SupportTollFreeNumbers(),
     ),
   ];
 }

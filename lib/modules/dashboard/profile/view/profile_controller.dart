@@ -38,7 +38,6 @@ class ProfileController extends GetxController {
       body: body,
       callback: (state) {
         profileState.value = state;
-
         state.when(
           success: (data) {
             print("✅ Profile Success");

@@ -8,7 +8,8 @@ import '../data/forget_pass_repo.dart';
 import '../data/forget_response.dart';
 
 class ForgotPassController extends GetxController {
-  final formKey = GlobalKey<FormState>();
+  final mainFormKey = GlobalKey<FormState>();
+  final otpFormKey = GlobalKey<FormState>();
   final repo = ForgetPassRepo();
 
   final mobileController = TextEditingController();

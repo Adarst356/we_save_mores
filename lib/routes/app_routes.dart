@@ -25,7 +25,8 @@ class AppRoutes {
   static const viewPlan = "/ViewPlanScreen";
   static const selectZone = "/SelectZoneScreen";
   static const rOffers = "/ROffers";
-  static const prePaidSupport = "/PrepaidSupport";
+  static const supportNumbers = "/PrepaidSupport";
+  static const createTicket = "/CreateTicket";
 
 
 

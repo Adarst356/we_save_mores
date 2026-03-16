@@ -119,7 +119,9 @@ class MainNav extends StatelessWidget {
           Icon(
             icon,
             color: isSelected
-                ? (isDarkMode ? Colors.white : theme.primaryColor)
+                ? (
+                isDarkMode ? Colors.white : theme.primaryColor
+            )
                 : Colors.grey,
             size: 26,
           ),

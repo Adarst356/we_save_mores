@@ -156,297 +156,299 @@ class HomeScreen extends StatelessWidget {
 
       /// ======= BODY STARTS =======
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            /// ======= WALLET BOX =======
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: double.infinity,
-                height: 110,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 8,
-                      spreadRadius: 1,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    const SizedBox(width: 15),
-                    SvgPicture.asset(
-                      "assets/svg/wallet-svgrepo-com.svg",
-                      height: 50,
-                      width: 50,
-                    ),
-                    Spacing.w20,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const AppText(
-                          "PREPAID WALLET",
-                          color: Colors.grey,
-                          fontSize: 16,
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Obx(
-                                () => AppText(
-                              '₹ ${balanceController.balance.value.toStringAsFixed(2)}',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.black,
+        child: SafeArea(
+          child: Column(
+            children: [
+              /// ======= WALLET BOX =======
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: double.infinity,
+                  height: 110,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 8,
+                        spreadRadius: 1,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 15),
+                      SvgPicture.asset(
+                        "assets/svg/wallet-svgrepo-com.svg",
+                        height: 50,
+                        width: 50,
+                      ),
+                      Spacing.w20,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const AppText(
+                            "PREPAID WALLET",
+                            color: Colors.grey,
+                            fontSize: 16,
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Obx(
+                                  () => AppText(
+                                '₹ ${balanceController.balance.value.toStringAsFixed(2)}',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-
-            /// ======= LATEST NEWS - NOW USING API =======
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: LatestNewsWidget(),
-            ),
-
-            /// ======= MAIN CONTENT =======
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Column(
-                children: [
-                  /// ======= QUICK ACTIONS (Add Money etc) =======
-                  Container(
-                    width: double.infinity,
-                    height: 180,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      gradient: LinearGradient(
-                        colors: [
-                          appColors.serviceGradientStart,
-                          appColors.serviceGradientEnd,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 25),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Get.toNamed(AppRoutes.addMoney);
-                            },
-                            child: serviceCircularItem("Add \nMoney", Icons.add),
-                          ),
-                          serviceCircularItem("Send\nMoney", Icons.send),
-                          GestureDetector(
-                            onTap: (){Get.find<MainNavigationController>().selectedIndex.value = 3;},
-                            child: serviceCircularItem(
-                              "Transaction Report",
-                              Icons.receipt_long,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Get.toNamed(AppRoutes.walletHistory);
-                            },
-                            child: serviceCircularItem(
-                              "Wallet History",
-                              Icons.account_balance_wallet,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  Spacing.h12,
-
-                  /// ======= OUR SERVICES CARD =======
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 8,
-                    ),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          offset: Offset(0, 4),
+          
+              /// ======= LATEST NEWS - NOW USING API =======
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: LatestNewsWidget(),
+              ),
+          
+              /// ======= MAIN CONTENT =======
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
+                  children: [
+                    /// ======= QUICK ACTIONS (Add Money etc) =======
+                    Container(
+                      width: double.infinity,
+                      height: 180,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        gradient: LinearGradient(
+                          colors: [
+                            appColors.serviceGradientStart,
+                            appColors.serviceGradientEnd,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        /// Title Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 25),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            const AppText(
-                              "Our Services",
-                              fontSize: 21,
-                              fontWeight: FontWeight.w900,
+                            GestureDetector(
+                              onTap: () {
+                                Get.toNamed(AppRoutes.addMoney);
+                              },
+                              child: serviceCircularItem("Add \nMoney", Icons.add),
                             ),
-                            SvgPicture.asset(
-                              "assets/svg/youtube.svg",
-                              height: 62,
+                            serviceCircularItem("Send\nMoney", Icons.send),
+                            GestureDetector(
+                              onTap: (){Get.find<MainNavigationController>().selectedIndex.value = 3;},
+                              child: serviceCircularItem(
+                                "Transaction Report",
+                                Icons.receipt_long,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Get.toNamed(AppRoutes.walletHistory);
+                              },
+                              child: serviceCircularItem(
+                                "Wallet History",
+                                Icons.account_balance_wallet,
+                              ),
                             ),
                           ],
                         ),
-                        Spacing.h10,
-
-                        /// GRID
-                        Obx(
-                              () => homeController.GetOpTypeState.value.when(
-                            success: (getOpTypes) {
-                              final assignedList =
-                                  getOpTypes.data?.assignedOpTypes ?? [];
-                              final activeServices = assignedList
-                                  .where((service) =>
-                              service.isActive == true &&
-                                  service.isServiceActive == true)
-                                  .toList();
-                              return GridView.builder(
-                                shrinkWrap: true,
-                                padding: EdgeInsets.zero,
-                                physics: const NeverScrollableScrollPhysics(),
-                                gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: 90,
-                                  childAspectRatio: 0.80,
-                                ),
-                                itemCount: activeServices.length,
-                                itemBuilder: (context, index) {
-                                  final service = activeServices[index];
-                                  return serviceItem(
-                                    service.name ?? "Service",
-                                    iconPath: getServiceIconSvg(
-                                      service.name ?? "",
-                                    ),
-                                    onTap: () => handleServiceTap(
-                                      service.serviceId as int?,
-                                      service.name ?? "",
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            error: (msg) => Text(msg),
-                            loading: () =>
-                                Center(child: CircularProgressIndicator()),
-                            none: () => SizedBox(),
+                      ),
+                    ),
+          
+                    Spacing.h12,
+          
+                    /// ======= OUR SERVICES CARD =======
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 8,
+                      ),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 10,
+                            offset: Offset(0, 4),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Spacing.h10,
-
-                  /// ======= OTHER SERVICES CARD =======
-                  Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 8,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
+                        ],
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const AppText(
-                            "Other Services",
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          const SizedBox(height: 12),
+                          /// Title Row
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Get.toNamed(AppRoutes.referral);
-                                },
-                                child: otherServiceItem(
-                                  "Refer\nEarn",
-                                  "assets/lottie/referral.json",
-                                ),
+                              const AppText(
+                                "Our Services",
+                                fontSize: 21,
+                                fontWeight: FontWeight.w900,
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  Get.toNamed(AppRoutes.userDayBook);
-                                },
-                                child: otherServiceItem(
-                                  "Total\nCommission",
-                                  "assets/lottie/Growth.json",
-                                ),
-                              ),
-                              otherServiceItem(
-                                "Spin\nEarn",
-                                "assets/lottie/spin_earn.json",
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Get.toNamed(AppRoutes.redeemCard);
-                                },
-                                child: otherServiceItem(
-                                  "Scratch\nCard",
-                                  "assets/images/scratch.gif",
-                                ),
+                              SvgPicture.asset(
+                                "assets/svg/youtube.svg",
+                                height: 62,
                               ),
                             ],
+                          ),
+                          Spacing.h10,
+          
+                          /// GRID
+                          Obx(
+                                () => homeController.GetOpTypeState.value.when(
+                              success: (getOpTypes) {
+                                final assignedList =
+                                    getOpTypes.data?.assignedOpTypes ?? [];
+                                final activeServices = assignedList
+                                    .where((service) =>
+                                service.isActive == true &&
+                                    service.isServiceActive == true)
+                                    .toList();
+                                return GridView.builder(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                  const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 90,
+                                    childAspectRatio: 0.80,
+                                  ),
+                                  itemCount: activeServices.length,
+                                  itemBuilder: (context, index) {
+                                    final service = activeServices[index];
+                                    return serviceItem(
+                                      service.name ?? "Service",
+                                      iconPath: getServiceIconSvg(
+                                        service.name ?? "",
+                                      ),
+                                      onTap: () => handleServiceTap(
+                                        service.serviceId as int?,
+                                        service.name ?? "",
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              error: (msg) => Text(msg),
+                              loading: () =>
+                                  Center(child: CircularProgressIndicator()),
+                              none: () => SizedBox(),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-
-                  /// ======= BOTTOM BANNER =======
-                  Obx(
-                        () => BannerController.to.bannerState.value.when(
-                      success: (data) {
-                        return Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(6),
-                            child: Image.network(
-                              (data.bannerUrl?.first.resourceUrl).toString(),
-                              width: double.infinity,
-                              fit: BoxFit.cover,
+                    Spacing.h10,
+          
+                    /// ======= OTHER SERVICES CARD =======
+                    Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 8,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const AppText(
+                              "Other Services",
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ),
-                        );
-                      },
-                      error: (msg) => Text(msg),
-                      loading: () => CircularProgressIndicator(),
-                      none: () => SizedBox(),
+                            const SizedBox(height: 12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.toNamed(AppRoutes.referral);
+                                  },
+                                  child: otherServiceItem(
+                                    "Refer\nEarn",
+                                    "assets/lottie/referral.json",
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.toNamed(AppRoutes.userDayBook);
+                                  },
+                                  child: otherServiceItem(
+                                    "Total\nCommission",
+                                    "assets/lottie/Growth.json",
+                                  ),
+                                ),
+                                otherServiceItem(
+                                  "Spin\nEarn",
+                                  "assets/lottie/spin_earn.json",
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.toNamed(AppRoutes.redeemCard);
+                                  },
+                                  child: otherServiceItem(
+                                    "Scratch\nCard",
+                                    "assets/images/scratch.gif",
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+          
+                    /// ======= BOTTOM BANNER =======
+                    Obx(
+                          () => BannerController.to.bannerState.value.when(
+                        success: (data) {
+                          return Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(6),
+                              child: Image.network(
+                                (data.bannerUrl?.first.resourceUrl).toString(),
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
+                        error: (msg) => Text(msg),
+                        loading: () => CircularProgressIndicator(),
+                        none: () => SizedBox(),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-
-            Spacing.h100,
-          ],
+          
+              Spacing.h100,
+            ],
+          ),
         ),
       ),
     );

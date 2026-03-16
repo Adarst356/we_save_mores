@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:we_save_more/modules/splash/splash_controller.dart';
-class SplashScreen extends GetView<SplashController> {
-    const SplashScreen({super.key});
-
+class SplashScreen extends StatelessWidget {
+     SplashScreen({super.key});
+final SplashController controller = Get.put(SplashController());
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<SplashController>();
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(

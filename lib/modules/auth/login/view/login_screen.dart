@@ -7,6 +7,7 @@ import 'package:we_save_more/widget/app_text.dart';
 import 'package:we_save_more/widget/custom_textfield.dart';
 import 'package:we_save_more/widget/custom_button.dart';
 import '../../../dashboard/main_nav/main_nav.dart';
+import '../../../dashboard/webviewPage/webview_privacy_policy.dart';
 import 'login_controller.dart';
 
 class LoginScreen extends GetView<LoginController> {
@@ -130,8 +131,14 @@ class LoginScreen extends GetView<LoginController> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Get.to(() => const WebViewScreen(
+                                  url: "https://wesavemore.in/#/privacypolicy.html",
+                                  title: "Privacy Policy",
+                                ));
+                              },
                               child: AppText(
                                 AppStrings.privacyPolicy,
                                 decoration: TextDecoration.underline,
@@ -139,8 +146,16 @@ class LoginScreen extends GetView<LoginController> {
                                 fontWeight: FontWeight.w100,
                               ),
                             ),
+
+                            const SizedBox(width: 10),
+
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Get.to(() => const WebViewScreen(
+                                  url: "https://wesavemore.in/#/termsconditions.html",
+                                  title: "Terms & Conditions",
+                                ));
+                              },
                               child: AppText(
                                 AppStrings.termCondition,
                                 decoration: TextDecoration.underline,
@@ -148,8 +163,9 @@ class LoginScreen extends GetView<LoginController> {
                                 fontWeight: FontWeight.w100,
                               ),
                             ),
+
                           ],
-                        ),
+                        )
                       ],
                     ),
                   ),
